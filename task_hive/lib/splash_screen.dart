@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:task_hive/core/navigation/router_config.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/core/theme/colors.dart';
 
@@ -17,9 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 1), () {
-      context.go("/${MyRoutes.onboard1}");
-    });
+    _checkOnboardingStatus();
   }
 
   @override
@@ -42,5 +40,18 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _checkOnboardingStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool hasSeenOnboarding = prefs.getBool('onboardingCompleted') ?? false;
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (hasSeenOnboarding) {
+      context.go("/${MyRoutes.signInRoute}");
+    } else {
+      context.go("/${MyRoutes.onboard1}");
+    }
   }
 }

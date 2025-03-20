@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
 import 'package:task_hive/core/theme/colors.dart';
 
@@ -81,6 +82,7 @@ class OnboardScreen3 extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+            _completeOnboarding(context);
             context.go("/${MyRoutes.signInRoute}");
           },
           child: const Text('Skip'),
@@ -98,5 +100,10 @@ class OnboardScreen3 extends StatelessWidget {
         shape: BoxShape.circle,
       ),
     );
+  }
+
+  Future<void> _completeOnboarding(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboardingCompleted', true);
   }
 }
