@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       bloc: theme,
       builder: (context, state) {
         return MaterialApp.router(
-          title: 'Flutter Demo',
+          title: 'Task Hive',
           theme: ThemeClass.lightTheme,
           darkTheme: ThemeClass.darkTheme,
           themeMode: state.themeMode,

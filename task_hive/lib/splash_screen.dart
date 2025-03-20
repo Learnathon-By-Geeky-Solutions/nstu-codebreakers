@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 1), () {
-      context.go(MyRoutes.onboard1);
+      context.go("/${MyRoutes.onboard1}");
     });
   }
 

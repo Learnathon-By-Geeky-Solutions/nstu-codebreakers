@@ -142,3 +142,13 @@ extension TextThemeExtension on TextTheme {
         fontWeight: FontWeight.w400,
       );
 }
+
+extension on Column {
+  paddingOnly(double left, double top, double right, double bottom) {
+    return Padding(
+      padding:
+          EdgeInsets.only(left: left, top: top, right: right, bottom: bottom),
+      child: this,
+    );
+  }
+}
