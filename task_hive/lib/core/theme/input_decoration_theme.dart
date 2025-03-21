@@ -5,14 +5,17 @@ import 'colors.dart';
 
 class AppInputDecorationTheme {
   static final appInputDecorationTheme = InputDecorationTheme(
-    filled: true,
+    filled: false,
     hintStyle: GoogleFonts.poppins(
       fontSize: 16,
       fontWeight: FontWeight.w300,
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(15),
-      borderSide: BorderSide.none,
+      borderSide: BorderSide(
+        color: AppColors.brand.withOpacity(0.2),
+        width: 1,
+      ),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(15),
