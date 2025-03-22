@@ -3,7 +3,7 @@ import 'package:task_hive/features/auth/presentation/screens/sign_up_screen.dart
 import 'package:task_hive/features/auth/presentation/screens/signin_screen.dart';
 import 'package:task_hive/features/on_board/screens/onboard_screen_1.dart';
 import 'package:task_hive/features/on_board/screens/onboard_screen_2.dart';
-import 'package:task_hive/splash_screen.dart';
+import 'package:task_hive/features/onboarding/presentation/screens/splash_screen.dart';
 
 import '../../features/on_board/screens/onboard_screen_3.dart';
 import 'error_page.dart';
