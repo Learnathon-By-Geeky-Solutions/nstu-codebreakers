@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
-import 'package:task_hive/core/navigation/router_config.dart';
-import 'package:task_hive/core/widgets/custom_input_field.dart';
 
 import '../../../../core/navigation/routes.dart';
+import '../../../../core/widgets/custom_input_field.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
+  TextEditingController nameCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
+  TextEditingController conPassCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -24,8 +25,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void dispose() {
+    nameCtrl.dispose();
     emailCtrl.dispose();
     passCtrl.dispose();
+    conPassCtrl.dispose();
     super.dispose();
   }
 
@@ -34,26 +37,23 @@ class _SignInScreenState extends State<SignInScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      body: _buildBody(textTheme, colorScheme),
+      body: _buildBody(colorScheme, textTheme),
     );
   }
 
-  Widget _buildBody(TextTheme textTheme, ColorScheme colorScheme) {
+  _buildBody(ColorScheme colorScheme, TextTheme textTheme) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: _bodyElemtns(textTheme, colorScheme),
+          child: _bodyElemtns(colorScheme, textTheme),
         ),
       ),
     );
   }
 
-  Widget _bodyElemtns(
-    TextTheme textTheme,
-    ColorScheme colorScheme,
-  ) {
+  _bodyElemtns(ColorScheme colorScheme, TextTheme textTheme) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -71,10 +71,17 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         const SizedBox(height: 60),
         Text(
-          'Login to your account',
+          'Create your account',
           style: textTheme.textSmMedium,
         ),
         const SizedBox(height: 30),
+        CustomInputField(
+          icon: Icons.person_rounded,
+          hintText: 'User Name',
+          obscureText: false,
+          controller: nameCtrl,
+        ),
+        const SizedBox(height: 20),
         CustomInputField(
           icon: Icons.email_rounded,
           hintText: 'Email',
@@ -88,70 +95,39 @@ class _SignInScreenState extends State<SignInScreen> {
           obscureText: true,
           controller: passCtrl,
         ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            InkWell(
-              child: Text(
-                "Forgot Password?",
-                style: textTheme.textXsRegular.copyWith(
-                  color: colorScheme.brand.withOpacity(0.8),
-                ),
-              ),
-              onTap: () {},
-            ),
-          ],
+        const SizedBox(height: 20),
+        CustomInputField(
+          icon: Icons.lock_rounded,
+          hintText: 'Confirm Password',
+          obscureText: true,
+          controller: conPassCtrl,
         ),
         const SizedBox(height: 25),
-        _loginButton(textTheme),
+        _signUpButton(textTheme),
         const SizedBox(height: 35),
         Text(
-          '- Or log in with -',
+          '- Or Register with -',
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        _googleSignIn(textTheme),
+        _googleSignUp(textTheme),
         const SizedBox(height: 20),
-        _redirectSignUp(colorScheme),
+        _redirectSignIn(textTheme, colorScheme),
       ],
     );
   }
 
-  Widget _redirectSignUp(ColorScheme colorScheme) {
-    return InkWell(
-      child: RichText(
-        text: TextSpan(
-          text: "Don't have an account? ",
-          style: Theme.of(context).textTheme.bodyMedium,
-          children: [
-            TextSpan(
-              text: 'Sign up!',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: colorScheme.brand),
-            ),
-          ],
-        ),
-      ),
-      onTap: () {
-        context.go("/${MyRoutes.signUpRoute}");
-      },
-    );
-  }
-
-  Widget _loginButton(TextTheme textTheme) {
+  Widget _signUpButton(TextTheme textTheme) {
     return ElevatedButton(
       onPressed: () {},
       child: Text(
-        'Login',
+        'Register',
         style: textTheme.textSmRegular,
       ),
     );
   }
 
-  Widget _googleSignIn(TextTheme textTheme) {
+  Widget _googleSignUp(TextTheme textTheme) {
     return ElevatedButton(
       onPressed: () {},
       child: Row(
@@ -171,11 +147,31 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           const SizedBox(width: 10),
           Text(
-            'Sign in with Google',
+            'Sign Up with Google',
             style: textTheme.textSmRegular,
           ),
         ],
       ),
+    );
+  }
+
+  Widget _redirectSignIn(TextTheme textTheme, ColorScheme colorScheme) {
+    return InkWell(
+      child: RichText(
+        text: TextSpan(
+          text: "Already have an account? ",
+          style: Theme.of(context).textTheme.bodyMedium,
+          children: [
+            TextSpan(
+              text: 'Sign in!',
+              style: textTheme.bodyMedium?.copyWith(color: colorScheme.brand),
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        context.go("/${MyRoutes.signInRoute}");
+      },
     );
   }
 }
