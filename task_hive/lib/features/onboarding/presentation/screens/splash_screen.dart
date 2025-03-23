@@ -49,15 +49,12 @@ class _SplashScreenState extends State<SplashScreen> {
         BlocBuilder<OnboardingCubit, OnboardingState>(
           bloc: _onboardingCubit,
           builder: (context, state) {
-            print('dbg state: ${state.runtimeType}');
-
             if (state is OnboardingLoaded) {
               bool onboardComplete = state.onboardComplete;
 
               WidgetsBinding.instance.addPostFrameCallback(
                 (_) {
                   if (!onboardComplete) {
-                    print('dbg here before go onboard 1');
                     context.go("/${MyRoutes.onboard1}");
                   } else {
                     if (state.isSignedIn) {

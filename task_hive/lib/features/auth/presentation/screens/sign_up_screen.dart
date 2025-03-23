@@ -47,13 +47,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: _bodyElemtns(colorScheme, textTheme),
+          child: _bodyElements(colorScheme, textTheme),
         ),
       ),
     );
   }
 
-  _bodyElemtns(ColorScheme colorScheme, TextTheme textTheme) {
+  _bodyElements(ColorScheme colorScheme, TextTheme textTheme) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

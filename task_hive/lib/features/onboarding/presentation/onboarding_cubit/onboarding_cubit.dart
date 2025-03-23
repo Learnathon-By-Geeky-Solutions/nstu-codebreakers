@@ -12,9 +12,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
   OnboardingCubit(this.onboardingUseCase) : super(OnboardingInitial());
 
   void checkOnboardingStatus() async {
-    print('dbg checkOnboardingStatus');
     emit(OnboardingLoading());
-    Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     final onboardStatus = await onboardingUseCase.isOnboardingCompleted();
 
@@ -34,6 +33,8 @@ class OnboardingCubit extends Cubit<OnboardingState> {
     });
     if (onboardComplete != null && signedIn != null) {
       emit(OnboardingLoaded(onboardComplete!, signedIn!));
+    } else {
+      emit(const OnboardingError("Error: Onboarding status not found"));
     }
   }
 

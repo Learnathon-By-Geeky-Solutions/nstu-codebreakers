@@ -44,13 +44,13 @@ class _SignInScreenState extends State<SignInScreen> {
         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          child: _bodyElemtns(textTheme, colorScheme),
+          child: _bodyElements(textTheme, colorScheme),
         ),
       ),
     );
   }
 
-  Widget _bodyElemtns(
+  Widget _bodyElements(
     TextTheme textTheme,
     ColorScheme colorScheme,
   ) {

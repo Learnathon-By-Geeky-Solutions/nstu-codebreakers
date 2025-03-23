@@ -7,15 +7,15 @@ class OnboardingUseCase {
 
   OnboardingUseCase(this._onboardingRepository);
 
-  Future<Either<bool, String>> isOnboardingCompleted() async {
-    return await _onboardingRepository.isOnboardingCompleted();
+  Future<Either<bool, String>> isOnboardingCompleted() {
+    return _onboardingRepository.isOnboardingCompleted();
   }
 
-  Future<Either<bool, String>> checkSignedInStatus() async {
-    return await _onboardingRepository.checkSignedInStatus();
+  Future<Either<bool, String>> checkSignedInStatus() {
+    return _onboardingRepository.checkSignedInStatus();
   }
 
-  Future<Either<void, String>> setOnboardingCompleted() async {
-    return await _onboardingRepository.setOnboardingCompleted();
+  Future<Either<void, String>> setOnboardingCompleted() {
+    return _onboardingRepository.setOnboardingCompleted();
   }
 }

@@ -120,9 +120,4 @@ class OnboardScreen1 extends StatelessWidget {
       ),
     );
   }
-
-  // Future<void> _completeOnboarding(BuildContext context) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.setBool('onboardingCompleted', true);
-  // }
 }
