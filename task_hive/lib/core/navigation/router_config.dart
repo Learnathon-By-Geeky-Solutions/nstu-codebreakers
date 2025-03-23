@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:task_hive/features/auth/presentation/screens/signin_screen.dart';
-import 'package:task_hive/features/on_board/screens/onboard_screen_1.dart';
-import 'package:task_hive/features/on_board/screens/onboard_screen_2.dart';
+import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_1.dart';
+import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_2.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/splash_screen.dart';
 
-import '../../features/on_board/screens/onboard_screen_3.dart';
+import '../../features/onboarding/presentation/screens/onboard_screen_3.dart';
 import 'error_page.dart';
 import 'routes.dart';
 
@@ -22,15 +22,15 @@ class MyRouterConfig {
       ),
       GoRoute(
         path: "/${MyRoutes.onboard1}",
-        builder: (context, state) => const OnboardScreen1(),
+        builder: (context, state) => OnboardScreen1(),
         routes: [
           GoRoute(
             path: "/${MyRoutes.onboard2}",
-            builder: (context, state) => const OnboardScreen2(),
+            builder: (context, state) => OnboardScreen2(),
             routes: [
               GoRoute(
                 path: "/${MyRoutes.onboard3}",
-                builder: (context, state) => const OnboardScreen3(),
+                builder: (context, state) => OnboardScreen3(),
               ),
             ],
           ),

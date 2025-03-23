@@ -7,19 +7,40 @@ import '../../../../core/di/di.dart';
 part 'onboarding_state.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {
-  OnboardingCubit() : super(OnboardingInitial());
+  final OnboardingUseCase onboardingUseCase;
+
+  OnboardingCubit(this.onboardingUseCase) : super(OnboardingInitial());
 
   void checkOnboardingStatus() async {
     print('dbg checkOnboardingStatus');
     emit(OnboardingLoading());
     Future.delayed(const Duration(seconds: 1));
 
-    final isFirstTime =
-        await getIt<OnboardingUseCase>().isOnboardingCompleted();
-    print('dbg isFirstTime: $isFirstTime');
+    final onboardStatus = await onboardingUseCase.isOnboardingCompleted();
 
-    final isSignedIn = await getIt<OnboardingUseCase>().checkSignedInStatus();
-    print('dbg isSignedIn: $isSignedIn');
-    emit(OnboardingLoaded(isFirstTime, isSignedIn));
+    bool? onboardComplete, signedIn;
+    onboardStatus.fold((l) {
+      onboardComplete = l;
+    }, (r) {
+      emit(OnboardingError(r));
+    });
+
+    final signedInStatus = await onboardingUseCase.checkSignedInStatus();
+
+    signedInStatus.fold((l) {
+      signedIn = l;
+    }, (r) {
+      emit(OnboardingError(r));
+    });
+    if (onboardComplete != null && signedIn != null) {
+      emit(OnboardingLoaded(onboardComplete!, signedIn!));
+    }
+  }
+
+  void setOnboardingCompleted() async {
+    final response = await onboardingUseCase.setOnboardingCompleted();
+    response.fold((_) {}, (r) {
+      emit(OnboardingError(r));
+    });
   }
 }

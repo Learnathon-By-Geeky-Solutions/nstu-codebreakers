@@ -107,7 +107,7 @@ class _SignInScreenState extends State<SignInScreen> {
         _loginButton(textTheme),
         const SizedBox(height: 35),
         Text(
-          '- Or log in with -',
+          '- OR -',
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),

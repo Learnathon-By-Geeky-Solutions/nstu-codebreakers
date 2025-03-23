@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/features/onboarding/presentation/onboarding_cubit/onboarding_cubit.dart';
-import 'dart:async';
 
+import '../onboarding_cubit/onboarding_cubit.dart';
 import '../../../../core/navigation/routes.dart';
-import '../../../../core/theme/colors.dart';
-import '../../../../core/database_service/local/shared_preference_service.dart';
 import '../../../../core/di/di.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -35,47 +32,57 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BlocBuilder<OnboardingCubit, OnboardingState>(
-              bloc: _onboardingCubit,
-              builder: (context, state) {
-                print('dbg state: ${state.runtimeType}');
+      body: _buildBody(),
+    );
+  }
 
-                if (state is OnboardingLoaded) {
-                  bool isFirstTime = state.isFirstTime;
+  Center _buildBody() {
+    return Center(
+      child: _bodyElements(),
+    );
+  }
 
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (isFirstTime) {
-                      print('dbg here before go onboard 1');
-                      context.go("/${MyRoutes.onboard1}");
+  Column _bodyElements() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        BlocBuilder<OnboardingCubit, OnboardingState>(
+          bloc: _onboardingCubit,
+          builder: (context, state) {
+            print('dbg state: ${state.runtimeType}');
+
+            if (state is OnboardingLoaded) {
+              bool onboardComplete = state.onboardComplete;
+
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  if (!onboardComplete) {
+                    print('dbg here before go onboard 1');
+                    context.go("/${MyRoutes.onboard1}");
+                  } else {
+                    if (state.isSignedIn) {
+                      // context.go("/${MyRoutes.home}");
                     } else {
-                      if (state.isSignedIn) {
-                        // context.go("/${MyRoutes.home}");
-                      } else {
-                        context.go("/${MyRoutes.signInRoute}");
-                      }
+                      context.go("/${MyRoutes.signInRoute}");
                     }
-                  });
-                }
+                  }
+                },
+              );
+            }
 
-                if (state is OnboardingError) {
-                  return Center(child: Text("Error: ${state.message}"));
-                }
+            if (state is OnboardingError) {
+              return Center(child: Text("Error: ${state.message}"));
+            }
 
-                return const CircularProgressIndicator();
-              },
-            ),
-            Image.asset(
-              'assets/images/logo.png',
-              height: 150,
-              width: 150,
-            ),
-          ],
+            return const CircularProgressIndicator();
+          },
         ),
-      ),
+        Image.asset(
+          'assets/images/logo.png',
+          height: 150,
+          width: 150,
+        ),
+      ],
     );
   }
 }

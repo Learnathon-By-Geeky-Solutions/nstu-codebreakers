@@ -23,7 +23,7 @@ void setupLocator() {
       () => SharedPreferenceService());
 
   // Register Cubits
-  getIt.registerFactory(() => OnboardingCubit());
+  getIt.registerFactory(() => OnboardingCubit(getIt.call()));
 
   //Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(

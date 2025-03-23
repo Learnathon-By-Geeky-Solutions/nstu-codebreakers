@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:task_hive/core/extensions/app_extension.dart';
-import 'package:task_hive/core/theme/colors.dart';
 
-import '../../../core/navigation/routes.dart';
+import '../../../../core/extensions/app_extension.dart';
+import '../../../../core/theme/colors.dart';
+import '../onboarding_cubit/onboarding_cubit.dart';
+import '../../../../core/di/di.dart';
+import '../../../../core/navigation/routes.dart';
 
 class OnboardScreen1 extends StatelessWidget {
-  const OnboardScreen1({super.key});
+  OnboardScreen1({super.key});
+  final _onboardingCubit = getIt<OnboardingCubit>();
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +85,26 @@ class OnboardScreen1 extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            _completeOnboarding(context);
+            _onboardingCubit.setOnboardingCompleted();
             context.go("/${MyRoutes.signInRoute}");
           },
-          child: const Text('Skip'),
+          child: BlocConsumer<OnboardingCubit, OnboardingState>(
+            bloc: _onboardingCubit,
+            listener: (context, state) {
+              if (state is OnboardingError) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                    ),
+                  );
+                });
+              }
+            },
+            builder: (context, state) {
+              return const Text('Skip');
+            },
+          ),
         ),
       ],
     );
@@ -102,8 +121,8 @@ class OnboardScreen1 extends StatelessWidget {
     );
   }
 
-  Future<void> _completeOnboarding(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboardingCompleted', true);
-  }
+  // Future<void> _completeOnboarding(BuildContext context) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setBool('onboardingCompleted', true);
+  // }
 }

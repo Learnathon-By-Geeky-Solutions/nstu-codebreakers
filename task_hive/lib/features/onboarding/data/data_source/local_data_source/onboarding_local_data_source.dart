@@ -1,3 +1,6 @@
+import 'package:dartz/dartz.dart';
+
 abstract class OnboardingLocalDataSource {
-  Future<bool> isOnboardingCompleted();
+  Future<Either<bool, String>> isOnboardingCompleted();
+  Future<Either<void, String>> setOnboardingCompleted();
 }

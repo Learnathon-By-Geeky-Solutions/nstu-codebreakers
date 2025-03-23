@@ -1,4 +1,7 @@
+import 'package:dartz/dartz.dart';
+
 abstract class OnboardingRepository {
-  Future<bool> isOnboardingCompleted();
-  Future<bool> checkSignedInStatus();
+  Future<Either<bool, String>> isOnboardingCompleted();
+  Future<Either<bool, String>> checkSignedInStatus();
+  Future<Either<void, String>> setOnboardingCompleted();
 }

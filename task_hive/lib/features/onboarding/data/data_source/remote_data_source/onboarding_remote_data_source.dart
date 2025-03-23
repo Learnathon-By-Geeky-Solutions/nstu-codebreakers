@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+
 abstract class OnboardingRemoteDataSource {
-  Future<bool> checkSignedInStatus();
+  Future<Either<bool, String>> checkSignedInStatus();
 }

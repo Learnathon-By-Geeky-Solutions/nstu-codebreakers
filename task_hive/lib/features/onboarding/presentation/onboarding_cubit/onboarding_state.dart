@@ -12,10 +12,10 @@ final class OnboardingInitial extends OnboardingState {}
 final class OnboardingLoading extends OnboardingState {}
 
 final class OnboardingLoaded extends OnboardingState {
-  final bool isFirstTime, isSignedIn;
-  const OnboardingLoaded(this.isFirstTime, this.isSignedIn);
+  final bool onboardComplete, isSignedIn;
+  const OnboardingLoaded(this.onboardComplete, this.isSignedIn);
   @override
-  List<Object> get props => [isFirstTime, isSignedIn];
+  List<Object> get props => [onboardComplete, isSignedIn];
 }
 
 final class OnboardingError extends OnboardingState {
