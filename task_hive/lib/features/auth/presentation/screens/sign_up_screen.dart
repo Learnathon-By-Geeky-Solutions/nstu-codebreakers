@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/core/extensions/app_extension.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:task_hive/features/auth/presentation/cubits/auth/sign_up/sign_up_cubit.dart';
 
+import '../../../../core/di/di.dart';
+import '../../../../core/validators/input_field_validation.dart';
+import '../cubits/validation/email_validation_cubit.dart';
+import '../cubits/validation/name_validation_cubit.dart';
+import '../cubits/validation/pass_validation_cubit.dart';
+import '../widgets/email_field.dart';
+import '../widgets/name_field.dart';
+import '../widgets/password_field.dart';
+import '../../../../core/extensions/app_extension.dart';
 import '../../../../core/navigation/routes.dart';
-import '../../../../core/widgets/custom_input_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -18,6 +28,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController passCtrl = TextEditingController();
   TextEditingController conPassCtrl = TextEditingController();
 
+  final _passValidationCubit = PasswordValidationCubit();
+  final _conPassValidationCubit = PasswordValidationCubit();
+  final _emailValidationCubit = EmailValidationCubit();
+  final _nameValidationCubit = NameValidationCubit();
+
+  final _signUpCubit = getIt<SignUpCubit>();
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +46,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     emailCtrl.dispose();
     passCtrl.dispose();
     conPassCtrl.dispose();
+
+    _passValidationCubit.close();
+    _nameValidationCubit.close();
+    _emailValidationCubit.close();
+    _conPassValidationCubit.close();
+
+    _signUpCubit.close();
     super.dispose();
   }
 
@@ -64,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         const SizedBox(height: 10),
         Text(
-          'Task Management  App',
+          'Task Management App',
           style: textTheme.textBaseMedium.copyWith(
             color: colorScheme.textColor.withOpacity(0.4),
           ),
@@ -75,54 +99,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: textTheme.textSmMedium,
         ),
         const SizedBox(height: 30),
-        CustomInputField(
-          icon: Icons.person_rounded,
+        NameField(
+          screenSize: MediaQuery.of(context).size.width,
           hintText: 'User Name',
-          obscureText: false,
           controller: nameCtrl,
+          nameCubit: _nameValidationCubit,
         ),
         const SizedBox(height: 20),
-        CustomInputField(
-          icon: Icons.email_rounded,
+        EmailField(
+          screenSize: MediaQuery.of(context).size.width,
           hintText: 'Email',
-          obscureText: false,
           controller: emailCtrl,
+          emailCubit: _emailValidationCubit,
         ),
         const SizedBox(height: 20),
-        CustomInputField(
-          icon: Icons.lock_rounded,
+        PasswordField(
+          screenSize: MediaQuery.of(context).size.width,
           hintText: 'Password',
-          obscureText: true,
           controller: passCtrl,
+          passCubit: _passValidationCubit,
         ),
         const SizedBox(height: 20),
-        CustomInputField(
-          icon: Icons.lock_rounded,
+        PasswordField(
+          screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Confirm Password',
-          obscureText: true,
           controller: conPassCtrl,
+          passCubit: _conPassValidationCubit,
         ),
         const SizedBox(height: 25),
         _signUpButton(textTheme),
         const SizedBox(height: 35),
         Text(
-          '- Or Register with -',
+          '- OR -',
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
         _googleSignUp(textTheme),
         const SizedBox(height: 20),
         _redirectSignIn(textTheme, colorScheme),
+        const SizedBox(height: 20),
       ],
     );
   }
 
   Widget _signUpButton(TextTheme textTheme) {
     return ElevatedButton(
-      onPressed: () {},
-      child: Text(
-        'Register',
-        style: textTheme.textSmRegular,
+      onPressed: () {
+        _validateInput();
+      },
+      child: BlocConsumer<SignUpCubit, SignUpState>(
+        bloc: _signUpCubit,
+        listener: (context, state) {
+          if (state is SignUpFailed) {
+            _showSnackbar(context, state.failure.message, Colors.red);
+          } else if (state is SignUpSuccess) {
+            _showSnackbar(context, state.success.message, Colors.green);
+            context.go('/${MyRoutes.signInRoute}');
+          }
+        },
+        builder: (context, state) {
+          if (state is SignUpLoading) {
+            return const CircularProgressIndicator();
+          }
+          return Text(
+            'Register',
+            style: textTheme.textSmRegular,
+          );
+        },
       ),
     );
   }
@@ -173,5 +216,66 @@ class _SignUpScreenState extends State<SignUpScreen> {
         context.go("/${MyRoutes.signInRoute}");
       },
     );
+  }
+
+  void _showSnackbar(BuildContext context, String msg, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: color,
+        content: Text(
+          msg,
+          style: Theme.of(context).textTheme.textSmRegular,
+        ),
+      ),
+    );
+  }
+
+  void _validateInput() {
+    final validator = InputFieldValidation();
+    bool isEmailValid = validator.emailValidation(emailCtrl.text);
+    String? passValidationStatus = validator.passwordValidation(passCtrl.text);
+    String? conPassValidionStatus =
+        validator.passwordValidation(conPassCtrl.text);
+    String? nameValidationStatus = validator.nameValidation(nameCtrl.text);
+
+    _emailValidationCubit.showError(null);
+    _passValidationCubit.showError(null);
+    _nameValidationCubit.showError(null);
+
+    print('dbg ${(passCtrl.text == conPassCtrl.text)}');
+    print('-${passCtrl.text}- -${conPassCtrl.text}-');
+    print('dbg vs $conPassValidionStatus');
+
+    if (!isEmailValid) {
+      _emailValidationCubit.showError('invalid email');
+    }
+    if (passValidationStatus != null) {
+      _passValidationCubit.showError(passValidationStatus);
+    }
+    if (conPassValidionStatus != null) {
+      print('dbg entered');
+      _conPassValidationCubit.showError(conPassValidionStatus);
+    }
+    if (nameValidationStatus != null) {
+      _nameValidationCubit.showError(nameValidationStatus);
+    }
+
+    if (passCtrl.text != conPassCtrl.text) {
+      print('here dbg');
+      _conPassValidationCubit.showError('Passwords must be same');
+    }
+    if (isEmailValid &&
+        passValidationStatus == null &&
+        conPassValidionStatus == null &&
+        nameValidationStatus == null &&
+        passCtrl.text == conPassCtrl.text) {
+      print('dbg before calling from screen');
+      _signUpCubit.signUp({
+        'name': nameCtrl.text,
+        'email': emailCtrl.text,
+        'password': passCtrl.text,
+        'confirmPassword': conPassCtrl.text
+      });
+    }
   }
 }

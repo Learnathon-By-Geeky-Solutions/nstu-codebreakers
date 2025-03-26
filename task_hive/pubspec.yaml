@@ -44,6 +44,8 @@ dependencies:
   dartz: ^0.10.1
   shared_preferences: ^2.5.2
   supabase_flutter: ^2.8.4
+  flutter_dotenv: ^5.2.1
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +74,7 @@ flutter:
       - assets/images/
       - assets/onboarding/
       - assets/icons/
+      - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
             }
 
             if (state is OnboardingError) {
-              return Center(child: Text("Error: ${state.message}"));
+              return Center(child: Text(state.message));
             }
 
             return const CircularProgressIndicator();

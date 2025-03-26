@@ -9,6 +9,9 @@ class ThemeClass {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: Colors.white,
+    ),
     // colorScheme: const ColorScheme.light(
     //   primary: MyLightColors.primary,
     //   secondary: MyLightColors.secondary,

@@ -22,4 +22,5 @@ class AppColors {
   static const subHeader = Color(0xFF474747);
   static const textColor = Color(0xFF4A4646);
   static const alert = Color(0xFFCB2F2F);
+  static const success = Color.fromARGB(255, 62, 140, 64);
 }

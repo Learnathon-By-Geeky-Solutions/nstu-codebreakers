@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/core/extensions/app_extension.dart';
-import 'package:task_hive/core/navigation/router_config.dart';
-import 'package:task_hive/core/widgets/custom_input_field.dart';
 
+import '../../../../core/extensions/app_extension.dart';
+import '../cubits/validation/email_validation_cubit.dart';
+import '../cubits/validation/pass_validation_cubit.dart';
+import '../widgets/email_field.dart';
+import '../widgets/password_field.dart';
 import '../../../../core/navigation/routes.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -16,6 +18,9 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
+
+  final _emailCubit = EmailValidationCubit();
+  final _passCubit = PasswordValidationCubit();
 
   @override
   void initState() {
@@ -75,18 +80,18 @@ class _SignInScreenState extends State<SignInScreen> {
           style: textTheme.textSmMedium,
         ),
         const SizedBox(height: 30),
-        CustomInputField(
-          icon: Icons.email_rounded,
+        EmailField(
+          screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Email',
-          obscureText: false,
           controller: emailCtrl,
+          emailCubit: _emailCubit,
         ),
         const SizedBox(height: 20),
-        CustomInputField(
-          icon: Icons.lock_rounded,
+        PasswordField(
+          screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Password',
-          obscureText: true,
           controller: passCtrl,
+          passCubit: _passCubit,
         ),
         const SizedBox(height: 10),
         Row(
