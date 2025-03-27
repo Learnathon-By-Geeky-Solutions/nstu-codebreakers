@@ -10,8 +10,8 @@ class SupabaseImpl implements AuthService {
     try {
       await dotenv.load(fileName: ".env");
       await Supabase.initialize(
-        url: dotenv.env['APK_URL'] ?? 'No URL found',
-        anonKey: dotenv.env['ANON_KEY'] ?? 'No Anon Key found',
+        url: dotenv.env['SUPABASE_URL'] ?? 'No URL found',
+        anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? 'No Anon Key found',
       );
     } catch (e) {
       logger.e(e.toString());

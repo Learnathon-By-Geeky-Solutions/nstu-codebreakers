@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'input_field_prefix_icon.dart';
 import '../cubits/validation/name_validation_cubit.dart';
 
-
 class NameField extends StatelessWidget {
   const NameField({
     super.key,
@@ -50,7 +49,7 @@ class NameField extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         prefixIcon: const InputFieldPrefixIcon(
-          icon: Icons.lock_rounded,
+          icon: Icons.person_rounded,
         ),
         error: (error != null)
             ? Text(
