@@ -4,9 +4,9 @@ import 'package:task_hive/features/auth/data/data_source/remote/auth_data_source
 import 'package:task_hive/features/auth/data/repository/auth_reposity_impl.dart';
 import 'package:task_hive/features/auth/domain/repository/auth_repository.dart';
 import 'package:task_hive/features/auth/domain/use_case/auth_use_case.dart';
-import 'package:task_hive/features/auth/presentation/cubits/auth/sign_in_cubit.dart';
 import 'package:task_hive/features/auth/presentation/cubits/auth/sign_up/sign_up_cubit.dart';
 
+import '../../features/auth/presentation/cubits/auth/sign_in/sign_in_cubit.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/auth_service/supabase_impl.dart';
 import '../../features/onboarding/presentation/onboarding_cubit/onboarding_cubit.dart';
@@ -32,11 +32,13 @@ void setupLocator() {
   /// Register Cubits
   getIt.registerFactory(() => OnboardingCubit(getIt.call()));
   getIt.registerFactory<SignUpCubit>(() => SignUpCubit(getIt.call()));
+  getIt.registerFactory<SignInCubit>(() => SignInCubit(getIt.call()));
 
   ///Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(
       () => OnboardingUseCase(getIt.call()));
   getIt.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(getIt.call()));
+  getIt.registerLazySingleton<SignInUseCase>(() => SignInUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(

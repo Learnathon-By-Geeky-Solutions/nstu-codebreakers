@@ -12,7 +12,17 @@ class SignUpUseCase
 
   @override
   Future<Either<Success, Failure>> call(Map<String, dynamic> input) async {
-    print('dgb in use case');
     return await _authRepository.signUp(input);
+  }
+}
+
+class SignInUseCase
+    extends BaseUseCase<Map<String, dynamic>, Success, Failure> {
+  final AuthRepository _authRepository;
+  SignInUseCase(this._authRepository);
+
+  @override
+  Future<Either<Success, Failure>> call(Map<String, dynamic> input) async {
+    return await _authRepository.signIn(input);
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'input_field_prefix_icon.dart';
 import '../cubits/validation/email_validation_cubit.dart';
 
-
 class EmailField extends StatelessWidget {
   const EmailField({
     super.key,
@@ -50,7 +49,7 @@ class EmailField extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         prefixIcon: const InputFieldPrefixIcon(
-          icon: Icons.lock_rounded,
+          icon: Icons.email_rounded,
         ),
         error: (error != null)
             ? Text(

@@ -20,9 +20,14 @@ class AuthReposityImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<UserInfo, Failure>> signIn() {
-    // TODO: implement signIn
-    throw UnimplementedError();
+  Future<Either<Success, Failure>> signIn(Map<String, dynamic> input) async {
+    try {
+      final res = await _authDataSource.signIn(input);
+
+      return Left(Success('Sign In Successful'));
+    } catch (e) {
+      return Right(Failure(e.toString()));
+    }
   }
 
   @override

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:task_hive/core/theme/colors.dart';
+import 'package:task_hive/features/auth/presentation/cubits/auth/sign_in/sign_in_cubit.dart';
 
+import '../../../../core/di/di.dart';
 import '../../../../core/extensions/app_extension.dart';
+import '../../../../core/validators/input_field_validation.dart';
 import '../cubits/validation/email_validation_cubit.dart';
 import '../cubits/validation/pass_validation_cubit.dart';
 import '../widgets/email_field.dart';
@@ -16,11 +21,13 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController emailCtrl = TextEditingController();
-  TextEditingController passCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
 
-  final _emailCubit = EmailValidationCubit();
-  final _passCubit = PasswordValidationCubit();
+  final _passValidationCubit = PasswordValidationCubit();
+  final _emailValidationCubit = EmailValidationCubit();
+
+  final _signInCubit = getIt<SignInCubit>();
 
   @override
   void initState() {
@@ -29,8 +36,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void dispose() {
-    emailCtrl.dispose();
-    passCtrl.dispose();
+    _emailCtrl.dispose();
+    _passCtrl.dispose();
+
+    _emailValidationCubit.close();
+    _passValidationCubit.close();
+    _signInCubit.close();
+
     super.dispose();
   }
 
@@ -83,15 +95,15 @@ class _SignInScreenState extends State<SignInScreen> {
         EmailField(
           screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Email',
-          controller: emailCtrl,
-          emailCubit: _emailCubit,
+          controller: _emailCtrl,
+          emailCubit: _emailValidationCubit,
         ),
         const SizedBox(height: 20),
         PasswordField(
           screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Password',
-          controller: passCtrl,
-          passCubit: _passCubit,
+          controller: _passCtrl,
+          passCubit: _passValidationCubit,
         ),
         const SizedBox(height: 10),
         Row(
@@ -148,10 +160,27 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Widget _loginButton(TextTheme textTheme) {
     return ElevatedButton(
-      onPressed: () {},
-      child: Text(
-        'Login',
-        style: textTheme.textSmRegular,
+      onPressed: () {
+        _validateInput();
+      },
+      child: BlocConsumer<SignInCubit, SignInState>(
+        bloc: _signInCubit,
+        listener: (context, state) {
+          if (state is SignInSuccess) {
+            context.go(MyRoutes.profile);
+          } else if (state is SignInFailed) {
+            _showSnackbar(context, state.failure.message, AppColors.alert);
+          }
+        },
+        builder: (context, state) {
+          if (state is SignInLoading) {
+            return const CircularProgressIndicator();
+          }
+          return Text(
+            'Login',
+            style: textTheme.textSmRegular,
+          );
+        },
       ),
     );
   }
@@ -182,5 +211,40 @@ class _SignInScreenState extends State<SignInScreen> {
         ],
       ),
     );
+  }
+
+  void _showSnackbar(BuildContext context, String msg, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: color,
+        content: Text(
+          msg,
+          style: Theme.of(context).textTheme.textSmRegular,
+        ),
+      ),
+    );
+  }
+
+  void _validateInput() {
+    final validator = InputFieldValidation();
+    bool isEmailValid = validator.emailValidation(_emailCtrl.text);
+    String? passValidationStatus = validator.passwordValidation(_passCtrl.text);
+
+    _emailValidationCubit.showError(null);
+    _passValidationCubit.showError(null);
+
+    if (!isEmailValid) {
+      _emailValidationCubit.showError('invalid email');
+    }
+    if (passValidationStatus != null) {
+      _passValidationCubit.showError(passValidationStatus);
+    }
+
+    if (isEmailValid && passValidationStatus == null) {
+      _signInCubit.signIn({
+        'email': _emailCtrl.text,
+        'password': _passCtrl.text,
+      });
+    }
   }
 }

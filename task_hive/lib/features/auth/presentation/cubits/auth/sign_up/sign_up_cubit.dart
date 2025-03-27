@@ -14,9 +14,7 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   void signUp(Map<String, dynamic> input) async {
     emit(SignUpLoading());
-    print('dbg before use case ecall');
     final res = await _signUpUseCase.call(input);
-    print('dbg after use case ecall');
 
     res.fold((l) {
       emit(SignUpSuccess(l));

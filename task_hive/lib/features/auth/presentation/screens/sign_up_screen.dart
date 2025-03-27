@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:task_hive/features/auth/presentation/cubits/auth/sign_up/sign_up_cubit.dart';
 
+import '../cubits/auth/sign_up/sign_up_cubit.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/validators/input_field_validation.dart';
 import '../cubits/validation/email_validation_cubit.dart';
@@ -23,10 +22,10 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController nameCtrl = TextEditingController();
-  TextEditingController emailCtrl = TextEditingController();
-  TextEditingController passCtrl = TextEditingController();
-  TextEditingController conPassCtrl = TextEditingController();
+  final TextEditingController _nameCtrl = TextEditingController();
+  final TextEditingController _emailCtrl = TextEditingController();
+  final TextEditingController _passCtrl = TextEditingController();
+  final TextEditingController _conPassCtrl = TextEditingController();
 
   final _passValidationCubit = PasswordValidationCubit();
   final _conPassValidationCubit = PasswordValidationCubit();
@@ -42,10 +41,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    nameCtrl.dispose();
-    emailCtrl.dispose();
-    passCtrl.dispose();
-    conPassCtrl.dispose();
+    _nameCtrl.dispose();
+    _emailCtrl.dispose();
+    _passCtrl.dispose();
+    _conPassCtrl.dispose();
 
     _passValidationCubit.close();
     _nameValidationCubit.close();
@@ -102,28 +101,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
         NameField(
           screenSize: MediaQuery.of(context).size.width,
           hintText: 'User Name',
-          controller: nameCtrl,
+          controller: _nameCtrl,
           nameCubit: _nameValidationCubit,
         ),
         const SizedBox(height: 20),
         EmailField(
           screenSize: MediaQuery.of(context).size.width,
           hintText: 'Email',
-          controller: emailCtrl,
+          controller: _emailCtrl,
           emailCubit: _emailValidationCubit,
         ),
         const SizedBox(height: 20),
         PasswordField(
           screenSize: MediaQuery.of(context).size.width,
           hintText: 'Password',
-          controller: passCtrl,
+          controller: _passCtrl,
           passCubit: _passValidationCubit,
         ),
         const SizedBox(height: 20),
         PasswordField(
           screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Confirm Password',
-          controller: conPassCtrl,
+          controller: _conPassCtrl,
           passCubit: _conPassValidationCubit,
         ),
         const SizedBox(height: 25),
@@ -232,19 +231,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _validateInput() {
     final validator = InputFieldValidation();
-    bool isEmailValid = validator.emailValidation(emailCtrl.text);
-    String? passValidationStatus = validator.passwordValidation(passCtrl.text);
+    bool isEmailValid = validator.emailValidation(_emailCtrl.text);
+    String? passValidationStatus = validator.passwordValidation(_passCtrl.text);
     String? conPassValidionStatus =
-        validator.passwordValidation(conPassCtrl.text);
-    String? nameValidationStatus = validator.nameValidation(nameCtrl.text);
+        validator.passwordValidation(_conPassCtrl.text);
+    String? nameValidationStatus = validator.nameValidation(_nameCtrl.text);
 
     _emailValidationCubit.showError(null);
     _passValidationCubit.showError(null);
     _nameValidationCubit.showError(null);
-
-    print('dbg ${(passCtrl.text == conPassCtrl.text)}');
-    print('-${passCtrl.text}- -${conPassCtrl.text}-');
-    print('dbg vs $conPassValidionStatus');
 
     if (!isEmailValid) {
       _emailValidationCubit.showError('invalid email');
@@ -253,28 +248,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _passValidationCubit.showError(passValidationStatus);
     }
     if (conPassValidionStatus != null) {
-      print('dbg entered');
       _conPassValidationCubit.showError(conPassValidionStatus);
     }
     if (nameValidationStatus != null) {
       _nameValidationCubit.showError(nameValidationStatus);
     }
 
-    if (passCtrl.text != conPassCtrl.text) {
-      print('here dbg');
+    if (_passCtrl.text != _conPassCtrl.text) {
       _conPassValidationCubit.showError('Passwords must be same');
     }
     if (isEmailValid &&
         passValidationStatus == null &&
         conPassValidionStatus == null &&
         nameValidationStatus == null &&
-        passCtrl.text == conPassCtrl.text) {
-      print('dbg before calling from screen');
+        _passCtrl.text == _conPassCtrl.text) {
       _signUpCubit.signUp({
-        'name': nameCtrl.text,
-        'email': emailCtrl.text,
-        'password': passCtrl.text,
-        'confirmPassword': conPassCtrl.text
+        'name': _nameCtrl.text,
+        'email': _emailCtrl.text,
+        'password': _passCtrl.text,
+        'confirmPassword': _conPassCtrl.text
       });
     }
   }

@@ -12,9 +12,8 @@ void main() async {
   try {
     setupLocator();
     await getIt<AuthService>().init();
-  } catch (e, s) {
+  } catch (e) {
     logger.e(e.toString());
-    logger.e(s.toString());
   }
 
   runApp(MyApp());
