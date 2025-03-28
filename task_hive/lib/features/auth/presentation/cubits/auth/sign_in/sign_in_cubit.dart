@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../../../core/io/failure.dart';
 import '../../../../../../core/io/success.dart';
+import '../../../../domain/entity/user_info.dart';
 import '../../../../domain/use_case/auth_use_case.dart';
 
 part 'sign_in_state.dart';
@@ -12,9 +13,9 @@ class SignInCubit extends Cubit<SignInState> {
 
   final SignInUseCase _signInUseCase;
 
-  void signIn(Map<String, dynamic> input) async {
+  void signIn(UserInfo userInfo) async {
     emit(SignInLoading());
-    final res = await _signInUseCase.call(input);
+    final res = await _signInUseCase.call(userInfo);
 
     res.fold((l) {
       emit(SignInSuccess(l));

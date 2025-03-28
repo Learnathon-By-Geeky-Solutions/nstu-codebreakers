@@ -58,6 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     context.go("/${MyRoutes.onboard1}");
                   } else {
                     if (state.isSignedIn) {
+                      print('dbg: here loading');
                       // context.go("/${MyRoutes.home}");
                     } else {
                       context.go("/${MyRoutes.signInRoute}");

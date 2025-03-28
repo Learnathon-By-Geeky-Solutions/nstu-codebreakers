@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../core/io/failure.dart';
 import '../../../../../../core/io/success.dart';
+import '../../../../domain/entity/user_info.dart';
 import '../../../../domain/use_case/auth_use_case.dart';
 
 part 'sign_up_state.dart';
@@ -12,9 +13,9 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   final SignUpUseCase _signUpUseCase;
 
-  void signUp(Map<String, dynamic> input) async {
+  void signUp(UserInfo userInfo) async {
     emit(SignUpLoading());
-    final res = await _signUpUseCase.call(input);
+    final res = await _signUpUseCase.call(userInfo);
 
     res.fold((l) {
       emit(SignUpSuccess(l));

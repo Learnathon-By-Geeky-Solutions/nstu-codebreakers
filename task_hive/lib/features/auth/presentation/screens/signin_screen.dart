@@ -7,6 +7,7 @@ import 'package:task_hive/features/auth/presentation/cubits/auth/sign_in/sign_in
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/app_extension.dart';
 import '../../../../core/validators/input_field_validation.dart';
+import '../../domain/entity/user_info.dart';
 import '../cubits/validation/email_validation_cubit.dart';
 import '../cubits/validation/pass_validation_cubit.dart';
 import '../widgets/email_field.dart';
@@ -241,10 +242,10 @@ class _SignInScreenState extends State<SignInScreen> {
     }
 
     if (isEmailValid && passValidationStatus == null) {
-      _signInCubit.signIn({
-        'email': _emailCtrl.text,
-        'password': _passCtrl.text,
-      });
+      _signInCubit.signIn(UserInfo(
+        email: _emailCtrl.text,
+        password: _passCtrl.text,
+      ));
     }
   }
 }

@@ -2,9 +2,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/services/auth_service/auth_service.dart';
 import '../../../../../core/di/di.dart';
+import '../../../domain/entity/user_info.dart';
 import 'auth_data_source.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
+  final supabaseClient = getIt<AuthService>().getSupabaseClient();
   final authClient = getIt<AuthService>().getAuthClient();
 
   @override
@@ -14,27 +16,40 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<void> signIn(Map<String, dynamic> input) async {
-    print('dbg sign in $input');
+  Future<void> signIn(UserInfo userInfo) async {
     final res = await authClient.signInWithPassword(
-      email: input['email'],
-      password: input['password'],
+      email: userInfo.email ?? '',
+      password: userInfo.password ?? '',
     );
-
-    print('dbg after sign in: ${res.user?.identities}');
   }
 
   @override
-  Future<void> signUp(Map<String, dynamic> input) async {
+  Future<void> signUp(UserInfo userInfo) async {
     await authClient.signUp(
-      email: input['email'],
-      password: input['password'],
+      email: userInfo.email ?? '',
+      password: userInfo.password ?? '',
     );
   }
 
   @override
   Future<void> verifyOtp() {
     // TODO: implement verifyOtp
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addUser(UserInfo userInfo) async {
+    try {
+      if (authClient.currentUser == null) return;
+      await supabaseClient.from('users').insert(userInfo.toJson());
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> getUser() {
+    // TODO: implement getUser
     throw UnimplementedError();
   }
 }

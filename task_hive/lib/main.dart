@@ -8,12 +8,12 @@ import 'task_hive.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   try {
     setupLocator();
     await getIt<AuthService>().init();
-  } catch (e) {
+  } catch (e, s) {
     logger.e(e.toString());
+    logger.e(s.toString());
   }
 
   runApp(MyApp());

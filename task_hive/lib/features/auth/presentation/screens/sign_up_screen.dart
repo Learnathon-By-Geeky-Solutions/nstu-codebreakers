@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../domain/entity/user_info.dart';
 import '../cubits/auth/sign_up/sign_up_cubit.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/validators/input_field_validation.dart';
@@ -262,12 +264,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         conPassValidionStatus == null &&
         nameValidationStatus == null &&
         _passCtrl.text == _conPassCtrl.text) {
-      _signUpCubit.signUp({
-        'name': _nameCtrl.text,
-        'email': _emailCtrl.text,
-        'password': _passCtrl.text,
-        'confirmPassword': _conPassCtrl.text
-      });
+      _signUpCubit.signUp(UserInfo(
+        name: _nameCtrl.text,
+        email: _emailCtrl.text,
+        password: _passCtrl.text,
+      ));
     }
   }
 }

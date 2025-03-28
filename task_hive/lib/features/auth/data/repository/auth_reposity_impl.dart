@@ -9,7 +9,7 @@ import 'package:task_hive/features/auth/domain/entity/user_info.dart';
 import '../../domain/repository/auth_repository.dart';
 
 class AuthReposityImpl implements AuthRepository {
-  AuthDataSource _authDataSource;
+  final AuthDataSource _authDataSource;
 
   AuthReposityImpl(this._authDataSource);
 
@@ -20,21 +20,21 @@ class AuthReposityImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Success, Failure>> signIn(Map<String, dynamic> input) async {
+  Future<Either<Success, Failure>> signIn(UserInfo userInfo) async {
     try {
-      final res = await _authDataSource.signIn(input);
-
-      return Left(Success('Sign In Successful'));
+      final res = await _authDataSource.signIn(userInfo);
+      return Left(Success('Sign in successful'));
     } catch (e) {
       return Right(Failure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Success, Failure>> signUp(Map<String, dynamic> input) async {
+  Future<Either<Success, Failure>> signUp(UserInfo userInfo) async {
     try {
-      await _authDataSource.signUp(input);
-      return Left(Success('Sign Up Success'));
+      await _authDataSource.signUp(userInfo);
+      await _authDataSource.addUser(userInfo);
+      return Left(Success('Verification email is sent.'));
     } catch (e) {
       return Right(Failure(e.toString()));
     }
