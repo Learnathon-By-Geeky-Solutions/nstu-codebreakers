@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task_hive/core/services/auth_service/auth_service.dart';
 
 import 'core/services/auth_service/supabase_impl.dart';
@@ -10,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     setupLocator();
+    Bloc.observer = AppBlocObserver();
     await getIt<AuthService>().init();
   } catch (e, s) {
     logger.e(e.toString());

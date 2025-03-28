@@ -6,8 +6,11 @@ import '../../../domain/entity/user_info.dart';
 import 'auth_data_source.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
-  final supabaseClient = getIt<AuthService>().getSupabaseClient();
+  final SupabaseClient supabaseClient;
   final authClient = getIt<AuthService>().getAuthClient();
+  AuthDataSourceImpl({SupabaseClient? supabaseClient})
+      : supabaseClient =
+            supabaseClient ?? getIt<AuthService>().getSupabaseClient();
 
   @override
   Future<void> forgetPassword() {

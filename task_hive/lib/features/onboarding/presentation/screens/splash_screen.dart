@@ -58,10 +58,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     context.go("/${MyRoutes.onboard1}");
                   } else {
                     if (state.isSignedIn) {
-                      print('here before profile');
                       context.go(MyRoutes.profile);
                     } else {
-                      print('here before sign in');
                       context.go(MyRoutes.signInRoute);
                     }
                   }
