@@ -4,6 +4,7 @@ import 'package:task_hive/features/auth/presentation/screens/signin_screen.dart'
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_1.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_2.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/splash_screen.dart';
+import 'package:task_hive/features/profile/presentation/screens/profile_screen.dart';
 
 import '../../features/onboarding/presentation/screens/onboard_screen_3.dart';
 import 'error_page.dart';
@@ -37,8 +38,12 @@ class MyRouterConfig {
         ],
       ),
       GoRoute(
-        path: "/${MyRoutes.signInRoute}",
+        path: MyRoutes.signInRoute,
         builder: (context, state) => const SignInScreen(),
+      ),
+      GoRoute(
+        path: MyRoutes.profile,
+        builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         path: "/${MyRoutes.signUpRoute}",

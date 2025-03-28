@@ -87,7 +87,7 @@ class OnboardScreen2 extends StatelessWidget {
         TextButton(
           onPressed: () {
             _onboardingCubit.setOnboardingCompleted();
-            context.go("/${MyRoutes.signInRoute}");
+            context.go(MyRoutes.signInRoute);
           },
           child: BlocConsumer<OnboardingCubit, OnboardingState>(
             bloc: _onboardingCubit,

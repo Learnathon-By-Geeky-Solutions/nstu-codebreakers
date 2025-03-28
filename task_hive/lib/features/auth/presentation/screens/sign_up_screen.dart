@@ -155,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             _showSnackbar(context, state.failure.message, Colors.red);
           } else if (state is SignUpSuccess) {
             _showSnackbar(context, state.success.message, Colors.green);
-            context.go('/${MyRoutes.signInRoute}');
+            context.go(MyRoutes.signInRoute);
           }
         },
         builder: (context, state) {
@@ -214,7 +214,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
       onTap: () {
-        context.go("/${MyRoutes.signInRoute}");
+        context.go(MyRoutes.signInRoute);
       },
     );
   }

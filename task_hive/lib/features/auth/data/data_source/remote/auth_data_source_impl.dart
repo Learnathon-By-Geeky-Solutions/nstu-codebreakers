@@ -40,7 +40,6 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<void> addUser(UserInfo userInfo) async {
     try {
-      if (authClient.currentUser == null) return;
       await supabaseClient.from('users').insert(userInfo.toJson());
     } catch (e) {
       throw Exception(e.toString());

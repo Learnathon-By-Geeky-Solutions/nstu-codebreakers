@@ -21,8 +21,8 @@ class UserInfo {
       'email': email,
       'password': password,
       'profile_picture_url': profilePictureUrl,
-      'created_at': createdAt ?? DateTime.now(),
-      'updated_at': updatedAt ?? DateTime.now(),
+      'created_at': createdAt ?? DateTime.now().toIso8601String(),
+      'updated_at': updatedAt ?? DateTime.now().toIso8601String(),
     };
   }
 }

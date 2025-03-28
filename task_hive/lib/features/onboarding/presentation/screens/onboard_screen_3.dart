@@ -39,7 +39,7 @@ class OnboardScreen3 extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: ElevatedButton(
         onPressed: () {
-          context.go("/${MyRoutes.signInRoute}");
+          context.go(MyRoutes.signInRoute);
         },
         child: const Text('Next'),
       ),
@@ -86,7 +86,7 @@ class OnboardScreen3 extends StatelessWidget {
         TextButton(
           onPressed: () {
             _onboardingCubit.setOnboardingCompleted();
-            context.go("/${MyRoutes.signInRoute}");
+            context.go(MyRoutes.signInRoute);
           },
           child: BlocConsumer<OnboardingCubit, OnboardingState>(
             bloc: _onboardingCubit,

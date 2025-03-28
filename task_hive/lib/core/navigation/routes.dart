@@ -6,10 +6,11 @@ class MyRoutes {
   static String onboard2 = 'onboard2';
   static String onboard3 = 'onboard3';
 
-  static String signInRoute = 'signIn';
   static String signUpRoute = 'signUp';
-  static String otpRoute = 'otp';
-  static String forgotPassword = 'forgotPassword';
 
-  static String profile = 'profile';
+  static String forgotPassword = 'forgotPassword';
+  static String otpRoute = 'otp';
+
+  static String signInRoute = '/signIn';
+  static String profile = '/profile';
 }
