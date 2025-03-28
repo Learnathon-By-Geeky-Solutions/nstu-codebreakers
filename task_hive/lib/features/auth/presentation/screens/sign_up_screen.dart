@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/entity/user_info.dart';
 import '../cubits/auth/sign_up/sign_up_cubit.dart';
@@ -85,13 +84,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 60),
         Text(
           'TASK-HIVE',
-          style: textTheme.textxlSemiBold.copyWith(color: colorScheme.brand),
+          style: textTheme.textxlSemiBold.copyWith(color: colorScheme.primary),
         ),
         const SizedBox(height: 10),
         Text(
           'Task Management App',
           style: textTheme.textBaseMedium.copyWith(
-            color: colorScheme.textColor.withOpacity(0.4),
+            color: colorScheme.tertiary.withOpacity(0.4),
           ),
         ),
         const SizedBox(height: 60),
@@ -208,7 +207,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           children: [
             TextSpan(
               text: 'Sign in!',
-              style: textTheme.bodyMedium?.copyWith(color: colorScheme.brand),
+              style: textTheme.bodyMedium?.copyWith(color: colorScheme.primary),
             ),
           ],
         ),

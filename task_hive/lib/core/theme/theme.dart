@@ -10,31 +10,35 @@ class ThemeClass {
     useMaterial3: true,
     brightness: Brightness.light,
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: Colors.white,
+      color: AppLightColors.surface,
     ),
-    // colorScheme: const ColorScheme.light(
-    //   primary: MyLightColors.primary,
-    //   secondary: MyLightColors.secondary,
-    //   shadow: MyLightColors.shadow,
-    // ),
-    // textTheme: MyTextTheme.myLightTextTheme,
-    inputDecorationTheme: AppInputDecorationTheme.appInputDecorationTheme,
-    elevatedButtonTheme: MyElevatedfButtonTheme.myElevatedfButtonTheme,
+    colorScheme: const ColorScheme.light(
+      primary: AppLightColors.brandColor,
+      secondary: AppLightColors.headerColor,
+      tertiary: AppLightColors.subHeaderColor,
+      surface: AppLightColors.surface,
+      error: AppLightColors.alert,
+    ),
+    textTheme: AppTextTheme.textLightTheme,
+    inputDecorationTheme: AppInputDecorationTheme.appLightTheme,
+    elevatedButtonTheme: AppElevatedButtonTheme.appLightTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
-    // colorScheme: const ColorScheme.dark(
-    //   primary: MyDarkColors.primary,
-    //   secondary: MyDarkColors.secondary,
-    //   shadow: MyDarkColors.shadow,
-    // ),
-    // appBarTheme: const AppBarTheme(
-    //   foregroundColor: MyLightColors.surface,
-    // ),
-    // textTheme: MyTextTheme.myDarkTextTheme,
-    inputDecorationTheme: AppInputDecorationTheme.appInputDecorationTheme,
-    // elevatedButtonTheme: MyElevatedfButtonTheme.myElevatedfButtonTheme,
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: AppDarkColors.surface,
+    ),
+    colorScheme: const ColorScheme.dark(
+      primary: AppDarkColors.brandColor,
+      secondary: AppDarkColors.headerColor,
+      tertiary: AppDarkColors.subHeaderColor,
+      surface: AppDarkColors.surface,
+      error: AppDarkColors.alert,
+    ),
+    textTheme: AppTextTheme.textDarkTheme,
+    inputDecorationTheme: AppInputDecorationTheme.appDarkTheme,
+    elevatedButtonTheme: AppElevatedButtonTheme.appDarkTheme,
   );
 }

@@ -2,25 +2,22 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-// class MyLightColors {
-//   static const primary = Color(0xFFDC5F00);
-//   static const secondary = Color(0xFF373A40);
-//   static const shadow = Color(0xFF686D76);
-//   static const surface = Color(0xFFEEEEEE);
-// }
-
-// class MyDarkColors {
-//   static const primary = Color.fromARGB(255, 179, 124, 82);
-//   // static const surface = Color(0xFF373A40);
-//   static const shadow = Color(0xFF686D76);
-//   static const secondary = Color(0xFFEEEEEE);
-// }
-
-class AppColors {
-  static const brand = Color(0xFF105CDB);
-  static const header = Color(0xFF000000);
-  static const subHeader = Color(0xFF474747);
+class AppLightColors {
+  static const brandColor = Color(0xFF105CDB);
+  static const headerColor = Color(0xFF000000);
+  static const subHeaderColor = Color(0xFF474747);
   static const textColor = Color(0xFF4A4646);
   static const alert = Color(0xFFCB2F2F);
   static const success = Color.fromARGB(255, 62, 140, 64);
+  static const surface = Color.fromARGB(255, 235, 235, 255);
+}
+
+class AppDarkColors {
+  static const brandColor = Color(0xFF105CDB);
+  static const headerColor = Color.fromARGB(255, 255, 255, 255);
+  static const subHeaderColor = Color.fromARGB(255, 241, 237, 237);
+  static const textColor = Color.fromARGB(255, 232, 232, 255);
+  static const alert = Color(0xFFCB2F2F);
+  static const success = Color.fromARGB(255, 62, 140, 64);
+  static const surface = Color.fromARGB(255, 0, 0, 0);
 }

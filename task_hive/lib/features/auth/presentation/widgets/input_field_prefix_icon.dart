@@ -8,12 +8,13 @@ class InputFieldPrefixIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorTheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(15),
       margin: const EdgeInsets.only(right: 10),
-      decoration: const BoxDecoration(
-        color: AppColors.brand,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: colorTheme.primary,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(12),
           bottomLeft: Radius.circular(12),
         ),

@@ -78,13 +78,13 @@ class _SignInScreenState extends State<SignInScreen> {
         const SizedBox(height: 60),
         Text(
           'TASK-HIVE',
-          style: textTheme.textxlSemiBold.copyWith(color: colorScheme.brand),
+          style: textTheme.textxlSemiBold.copyWith(color: colorScheme.primary),
         ),
         const SizedBox(height: 10),
         Text(
           'Task Management  App',
           style: textTheme.textBaseMedium.copyWith(
-            color: colorScheme.textColor.withOpacity(0.4),
+            color: colorScheme.tertiary.withOpacity(0.4),
           ),
         ),
         const SizedBox(height: 60),
@@ -114,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Text(
                 "Forgot Password?",
                 style: textTheme.textXsRegular.copyWith(
-                  color: colorScheme.brand.withOpacity(0.8),
+                  color: colorScheme.primary.withOpacity(0.8),
                 ),
               ),
               onTap: () {},
@@ -122,7 +122,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ],
         ),
         const SizedBox(height: 25),
-        _loginButton(textTheme),
+        _loginButton(textTheme, colorScheme),
         const SizedBox(height: 35),
         Text(
           '- OR -',
@@ -148,7 +148,7 @@ class _SignInScreenState extends State<SignInScreen> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  ?.copyWith(color: colorScheme.brand),
+                  ?.copyWith(color: colorScheme.primary),
             ),
           ],
         ),
@@ -159,7 +159,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _loginButton(TextTheme textTheme) {
+  Widget _loginButton(TextTheme textTheme, ColorScheme colorTheme) {
     return ElevatedButton(
       onPressed: () {
         _validateInput();
@@ -170,7 +170,7 @@ class _SignInScreenState extends State<SignInScreen> {
           if (state is SignInSuccess) {
             context.go(MyRoutes.profile);
           } else if (state is SignInFailed) {
-            _showSnackbar(context, state.failure.message, AppColors.alert);
+            _showSnackbar(context, state.failure.message, colorTheme.error);
           }
         },
         builder: (context, state) {

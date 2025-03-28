@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../theme/colors.dart';
-
-extension CustomColorScheme on ColorScheme {
-  Color get brand => AppColors.brand;
-  Color get header => AppColors.header;
-  Color get subHeader => AppColors.subHeader;
-  Color get textColor => AppColors.textColor;
-  Color get alert => AppColors.alert;
-}
-
 extension TextThemeExtension on TextTheme {
   TextStyle get text3xlBold => GoogleFonts.poppins(
         fontSize: 40,

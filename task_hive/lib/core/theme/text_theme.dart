@@ -6,31 +6,59 @@ import 'colors.dart';
 class AppTextTheme {
   AppTextTheme._();
 
-  static final appTextTheme = TextTheme(
+  static final textLightTheme = TextTheme(
     headlineLarge: GoogleFonts.poppins(
       fontSize: 24,
       fontWeight: FontWeight.w700,
-      // color: AppColors.dark,
+      color: AppLightColors.brandColor,
     ),
     headlineSmall: GoogleFonts.poppins(
       fontSize: 12,
       fontWeight: FontWeight.w400,
-      // color: AppColors.dark,
+      color: AppLightColors.textColor,
     ),
     bodyLarge: GoogleFonts.poppins(
       fontSize: 16,
       fontWeight: FontWeight.w500,
-      // color: AppColors.dark,
+      color: AppLightColors.textColor,
     ),
     bodyMedium: GoogleFonts.poppins(
       fontSize: 12,
       fontWeight: FontWeight.w300,
-      // color: AppColors.dark,
+      color: AppLightColors.textColor,
     ),
     bodySmall: GoogleFonts.poppins(
       fontSize: 11,
       fontWeight: FontWeight.w500,
-      // color: AppColors.dark,
+      color: AppLightColors.textColor,
+    ),
+  );
+
+  static final textDarkTheme = TextTheme(
+    headlineLarge: GoogleFonts.poppins(
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+      color: AppDarkColors.brandColor,
+    ),
+    headlineSmall: GoogleFonts.poppins(
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+      color: AppDarkColors.textColor,
+    ),
+    bodyLarge: GoogleFonts.poppins(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: AppDarkColors.textColor,
+    ),
+    bodyMedium: GoogleFonts.poppins(
+      fontSize: 12,
+      fontWeight: FontWeight.w300,
+      color: AppDarkColors.textColor,
+    ),
+    bodySmall: GoogleFonts.poppins(
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      color: AppDarkColors.textColor,
     ),
   );
 }

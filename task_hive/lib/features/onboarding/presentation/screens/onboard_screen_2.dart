@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/app_extension.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/navigation/routes.dart';
 import '../onboarding_cubit/onboarding_cubit.dart';
@@ -15,6 +14,7 @@ class OnboardScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final colorTheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -24,7 +24,7 @@ class OnboardScreen2 extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _topElements(context),
+              _topElements(context, colorTheme),
               _midElements(textTheme),
               _bottomElements(context),
             ],
@@ -68,7 +68,7 @@ class OnboardScreen2 extends StatelessWidget {
     );
   }
 
-  Row _topElements(BuildContext context) {
+  Row _topElements(BuildContext context, ColorScheme colorTheme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -76,11 +76,11 @@ class OnboardScreen2 extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20.0),
           child: Row(
             children: [
-              _dot(false),
+              _dot(false, colorTheme.primary),
               const SizedBox(width: 10),
-              _dot(true),
+              _dot(true, colorTheme.primary),
               const SizedBox(width: 10),
-              _dot(false),
+              _dot(false, colorTheme.primary),
             ],
           ),
         ),
@@ -111,12 +111,12 @@ class OnboardScreen2 extends StatelessWidget {
     );
   }
 
-  Container _dot(bool isActive) {
+  Container _dot(bool isActive, Color primaryColor) {
     return Container(
       width: 10,
       height: 10,
       decoration: BoxDecoration(
-        color: (isActive) ? AppColors.brand : AppColors.brand.withOpacity(0.1),
+        color: (isActive) ? primaryColor : primaryColor.withOpacity(0.1),
         shape: BoxShape.circle,
       ),
     );
