@@ -14,9 +14,13 @@ class AuthReposityImpl implements AuthRepository {
   AuthReposityImpl(this._authDataSource);
 
   @override
-  Future<Either<UserInfo, Failure>> forgetPassword() {
-    // TODO: implement forgetPassword
-    throw UnimplementedError();
+  Future<Either<Success, Failure>> forgetPassword(String email) async {
+    try {
+      await _authDataSource.forgetPassword(email);
+      return Left(Success('OTP sent to your email'));
+    } catch (e) {
+      return Right(Failure(e.toString()));
+    }
   }
 
   @override

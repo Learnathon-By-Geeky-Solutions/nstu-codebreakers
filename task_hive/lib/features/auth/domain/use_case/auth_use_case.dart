@@ -25,3 +25,13 @@ class SignInUseCase extends BaseUseCase<UserInfo, Success, Failure> {
     return await _authRepository.signIn(input);
   }
 }
+
+class ForgetPasswordUseCase extends BaseUseCase<String, Success, Failure> {
+  final AuthRepository _authRepository;
+  ForgetPasswordUseCase(this._authRepository);
+
+  @override
+  Future<Either<Success, Failure>> call(String input) async {
+    return await _authRepository.forgetPassword(input);
+  }
+}

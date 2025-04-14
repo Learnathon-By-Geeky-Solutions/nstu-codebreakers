@@ -7,6 +7,6 @@ import '../entity/user_info.dart';
 abstract class AuthRepository {
   Future<Either<Success, Failure>> signUp(UserInfo userInfo);
   Future<Either<Success, Failure>> signIn(UserInfo userInfo);
-  Future<Either<UserInfo, Failure>> forgetPassword();
+  Future<Either<Success, Failure>> forgetPassword(String email);
   Future<Either<UserInfo, Failure>> verifyOtp();
 }
