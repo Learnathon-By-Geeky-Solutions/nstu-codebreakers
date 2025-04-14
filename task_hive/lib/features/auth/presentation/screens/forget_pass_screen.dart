@@ -70,6 +70,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         colorScheme.error,
                       );
                     } else if (state is ForgetPasswordSuccess) {
+                      _showSnackbar(
+                        context,
+                        state.success.message,
+                        Colors.green,
+                      );
                       context.go(MyRoutes.signInRoute);
                     }
                   },
@@ -89,28 +94,31 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   }
 
   void _showSnackbar(BuildContext context, String msg, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: color,
-        content: Text(
-          msg,
-          style: Theme.of(context).textTheme.textSmRegular,
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          backgroundColor: color,
+          duration: const Duration(seconds: 2),
         ),
-      ),
-    );
+      );
+    });
   }
 
   void _validateInput() {
     final validator = InputFieldValidation();
+    if (_emailCtrl.text.isEmpty) {
+      _emailCubit.showError('Email is required');
+      return;
+    }
+
     bool isEmailValid = validator.emailValidation(_emailCtrl.text);
-    _emailCubit.showError(null);
-
     if (!isEmailValid) {
-      _emailCubit.showError('invalid email');
+      _emailCubit
+          .showError('Please enter a valid email format (example@domain.com)');
+      return;
     }
-
-    if (isEmailValid) {
-      _forgetPassCubit.forgetPassword(_emailCtrl.text);
-    }
+    _emailCubit.showError(null);
+    _forgetPassCubit.forgetPassword(_emailCtrl.text);
   }
 }
