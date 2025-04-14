@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/colors.dart';
-
 class InputFieldPrefixIcon extends StatelessWidget {
   const InputFieldPrefixIcon({super.key, required this.icon});
   final IconData icon;

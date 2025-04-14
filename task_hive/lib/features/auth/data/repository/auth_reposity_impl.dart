@@ -26,7 +26,7 @@ class AuthReposityImpl implements AuthRepository {
   @override
   Future<Either<Success, Failure>> signIn(UserInfo userInfo) async {
     try {
-      final res = await _authDataSource.signIn(userInfo);
+      await _authDataSource.signIn(userInfo);
       return Left(Success('Sign in successful'));
     } catch (e) {
       return Right(Failure(e.toString()));
@@ -46,7 +46,6 @@ class AuthReposityImpl implements AuthRepository {
 
   @override
   Future<Either<UserInfo, Failure>> verifyOtp() {
-    // TODO: implement verifyOtp
     throw UnimplementedError();
   }
 }

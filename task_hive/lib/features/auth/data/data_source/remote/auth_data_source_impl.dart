@@ -14,7 +14,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<void> signIn(UserInfo userInfo) async {
-    final res = await authClient.signInWithPassword(
+    await authClient.signInWithPassword(
       email: userInfo.email ?? '',
       password: userInfo.password ?? '',
     );

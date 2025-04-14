@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/core/theme/colors.dart';
 import 'package:task_hive/features/auth/presentation/cubits/auth/sign_in/sign_in_cubit.dart';
 
 import '../../../../core/di/di.dart';

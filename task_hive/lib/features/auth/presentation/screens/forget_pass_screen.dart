@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
-import 'package:task_hive/core/navigation/router_config.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/features/auth/presentation/cubits/auth/forget_password/forget_pass_cubit.dart';
 import 'package:task_hive/features/auth/presentation/cubits/validation/email_validation_cubit.dart';
@@ -56,35 +55,33 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 emailCubit: _emailCubit,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _validateInput();
+              BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
+                bloc: _forgetPassCubit,
+                listener: (context, state) {
+                  if (state is ForgetPasswordFailed) {
+                    _showSnackbar(
+                      context,
+                      state.failure.message,
+                      colorScheme.error,
+                    );
+                  } else if (state is ForgetPasswordSuccess) {
+                    _showSnackbar(
+                      context,
+                      state.success.message,
+                      Colors.green,
+                    );
+                    context.go(MyRoutes.signInRoute);
+                  }
                 },
-                child: BlocConsumer<ForgetPasswordCubit, ForgetPasswordState>(
-                  bloc: _forgetPassCubit,
-                  listener: (context, state) {
-                    if (state is ForgetPasswordFailed) {
-                      _showSnackbar(
-                        context,
-                        state.failure.message,
-                        colorScheme.error,
-                      );
-                    } else if (state is ForgetPasswordSuccess) {
-                      _showSnackbar(
-                        context,
-                        state.success.message,
-                        Colors.green,
-                      );
-                      context.go(MyRoutes.signInRoute);
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is ForgetPasswordLoading) {
-                      return const CircularProgressIndicator();
-                    }
-                    return const Text('submit');
-                  },
-                ),
+                builder: (context, state) {
+                  return ElevatedButton(
+                    onPressed:
+                        state is ForgetPasswordLoading ? null : _validateInput,
+                    child: state is ForgetPasswordLoading
+                        ? const CircularProgressIndicator()
+                        : const Text('submit'),
+                  );
+                },
               ),
             ],
           ),
