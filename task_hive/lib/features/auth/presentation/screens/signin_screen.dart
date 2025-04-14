@@ -117,7 +117,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   color: colorScheme.primary.withOpacity(0.8),
                 ),
               ),
-              onTap: () {},
+              onTap: () {
+                context.push(MyRoutes.forgotPassword);
+              },
             ),
           ],
         ),

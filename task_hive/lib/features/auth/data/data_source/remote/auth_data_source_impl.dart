@@ -13,12 +13,6 @@ class AuthDataSourceImpl implements AuthDataSource {
             supabaseClient ?? getIt<AuthService>().getSupabaseClient();
 
   @override
-  Future<void> forgetPassword() {
-    // TODO: implement forgetPassword
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> signIn(UserInfo userInfo) async {
     final res = await authClient.signInWithPassword(
       email: userInfo.email ?? '',
@@ -32,6 +26,11 @@ class AuthDataSourceImpl implements AuthDataSource {
       email: userInfo.email ?? '',
       password: userInfo.password ?? '',
     );
+  }
+
+  @override
+  Future<void> forgetPassword(String email) async {
+    await authClient.resetPasswordForEmail(email);
   }
 
   @override
