@@ -2,7 +2,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../../core/services/auth_service/auth_service.dart';
 import '../../../../../core/di/di.dart';
-import '../../../domain/entity/user_info.dart';
+import '../../../domain/entity/user_entity.dart';
 import 'auth_data_source.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
@@ -13,7 +13,7 @@ class AuthDataSourceImpl implements AuthDataSource {
             supabaseClient ?? getIt<AuthService>().getSupabaseClient();
 
   @override
-  Future<void> signIn(UserInfo userInfo) async {
+  Future<void> signIn(UserEntity userInfo) async {
     await authClient.signInWithPassword(
       email: userInfo.email ?? '',
       password: userInfo.password ?? '',
@@ -21,7 +21,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<void> signUp(UserInfo userInfo) async {
+  Future<void> signUp(UserEntity userInfo) async {
     await authClient.signUp(
       email: userInfo.email ?? '',
       password: userInfo.password ?? '',
@@ -40,7 +40,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<void> addUser(UserInfo userInfo) async {
+  Future<void> addUser(UserEntity userInfo) async {
     try {
       await supabaseClient.from('users').insert(userInfo.toJson());
     } catch (e) {
@@ -49,8 +49,13 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<Map<String, dynamic>> getUser() {
-    // TODO: implement getUser
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> getUser() async {
+    final email = supabaseClient.auth.currentUser?.email;
+    if (email == null) {
+      throw Exception('User not found');
+    }
+    final response =
+        await supabaseClient.from('users').select().eq('email', email).single();
+    return response;
   }
 }

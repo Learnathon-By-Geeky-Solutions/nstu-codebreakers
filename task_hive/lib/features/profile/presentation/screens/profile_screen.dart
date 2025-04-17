@@ -3,11 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:task_hive/core/navigation/router_config.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/core/services/auth_service/auth_service.dart';
+import 'package:task_hive/features/auth/domain/entity/user_entity.dart';
 
 import '../../../../core/di/di.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final UserEntity? userData;
+  const ProfileScreen({super.key, this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +32,12 @@ class ProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: 16),
               Text(
-                'User Name',
+                userData?.name ?? 'User Name',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
               Text(
-                'user@example.com',
+                userData?.email ?? 'user@example.com',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
               SizedBox(height: 24),

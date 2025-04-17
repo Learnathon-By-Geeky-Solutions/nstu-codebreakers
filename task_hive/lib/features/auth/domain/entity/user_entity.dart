@@ -1,4 +1,4 @@
-class UserInfo {
+class UserEntity {
   String? name;
   String? email;
   String? password;
@@ -6,7 +6,7 @@ class UserInfo {
   String? createdAt;
   String? updatedAt;
 
-  UserInfo({
+  UserEntity({
     this.name,
     this.email,
     this.password,
@@ -17,10 +17,9 @@ class UserInfo {
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'full_name': name,
       'email': email,
-      'password': password,
-      'profile_picture_url': profilePictureUrl,
+      'profile_picture': profilePictureUrl,
       'created_at': createdAt ?? DateTime.now().toIso8601String(),
       'updated_at': updatedAt ?? DateTime.now().toIso8601String(),
     };

@@ -1,10 +1,10 @@
-import '../../../domain/entity/user_info.dart';
+import '../../../domain/entity/user_entity.dart';
 
 abstract class AuthDataSource {
-  Future<void> signUp(UserInfo userInfo);
-  Future<void> signIn(UserInfo userInfo);
+  Future<void> signUp(UserEntity userInfo);
+  Future<void> signIn(UserEntity userInfo);
   Future<void> forgetPassword(String email);
   Future<void> verifyOtp();
-  Future<void> addUser(UserInfo userInfo);
+  Future<void> addUser(UserEntity userInfo);
   Future<Map<String, dynamic>> getUser();
 }
