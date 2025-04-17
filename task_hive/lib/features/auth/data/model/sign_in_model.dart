@@ -7,8 +7,8 @@ class SignInModel {
   SignInModel(this.email, this.name);
 
   SignInModel.fromJson(Map<String, dynamic> json) {
-    email = json['email'];
-    name = json['full_name'];
+    email = json['email'] ?? 'No email';
+    name = json['full_name'] ?? 'No name';
   }
   UserEntity toEntity() {
     return UserEntity(
