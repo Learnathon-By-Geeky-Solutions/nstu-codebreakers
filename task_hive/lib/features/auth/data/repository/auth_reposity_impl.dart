@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
 
-import 'package:task_hive/core/io/failure.dart';
-import 'package:task_hive/core/io/success.dart';
-import 'package:task_hive/features/auth/data/data_source/remote/auth_data_source.dart';
-
-import 'package:task_hive/features/auth/domain/entity/user_info.dart';
-
+import '../../../../core/io/failure.dart';
+import '../../../../core/io/success.dart';
+import '../data_source/remote/auth_data_source.dart';
+import '../model/sign_in_model.dart';
+import '../../domain/entity/user_entity.dart';
+import '../../../../core/logger/logger.dart';
 import '../../domain/repository/auth_repository.dart';
 
 class AuthReposityImpl implements AuthRepository {
@@ -24,17 +24,21 @@ class AuthReposityImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Success, Failure>> signIn(UserInfo userInfo) async {
+  Future<Either<UserEntity, Failure>> signIn(UserEntity userInfo) async {
     try {
       await _authDataSource.signIn(userInfo);
-      return Left(Success('Sign in successful'));
+
+      final user = await _authDataSource.getUser();
+      logger.e(user);
+
+      return Left(SignInModel.fromJson(user).toEntity());
     } catch (e) {
       return Right(Failure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Success, Failure>> signUp(UserInfo userInfo) async {
+  Future<Either<Success, Failure>> signUp(UserEntity userInfo) async {
     try {
       await _authDataSource.signUp(userInfo);
       await _authDataSource.addUser(userInfo);
@@ -45,7 +49,7 @@ class AuthReposityImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<UserInfo, Failure>> verifyOtp() {
+  Future<Either<UserEntity, Failure>> verifyOtp() {
     throw UnimplementedError();
   }
 }

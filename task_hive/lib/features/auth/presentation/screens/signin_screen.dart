@@ -6,7 +6,7 @@ import 'package:task_hive/features/auth/presentation/cubits/auth/sign_in/sign_in
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/app_extension.dart';
 import '../../../../core/validators/input_field_validation.dart';
-import '../../domain/entity/user_info.dart';
+import '../../domain/entity/user_entity.dart';
 import '../cubits/validation/email_validation_cubit.dart';
 import '../cubits/validation/pass_validation_cubit.dart';
 import '../widgets/email_field.dart';
@@ -169,7 +169,7 @@ class _SignInScreenState extends State<SignInScreen> {
         bloc: _signInCubit,
         listener: (context, state) {
           if (state is SignInSuccess) {
-            context.go(MyRoutes.profile);
+            context.go(MyRoutes.profile, extra: state.userData);
           } else if (state is SignInFailed) {
             _showSnackbar(context, state.failure.message, colorTheme.error);
           }
@@ -243,7 +243,7 @@ class _SignInScreenState extends State<SignInScreen> {
     }
 
     if (isEmailValid && passValidationStatus == null) {
-      _signInCubit.signIn(UserInfo(
+      _signInCubit.signIn(UserEntity(
         email: _emailCtrl.text,
         password: _passCtrl.text,
       ));

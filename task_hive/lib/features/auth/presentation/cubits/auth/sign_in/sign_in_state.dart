@@ -6,8 +6,8 @@ class SignInState extends Equatable {
 }
 
 class SignInSuccess extends SignInState {
-  final Success success;
-  SignInSuccess(this.success);
+  final UserEntity userData;
+  SignInSuccess(this.userData);
 }
 
 class SignInFailed extends SignInState {

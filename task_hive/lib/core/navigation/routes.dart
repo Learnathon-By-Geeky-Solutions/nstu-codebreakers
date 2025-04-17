@@ -13,4 +13,7 @@ class MyRoutes {
 
   static String signInRoute = '/signIn';
   static String profile = '/profile';
+
+  static String dummyPage1 = '/dummyPage1';
+  static String dummyPage2 = '/dummyPage2';
 }
