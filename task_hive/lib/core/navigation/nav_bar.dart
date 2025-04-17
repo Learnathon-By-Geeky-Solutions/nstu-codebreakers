@@ -33,7 +33,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
           icon: Icon(Icons.add_outlined),
           label: 'Add',
           activeIcon: Icon(
-            Icons.add_outlined,
+            Icons.add_circle,
           ),
           tooltip: 'Add',
         ),
@@ -58,8 +58,6 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       body: navigationShell,
-      // floatingActionButton: _buildFloatingActionButton(context),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: _buildBottomNavigationBar(context),
     );
   }

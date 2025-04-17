@@ -52,10 +52,18 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<Map<String, dynamic>> getUser() async {
     final email = supabaseClient.auth.currentUser?.email;
     if (email == null) {
-      throw Exception('User not found');
+      throw Exception(
+          'Current user email not found. User may not be authenticated.');
     }
-    final response =
-        await supabaseClient.from('users').select().eq('email', email).single();
-    return response;
+    try {
+      final response = await supabaseClient
+          .from('users')
+          .select()
+          .eq('email', email)
+          .single();
+      return response;
+    } catch (e) {
+      throw Exception('Error retrieving user data: ${e.toString()}');
+    }
   }
 }

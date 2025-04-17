@@ -45,7 +45,6 @@ class MyRouterConfig {
         },
         branches: [
           StatefulShellBranch(
-            initialLocation: MyRoutes.dummyPage1, // Add this
             routes: [
               GoRoute(
                 path: MyRoutes.dummyPage1,
@@ -70,7 +69,9 @@ class MyRouterConfig {
               GoRoute(
                 path: MyRoutes.profile,
                 builder: (context, state) {
-                  final userData = state.extra as UserEntity?;
+                  final userData = state.extra is UserEntity
+                      ? state.extra as UserEntity
+                      : null;
                   return ProfileScreen(userData: userData);
                 },
               ),
@@ -98,12 +99,6 @@ class MyRouterConfig {
         path: MyRoutes.signInRoute,
         builder: (context, state) => const SignInScreen(),
       ),
-      // GoRoute(
-      //     path: MyRoutes.profile,
-      //     builder: (context, state) {
-      //       final userData = state.extra as UserEntity?;
-      //       return ProfileScreen(userData: userData);
-      //     }),
       GoRoute(
         path: "/${MyRoutes.signUpRoute}",
         builder: (context, state) => const SignUpScreen(),
@@ -135,5 +130,7 @@ class MyRouterObserver extends NavigatorObserver {
     _updateBackButtonBehavior(newRoute);
   }
 
-  Future<void> _updateBackButtonBehavior(Route? route) async {}
+  Future<void> _updateBackButtonBehavior(Route? route) async {
+    // TODO: Implement platform-specific back-button handling (e.g. call SystemNavigator.pop on root)
+  }
 }

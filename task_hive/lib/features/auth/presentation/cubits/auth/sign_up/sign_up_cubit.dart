@@ -13,9 +13,9 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   final SignUpUseCase _signUpUseCase;
 
-  void signUp(UserEntity userInfo) async {
+  void signUp(UserEntity userEntity) async {
     emit(SignUpLoading());
-    final res = await _signUpUseCase.call(userInfo);
+    final res = await _signUpUseCase.call(userEntity);
 
     res.fold((l) {
       emit(SignUpSuccess(l));

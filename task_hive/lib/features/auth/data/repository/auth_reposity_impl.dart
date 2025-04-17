@@ -49,7 +49,7 @@ class AuthReposityImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<UserEntity, Failure>> verifyOtp() {
-    throw UnimplementedError();
+  Future<Either<UserEntity, Failure>> verifyOtp() async {
+    return Right(Failure('verifyOtp() not yet implemented'));
   }
 }
