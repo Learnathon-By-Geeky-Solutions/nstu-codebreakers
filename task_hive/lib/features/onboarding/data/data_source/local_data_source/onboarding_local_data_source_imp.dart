@@ -9,8 +9,9 @@ final class OnboardingLocalDataSourceImp implements OnboardingLocalDataSource {
   @override
   Future<Either<bool, String>> isOnboardingCompleted() async {
     try {
-      final prefs = await getIt<SharedPreferenceService>().getInstance();
-      bool hasSeenOnboarding = prefs.getBool('onboardingCompleted') ?? false;
+      final prefs = getIt<SharedPreferenceService>();
+      bool hasSeenOnboarding =
+          await prefs.getBool('onboardingCompleted') ?? false;
       return Left(hasSeenOnboarding);
     } catch (e) {
       return Right(e.toString());
@@ -20,7 +21,7 @@ final class OnboardingLocalDataSourceImp implements OnboardingLocalDataSource {
   @override
   Future<Either<void, String>> setOnboardingCompleted() async {
     try {
-      final prefs = await getIt<SharedPreferenceService>().getInstance();
+      final prefs = getIt<SharedPreferenceService>();
       await prefs.setBool('onboardingCompleted', true);
       return const Left(null);
     } catch (e) {

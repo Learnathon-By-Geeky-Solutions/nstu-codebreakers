@@ -3,18 +3,18 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../core/services/auth_service/auth_service.dart';
 import '../../../../../core/di/di.dart';
 import '../../../domain/entity/user_entity.dart';
-import 'auth_data_source.dart';
+import 'auth_remote.dart';
 
-class AuthDataSourceImpl implements AuthDataSource {
+class AuthRemoteImpl implements AuthRemote {
   final SupabaseClient supabaseClient;
   final authClient = getIt<AuthService>().getAuthClient();
-  AuthDataSourceImpl({SupabaseClient? supabaseClient})
+  AuthRemoteImpl({SupabaseClient? supabaseClient})
       : supabaseClient =
             supabaseClient ?? getIt<AuthService>().getSupabaseClient();
 
   @override
-  Future<void> signIn(UserEntity userInfo) async {
-    await authClient.signInWithPassword(
+  Future<AuthResponse> signIn(UserEntity userInfo) async {
+    return await authClient.signInWithPassword(
       email: userInfo.email ?? '',
       password: userInfo.password ?? '',
     );
@@ -49,13 +49,11 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<Map<String, dynamic>> getUser() async {
-    final email = supabaseClient.auth.currentUser?.email;
-    if (email == null) {
-      throw Exception(
-          'Current user email not found. User may not be authenticated.');
-    }
+  Future<Map<String, dynamic>> getUser(String? email) async {
     try {
+      if (email == null) {
+        throw Exception('Email cannot be null');
+      }
       final response = await supabaseClient
           .from('users')
           .select()
