@@ -21,9 +21,25 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   bool _assignToMe = false;
   final List<File> _attachments = [];
 
-  final List<String> _statusOptions = ['To Do', 'In Progress', 'Done', 'Blocked'];
-  final List<String> _labelOptions = ['High Priority', 'Bug', 'Feature', 'Documentation', 'Enhancement'];
-  final List<String> _memberOptions = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Taylor Swift'];
+  final List<String> _statusOptions = [
+    'To Do',
+    'In Progress',
+    'Done',
+    'Blocked'
+  ];
+  final List<String> _labelOptions = [
+    'High Priority',
+    'Bug',
+    'Feature',
+    'Documentation',
+    'Enhancement'
+  ];
+  final List<String> _memberOptions = [
+    'John Doe',
+    'Jane Smith',
+    'Alex Johnson',
+    'Taylor Swift'
+  ];
 
   Future<void> _pickFiles() async {
     try {
@@ -52,10 +68,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Create Tasks'),
+        title: Text('Create Tasks',
+            style: textTheme.titleLarge?.copyWith(
+              color: colorScheme.primary,
+              fontWeight: FontWeight.w600,
+            )),
         backgroundColor: Colors.white,
         foregroundColor: Colors.blue,
         elevation: 0,
@@ -106,7 +128,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         });
                       }
                     },
-                    validator: (value) => null, // Status always has a default value
+                    validator: (value) => null,
+                    // Status always has a default value
                     backgroundColor: const Color(0xFFF5F5F5),
                   ),
                 ),
@@ -154,7 +177,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       _selectedLabel = value;
                     });
                   },
-                  validator: (value) => null, // Labels are optional
+                  validator: (value) => null,
+                  // Labels are optional
                   hint: 'Select Label',
                 ),
                 const SizedBox(height: 16),
@@ -170,7 +194,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           _selectedMember = 'Me';
                         });
                       },
-                      child: const Text('Assign To Me', style: TextStyle(color: Colors.blue)),
+                      child: const Text('Assign To Me',
+                          style: TextStyle(color: Colors.blue)),
                     ),
                   ],
                 ),
@@ -184,8 +209,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       _assignToMe = value == 'Me';
                     });
                   },
-                  validator: (value) => null, // Member assignment is optional
-                  hint: 'Select Label', // This seems to be a UI mistake in the original design
+                  validator: (value) => null,
+                  // Member assignment is optional
+                  hint:
+                      'Select Label', // This seems to be a UI mistake in the original design
                 ),
                 const SizedBox(height: 24),
 
@@ -248,14 +275,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           border: Border.all(color: Colors.blue),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.attach_file, color: Colors.blue),
-                            SizedBox(width: 8),
+                            const Icon(Icons.attach_file, color: Colors.blue),
+                            const SizedBox(width: 8),
                             Text(
                               'Add Attachment',
-                              style: TextStyle(color: Colors.blue),
+                              style: textTheme.titleMedium?.copyWith(
+                                color: Colors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
@@ -272,14 +303,19 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       if (_formKey.currentState!.validate()) {
                         // Process data and submit form
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Task created successfully')),
+                          const SnackBar(
+                              content: Text('Task created successfully')),
                         );
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: const Text('Create Task'),
+                    child: Text('Create Task',style: textTheme.labelLarge?.copyWith(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),),
                   ),
                 ),
               ],
@@ -330,7 +366,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     }
   }
 
-
   Widget _buildDropdownField({
     required String? value,
     required List<String> items,
@@ -344,7 +379,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       items: items.map((String item) {
         return DropdownMenuItem<String>(
           value: item,
-          child: Text(item),
+          child: Text(item,style: Theme.of(context).textTheme.titleMedium,),
         );
       }).toList(),
       onChanged: onChanged,
@@ -372,11 +407,11 @@ class _FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: Colors.black87,
-      ),
+      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            color: Colors.grey[700],
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
     );
   }
 }
