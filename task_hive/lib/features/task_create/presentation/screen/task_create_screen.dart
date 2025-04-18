@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
 
@@ -15,10 +19,36 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   String? _selectedLabel;
   String? _selectedMember;
   bool _assignToMe = false;
+  final List<File> _attachments = [];
 
   final List<String> _statusOptions = ['To Do', 'In Progress', 'Done', 'Blocked'];
   final List<String> _labelOptions = ['High Priority', 'Bug', 'Feature', 'Documentation', 'Enhancement'];
   final List<String> _memberOptions = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Taylor Swift'];
+
+  Future<void> _pickFiles() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.any,
+      );
+
+      if (result != null) {
+        setState(() {
+          _attachments.addAll(result.paths.map((path) => File(path!)).toList());
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking files: $e')),
+      );
+    }
+  }
+
+  void _removeAttachment(int index) {
+    setState(() {
+      _attachments.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +189,82 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 ),
                 const SizedBox(height: 24),
 
+                // Attachments Field
+                const _FieldLabel(label: 'Attachments'),
+                const SizedBox(height: 8),
+                Column(
+                  children: [
+                    // Display selected files
+                    if (_attachments.isNotEmpty) ...[
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (int i = 0; i < _attachments.length; i++)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      _getFileIcon(_attachments[i].path),
+                                      color: Colors.blue,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        path.basename(_attachments[i].path),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close, size: 16),
+                                      color: Colors.grey,
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      onPressed: () => _removeAttachment(i),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+
+                    // Add file button
+                    InkWell(
+                      onTap: _pickFiles,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.attach_file, color: Colors.blue),
+                            SizedBox(width: 8),
+                            Text(
+                              'Add Attachment',
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -184,6 +290,47 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
+  IconData _getFileIcon(String filePath) {
+    final extension = path.extension(filePath).toLowerCase();
+
+    if (extension.isEmpty) return Icons.insert_drive_file;
+
+    switch (extension) {
+      case '.jpg':
+      case '.jpeg':
+      case '.png':
+      case '.gif':
+      case '.bmp':
+        return Icons.image;
+      case '.pdf':
+        return Icons.picture_as_pdf;
+      case '.doc':
+      case '.docx':
+        return Icons.description;
+      case '.xls':
+      case '.xlsx':
+        return Icons.table_chart;
+      case '.ppt':
+      case '.pptx':
+        return Icons.slideshow;
+      case '.mp3':
+      case '.wav':
+      case '.aac':
+        return Icons.audio_file;
+      case '.mp4':
+      case '.mov':
+      case '.avi':
+        return Icons.video_file;
+      case '.zip':
+      case '.rar':
+      case '.7z':
+        return Icons.folder_zip;
+      default:
+        return Icons.insert_drive_file;
+    }
+  }
+
+
   Widget _buildDropdownField({
     required String? value,
     required List<String> items,
@@ -204,7 +351,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       validator: validator,
       decoration: InputDecoration(
         border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(2.0)),
+          borderRadius: BorderRadius.all(Radius.circular(4.0)),
         ),
         hintText: hint,
         filled: backgroundColor != null,
