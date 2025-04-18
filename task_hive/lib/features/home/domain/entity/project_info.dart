@@ -9,13 +9,12 @@ class ProjectData {
   final String priority;
   final int percentage;
 
-  ProjectData({
-    required this.title,
-    required this.address,
-    required this.date,
-    required this.status,
-    required this.assignee,
-    required this.priority,
-    required this.percentage
-  });
+  ProjectData(
+      {required this.title,
+      required this.address,
+      required this.date,
+      required this.status,
+      required this.assignee,
+      required this.priority,
+      required this.percentage});
 }
