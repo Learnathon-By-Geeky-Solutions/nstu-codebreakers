@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/features/auth/presentation/cubits/auth/sign_in/sign_in_cubit.dart';
 
+import '../cubits/auth/sign_in/sign_in_cubit.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/app_extension.dart';
 import '../../../../core/validators/input_field_validation.dart';
@@ -169,7 +169,12 @@ class _SignInScreenState extends State<SignInScreen> {
         bloc: _signInCubit,
         listener: (context, state) {
           if (state is SignInSuccess) {
-            context.go(MyRoutes.profile, extra: state.userData);
+            _showSnackbar(
+              context,
+              state.success.message,
+              colorTheme.primary,
+            );
+            context.go(MyRoutes.home);
           } else if (state is SignInFailed) {
             _showSnackbar(context, state.failure.message, colorTheme.error);
           }

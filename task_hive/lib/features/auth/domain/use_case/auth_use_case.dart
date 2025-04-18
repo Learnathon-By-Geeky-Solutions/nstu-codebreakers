@@ -16,12 +16,12 @@ class SignUpUseCase extends BaseUseCase<UserEntity, Success, Failure> {
   }
 }
 
-class SignInUseCase extends BaseUseCase<UserEntity, UserEntity, Failure> {
+class SignInUseCase extends BaseUseCase<UserEntity, Success, Failure> {
   final AuthRepository _authRepository;
   SignInUseCase(this._authRepository);
 
   @override
-  Future<Either<UserEntity, Failure>> call(UserEntity input) async {
+  Future<Either<Success, Failure>> call(UserEntity input) async {
     return await _authRepository.signIn(input);
   }
 }
