@@ -54,9 +54,7 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Success, Failure>> createProject(ProjectEntity project) async {
     try {
-      print('dbg before project in repo imp: $project');
       await _homeRemoteDataSource.addProject(project.toJson());
-      print('dbg before project in repo imp');
 
       return Left(Success('Project created successfully'));
     } catch (e) {

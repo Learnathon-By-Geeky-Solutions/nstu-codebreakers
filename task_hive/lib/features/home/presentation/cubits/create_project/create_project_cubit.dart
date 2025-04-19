@@ -9,17 +9,14 @@ class CreateProjectCubit extends Cubit<CreateProjectState> {
   final CreateProjectUseCase _createProjectUseCase;
   CreateProjectCubit(this._createProjectUseCase)
       : super(CreateProjectInitial());
-  void createProject(ProjectEntity project) {
+  void createProject(ProjectEntity project) async {
     emit(CreateProjectLoading());
     try {
-      final res = _createProjectUseCase.call(project);
-      res.then((value) {
-        value.fold((l) {
-          emit(CreateProjectSuccess(success: l));
-        }, (r) {
-          emit(CreateProjectFailure(failure: r));
-        });
-      });
+      final res = await _createProjectUseCase.call(project);
+      res.fold(
+        (l) => emit(CreateProjectSuccess(success: l)),
+        (r) => emit(CreateProjectFailure(failure: r)),
+      );
     } catch (e) {
       emit(CreateProjectFailure(failure: Failure(e.toString())));
     }

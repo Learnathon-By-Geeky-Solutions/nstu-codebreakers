@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:task_hive/features/home/presentation/widgets/priority_task_card.dart';
 import 'package:task_hive/features/home/presentation/widgets/upcoming_delivery_card.dart';
 
+import '../../domain/entities/project_entity.dart';
 import '../../domain/entity/project_info.dart';
 // import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final ProjectEntity? projectEntity;
+  const HomePage({super.key, this.projectEntity});
 
   @override
   State<HomePage> createState() => _HomePageState();

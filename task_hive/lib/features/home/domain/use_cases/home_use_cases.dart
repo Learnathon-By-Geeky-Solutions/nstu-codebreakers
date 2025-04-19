@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:task_hive/core/io/failure.dart';
-import 'package:task_hive/core/io/success.dart';
-import 'package:task_hive/features/home/domain/entities/home_user_entity.dart';
 
+import '../../../../core/io/failure.dart';
+import '../../../../core/io/success.dart';
+import '../entities/home_user_entity.dart';
 import '../../../../core/base/use_case/base_use_case.dart';
 import '../../../../core/io/no_input.dart';
 import '../entities/project_entity.dart';
@@ -37,7 +37,6 @@ class CreateProjectUseCase
 
   @override
   Future<Either<Success, Failure>> call(ProjectEntity input) async {
-    print('dbg before project in use case: ${input.toJson()}');
     return await _projectRepository.createProject(input);
   }
 }
