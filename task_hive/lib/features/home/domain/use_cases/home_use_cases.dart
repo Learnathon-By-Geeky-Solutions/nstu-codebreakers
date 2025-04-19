@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:task_hive/core/io/failure.dart';
+import 'package:task_hive/core/io/success.dart';
 import 'package:task_hive/features/home/domain/entities/home_user_entity.dart';
 
 import '../../../../core/base/use_case/base_use_case.dart';
@@ -25,5 +27,17 @@ class FetchUserUseCase
   @override
   Future<Either<HomePageUserEntity, String>> call(NoInput input) async {
     return await _projectRepository.fetchUser();
+  }
+}
+
+class CreateProjectUseCase
+    extends BaseUseCase<ProjectEntity, Success, Failure> {
+  final HomeRepository _projectRepository;
+  CreateProjectUseCase(this._projectRepository);
+
+  @override
+  Future<Either<Success, Failure>> call(ProjectEntity input) async {
+    print('dbg before project in use case: ${input.toJson()}');
+    return await _projectRepository.createProject(input);
   }
 }

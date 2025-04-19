@@ -30,8 +30,8 @@ class ProjectModel {
       id: id,
       name: name,
       description: description,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
+      createdAt: DateTime.tryParse(createdAt ?? '') ?? DateTime.now(),
+      updatedAt: DateTime.tryParse(updatedAt ?? '') ?? DateTime.now(),
       createdBy: createdBy,
     );
   }

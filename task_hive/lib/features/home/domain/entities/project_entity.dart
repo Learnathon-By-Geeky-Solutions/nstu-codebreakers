@@ -2,16 +2,24 @@ class ProjectEntity {
   int? id;
   String? name;
   String? description;
-  String? createdAt;
-  String? updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   int? createdBy;
 
   ProjectEntity({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.createdBy,
+    this.id,
+    this.name,
+    this.description,
+    this.createdAt,
+    this.updatedAt,
+    this.createdBy,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'created_by': createdBy,
+    };
+  }
 }

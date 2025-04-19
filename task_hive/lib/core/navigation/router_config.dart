@@ -7,6 +7,7 @@ import 'package:task_hive/features/auth/presentation/screens/sign_up_screen.dart
 import 'package:task_hive/features/auth/presentation/screens/signin_screen.dart';
 import 'package:task_hive/features/home/domain/entities/home_user_entity.dart';
 import 'package:task_hive/features/home/presentation/screens/home_screen.dart';
+import 'package:task_hive/features/home/presentation/screens/projects_screen.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_1.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_2.dart';
 import 'package:task_hive/features/profile/presentation/screens/profile_screen.dart';
@@ -52,7 +53,7 @@ class MyRouterConfig {
               GoRoute(
                 path: MyRoutes.home,
                 builder: (context, state) {
-                  return const HomePage();
+                  return const ProjectsScreen();
                 },
               ),
             ],

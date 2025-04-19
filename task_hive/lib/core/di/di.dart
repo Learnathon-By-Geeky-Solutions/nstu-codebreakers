@@ -15,6 +15,7 @@ import '''
 package:task_hive/features/home/data/data_source/remote/home_remote.dart''';
 import '''
 package:task_hive/features/home/data/data_source/remote/home_remote_imp.dart''';
+import 'package:task_hive/features/home/presentation/cubits/create_project/create_project_cubit.dart';
 
 import '../../features/auth/data/data_source/local/auth_local_imp.dart';
 import '../../features/auth/data/repository_impl/auth_reposity_impl.dart';
@@ -57,6 +58,8 @@ void setupLocator() {
       () => FetchProjectsCubit(getIt.call()));
   getIt.registerCachedFactory<FetchUserCubit>(
       () => FetchUserCubit(getIt.call()));
+  getIt.registerCachedFactory<CreateProjectCubit>(
+      () => CreateProjectCubit(getIt.call()));
 
   ///Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(
@@ -69,6 +72,8 @@ void setupLocator() {
       () => FetchProjectsUseCase(getIt.call()));
   getIt.registerLazySingleton<FetchUserUseCase>(
       () => FetchUserUseCase(getIt.call()));
+  getIt.registerLazySingleton<CreateProjectUseCase>(
+      () => CreateProjectUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(

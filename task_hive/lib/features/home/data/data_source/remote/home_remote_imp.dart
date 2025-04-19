@@ -12,9 +12,15 @@ class HomeRemoteImpl implements HomeRemote {
             supabaseClient ?? getIt<AuthService>().getSupabaseClient();
 
   @override
-  Future<void> addProject(Map<String, dynamic> project) {
-    // TODO: implement addProject
-    throw UnimplementedError();
+  Future<void> addProject(Map<String, dynamic> project) async {
+    try {
+      print('dbg project: $project');
+      final response = await supabaseClient.from('projects').insert(project);
+      print('dbg response: $response');
+      return response;
+    } catch (e) {
+      throw Exception('Error adding project: ${e.toString()}');
+    }
   }
 
   @override

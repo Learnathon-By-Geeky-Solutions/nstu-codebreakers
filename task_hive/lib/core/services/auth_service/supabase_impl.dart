@@ -5,7 +5,7 @@ import 'package:task_hive/core/services/auth_service/auth_service.dart';
 import '../../logger/logger.dart';
 
 class SupabaseImpl implements AuthService {
-  late final _client;
+  late final SupabaseClient _client;
 
   @override
   Future<void> init() async {

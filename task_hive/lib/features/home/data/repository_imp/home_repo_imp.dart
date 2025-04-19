@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:task_hive/core/io/failure.dart';
+import 'package:task_hive/core/io/success.dart';
 import 'package:task_hive/features/home/data/data_source/local/home_local.dart';
 import 'package:task_hive/features/home/domain/entities/home_user_entity.dart';
 
@@ -11,12 +13,6 @@ class HomeRepositoryImpl implements HomeRepository {
   final HomeRemote _homeRemoteDataSource;
   final HomeLocal _homeLocalDataSource;
   HomeRepositoryImpl(this._homeRemoteDataSource, this._homeLocalDataSource);
-
-  @override
-  Future<void> addProject(Map<String, dynamic> project) {
-    // TODO: implement addProject
-    throw UnimplementedError();
-  }
 
   @override
   Future<void> deleteProject(String id) {
@@ -46,16 +42,25 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<HomePageUserEntity, String>> fetchUser() async {
     try {
-      print('dbg before fetchUser');
       final userId = await _homeLocalDataSource.getUserId();
-      print('dbg after fetchUser $userId');
-
       final response = await _homeRemoteDataSource.fetchUser(userId);
-      print('dbg after fetchUser response $response');
       final user = HomePageUserEntity.fromJson(response);
       return Left(user);
     } catch (e) {
       return Right(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<Success, Failure>> createProject(ProjectEntity project) async {
+    try {
+      print('dbg before project in repo imp: $project');
+      await _homeRemoteDataSource.addProject(project.toJson());
+      print('dbg before project in repo imp');
+
+      return Left(Success('Project created successfully'));
+    } catch (e) {
+      return Right(Failure(e.toString()));
     }
   }
 }
