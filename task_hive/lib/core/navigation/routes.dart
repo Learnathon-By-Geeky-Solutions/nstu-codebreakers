@@ -20,4 +20,5 @@ class MyRoutes {
   static String home = '/home';
   static String projectDetails = 'projectDetails';
   static String createTask = 'createTask';
+  static String taskDetails = '/taskDetails';
 }
