@@ -48,6 +48,7 @@ dependencies:
   rxdart: ^0.28.0
 #  file_picker: ^5.3.2
   file_picker: 10.1.0
+  intl: ^0.18.0
 
 
 dev_dependencies:
