@@ -6,7 +6,8 @@ import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
 
 class CreateTaskScreen extends StatefulWidget {
-  const CreateTaskScreen({super.key});
+  final Map<String, dynamic> keyData;
+  const CreateTaskScreen({super.key, required this.keyData});
 
   @override
   _CreateTaskScreenState createState() => _CreateTaskScreenState();
@@ -15,6 +16,7 @@ class CreateTaskScreen extends StatefulWidget {
 class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final _formKey = GlobalKey<FormState>();
   final _subtaskController = TextEditingController();
+  late final int projectId;
 
   String _selectedProject = 'Task Hive';
   String _status = 'To Do';
@@ -28,6 +30,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final List<SubTask> _subtasks = [];
   DateTime? _startDate;
   DateTime? _dueDate;
+
+  @override
+  void initState() {
+    projectId = widget.keyData['project_id'];
+    super.initState();
+  }
 
   final List<String> _statusOptions = [
     'To Do',
@@ -189,25 +197,25 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Project Field
-                const _FieldLabel(label: 'Project*'),
-                const SizedBox(height: 8),
-                _buildDropdownField(
-                  value: _selectedProject,
-                  items: ['Task Hive', 'Project Alpha', 'Team Beta'],
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedProject = value;
-                      });
-                    }
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a project';
-                    }
-                    return null;
-                  },
-                ),
+                // const _FieldLabel(label: 'Project*'),
+                // const SizedBox(height: 8),
+                // _buildDropdownField(
+                //   value: _selectedProject,
+                //   items: ['Task Hive', 'Project Alpha', 'Team Beta'],
+                //   onChanged: (value) {
+                //     if (value != null) {
+                //       setState(() {
+                //         _selectedProject = value;
+                //       });
+                //     }
+                //   },
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please select a project';
+                //     }
+                //     return null;
+                //   },
+                // ),
                 const SizedBox(height: 16),
                 const _FieldLabel(label: 'Status'),
                 const SizedBox(height: 8),
@@ -334,8 +342,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           decoration: InputDecoration(
                             hintText: 'Add subtask',
                             hintStyle: textTheme.labelLarge?.copyWith(
-                              color:
-                                  colorScheme.tertiary.withValues(alpha: 0.8),
+                              color: colorScheme.tertiary,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -397,7 +404,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       style: textTheme.labelLarge?.copyWith(
                                         color: _startDate == null
                                             ? colorScheme.tertiary
-                                                .withValues(alpha: 0.8)
                                             : Colors.black87,
                                       ),
                                     ),
@@ -439,7 +445,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       style: textTheme.labelLarge?.copyWith(
                                         color: _startDate == null
                                             ? colorScheme.tertiary
-                                                .withValues(alpha: 0.8)
                                             : Colors.black87,
                                       ),
                                     ),

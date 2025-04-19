@@ -11,6 +11,7 @@ import 'package:task_hive/features/home/presentation/screens/projects_screen.dar
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_1.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_2.dart';
 import 'package:task_hive/features/profile/presentation/screens/profile_screen.dart';
+import 'package:task_hive/features/project_details/presentation/screens/task_create_screen.dart';
 
 import '../../features/auth/domain/entity/user_entity.dart';
 import '../../features/home/domain/entities/project_entity.dart';
@@ -58,12 +59,21 @@ class MyRouterConfig {
                   },
                   routes: [
                     GoRoute(
-                      path: MyRoutes.projectDetails,
-                      builder: (context, state) {
-                        final keyData = state.extra as Map<String, dynamic>;
-                        return ProjectDetailsScreen(keyData: keyData);
-                      },
-                    ),
+                        path: MyRoutes.projectDetails,
+                        builder: (context, state) {
+                          final keyData = state.extra as Map<String, dynamic>;
+                          return ProjectDetailsScreen(keyData: keyData);
+                        },
+                        routes: [
+                          GoRoute(
+                            path: MyRoutes.createTask,
+                            builder: (context, state) {
+                              final keyData =
+                                  state.extra as Map<String, dynamic>;
+                              return CreateTaskScreen(keyData: keyData);
+                            },
+                          ),
+                        ]),
                   ]),
             ],
           ),
@@ -72,7 +82,7 @@ class MyRouterConfig {
               GoRoute(
                 path: MyRoutes.dummyPage2,
                 builder: (context, state) {
-                  return const HomeScreen();
+                  return const CreateTaskScreen(keyData: {'project_id': 0});
                 },
               ),
             ],

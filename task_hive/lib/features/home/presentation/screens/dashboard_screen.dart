@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:task_hive/core/navigation/router_config.dart';
+import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/features/home/presentation/widgets/priority_task_card.dart';
 import 'package:task_hive/features/home/presentation/widgets/upcoming_delivery_card.dart';
 
-import '../../../task_create/presentation/screen/task_create_screen.dart';
+import '../../../project_details/presentation/screens/task_create_screen.dart';
 import '../../domain/entities/project_entity.dart';
 import '../../domain/entity/project_info.dart';
 // import 'package:intl/intl.dart';
@@ -63,10 +66,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const CreateTaskScreen()),
-            );
+            context.go(MyRoutes.createTask,
+                extra: {'project_id': widget.projectEntity?.id});
           },
           backgroundColor: colorScheme.surface,
           foregroundColor: colorScheme.onSurface,

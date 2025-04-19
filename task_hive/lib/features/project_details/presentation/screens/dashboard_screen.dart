@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
 import 'package:task_hive/features/auth/presentation/screens/forget_pass_screen.dart';
 import 'package:task_hive/features/home/presentation/widgets/priority_task_card.dart';
 import 'package:task_hive/features/home/presentation/widgets/upcoming_delivery_card.dart';
 
+import '../../../../core/navigation/routes.dart';
 import '../../../home/domain/entities/project_entity.dart';
 import '../../../home/domain/entity/project_info.dart';
 // import 'package:intl/intl.dart';
@@ -82,7 +84,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                 ),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              context.go(
+                  "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
+                  extra: {'project_id': widget.keyData['project_id']});
+            },
             icon: Icon(Icons.add, color: colorScheme.surface),
           ),
         ),
