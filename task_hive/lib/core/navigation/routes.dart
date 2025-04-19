@@ -18,4 +18,5 @@ class MyRoutes {
   static String dummyPage2 = '/dummyPage2';
 
   static String home = '/home';
+  static String projectDetails = 'projectDetails';
 }

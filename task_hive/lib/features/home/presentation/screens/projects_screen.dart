@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
+import 'package:task_hive/core/navigation/router_config.dart';
 
 import '../../../../core/di/di.dart';
+import '../../../../core/navigation/routes.dart';
 import '../../domain/entities/home_user_entity.dart';
 import '../../domain/entities/project_entity.dart';
 import '../cubits/create_project/create_project_cubit.dart';
@@ -139,7 +142,18 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 8.0),
-                                    child: RecentProjectsCard(project: project),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          context.go(
+                                            '${MyRoutes.home}/${MyRoutes.projectDetails}',
+                                            extra: {
+                                              'project_id': project?.id ?? 0,
+                                              'user_name': _userData?.name ?? 0,
+                                            },
+                                          );
+                                        },
+                                        child: RecentProjectsCard(
+                                            project: project)),
                                   );
                                 },
                               );

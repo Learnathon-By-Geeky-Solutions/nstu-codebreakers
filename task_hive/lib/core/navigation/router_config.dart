@@ -13,7 +13,8 @@ import 'package:task_hive/features/onboarding/presentation/screens/onboard_scree
 import 'package:task_hive/features/profile/presentation/screens/profile_screen.dart';
 
 import '../../features/auth/domain/entity/user_entity.dart';
-import '../../features/home/presentation/screens/dashboard_screen.dart';
+import '../../features/home/domain/entities/project_entity.dart';
+import '../../features/project_details/presentation/screens/dashboard_screen.dart';
 import '../../features/onboarding/presentation/screens/onboard_screen_3.dart';
 import 'error_page.dart';
 import 'nav_bar.dart';
@@ -51,11 +52,19 @@ class MyRouterConfig {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: MyRoutes.home,
-                builder: (context, state) {
-                  return const ProjectsScreen();
-                },
-              ),
+                  path: MyRoutes.home,
+                  builder: (context, state) {
+                    return const ProjectsScreen();
+                  },
+                  routes: [
+                    GoRoute(
+                      path: MyRoutes.projectDetails,
+                      builder: (context, state) {
+                        final keyData = state.extra as Map<String, dynamic>;
+                        return ProjectDetailsScreen(keyData: keyData);
+                      },
+                    ),
+                  ]),
             ],
           ),
           StatefulShellBranch(
