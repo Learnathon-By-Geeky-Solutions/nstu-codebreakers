@@ -17,6 +17,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final _formKey = GlobalKey<FormState>();
   final _subtaskController = TextEditingController();
   late final int projectId;
+  late final int userId;
 
   String _selectedProject = 'Task Hive';
   String _status = 'To Do';
@@ -24,16 +25,25 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   String _description = '';
   String? _selectedLabel;
   String? _selectedPriority;
-  String? _selectedMember;
+  Assignee? _selectedMember;
   bool _assignToMe = false;
   final List<File> _attachments = [];
   final List<SubTask> _subtasks = [];
+  final List<Assignee> _projectMembers =
+      ['John Doe', 'Jane Smith', 'Alex Johnson', 'Taylor Swift']
+          .map((name) => Assignee(
+                name: name,
+              ))
+          .toList();
+  final List<Assignee> _assignedMembers = [];
+
   DateTime? _startDate;
   DateTime? _dueDate;
 
   @override
   void initState() {
-    projectId = widget.keyData['project_id'];
+    projectId = widget.keyData['project_id'] ?? 0;
+    userId = widget.keyData['user_id'] ?? 0;
     super.initState();
   }
 
@@ -106,6 +116,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   void _removeSubtask(int index) {
     setState(() {
       _subtasks.removeAt(index);
+    });
+  }
+
+  void _removeAssignee(int index) {
+    setState(() {
+      _assignedMembers.removeAt(index);
     });
   }
 
@@ -196,26 +212,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Project Field
-                // const _FieldLabel(label: 'Project*'),
-                // const SizedBox(height: 8),
-                // _buildDropdownField(
-                //   value: _selectedProject,
-                //   items: ['Task Hive', 'Project Alpha', 'Team Beta'],
-                //   onChanged: (value) {
-                //     if (value != null) {
-                //       setState(() {
-                //         _selectedProject = value;
-                //       });
-                //     }
-                //   },
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Please select a project';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 const SizedBox(height: 16),
                 const _FieldLabel(label: 'Status'),
                 const SizedBox(height: 8),
@@ -504,7 +500,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       onPressed: () {
                         setState(() {
                           _assignToMe = true;
-                          _selectedMember = 'Me';
+                          _selectedMember = Assignee(name: 'Me');
                         });
                       },
                       child: const Text('Assign To Me',
@@ -513,21 +509,55 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                _buildDropdownField(
-                  value: _assignToMe ? 'Me' : _selectedMember,
-                  items: _memberOptions,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedMember = value;
-                      _assignToMe = value == 'Me';
-                    });
-                  },
-                  validator: (value) => null,
-                  // Member assignment is optional
-                  hint:
-                      'Select Label', // This seems to be a UI mistake in the original design
-                ),
-                const SizedBox(height: 24),
+                if (_assignedMembers.isNotEmpty) ...[
+                  Container(
+                    padding: const EdgeInsets.only(left: 8, right: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: colorScheme.primary),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (int i = 0; i < _assignedMembers.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 0.0),
+                            child: Row(
+                              children: [
+                                // InkWell(
+                                //   // onTap: () => _toggleSubtask(i),
+                                //   child: Icon(
+                                //     _subtasks[i].isCompleted
+                                //         ? Icons.check_box
+                                //         : Icons.check_box_outline_blank,
+                                //     color: colorScheme.primary,
+                                //     size: 22,
+                                //   ),
+                                // ),
+                                // const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    _assignedMembers[i].name,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.close, size: 16),
+                                  color: colorScheme.primary,
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  onPressed: () => _removeAssignee(i),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+
+                _buildMemberDropdown(),
+                const SizedBox(height: 16),
 
                 // Attachments Field
                 const _FieldLabel(label: 'Attachments'),
@@ -730,6 +760,34 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       isExpanded: true,
     );
   }
+
+  Widget _buildMemberDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButtonFormField<Assignee>(
+          value: _selectedMember,
+          hint: const Text('Select Member'),
+          isExpanded: true,
+          items: _projectMembers.map((member) {
+            return DropdownMenuItem<Assignee>(
+              value: member,
+              child: Text(member?.name ?? 'N/A'),
+            );
+          }).toList(),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() {
+                if (!_assignedMembers.contains(value))
+                  _assignedMembers.add(value);
+                _selectedMember = null;
+              });
+            }
+          },
+        ),
+      ],
+    );
+  }
 }
 
 class CustomTextFormField extends StatelessWidget {
@@ -805,4 +863,20 @@ class SubTask {
   bool isCompleted;
 
   SubTask({required this.title, this.isCompleted = false});
+}
+
+class Assignee {
+  final String name;
+
+  Assignee({required this.name});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Assignee &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
+
+  @override
+  int get hashCode => name.hashCode;
 }

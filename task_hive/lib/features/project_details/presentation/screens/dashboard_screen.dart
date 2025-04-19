@@ -87,7 +87,10 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
             onPressed: () {
               context.go(
                   "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
-                  extra: {'project_id': widget.keyData['project_id']});
+                  extra: {
+                    'project_id': widget.keyData['project_id'],
+                    'user_id': widget.keyData['user_id'],
+                  });
             },
             icon: Icon(Icons.add, color: colorScheme.surface),
           ),
