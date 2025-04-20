@@ -46,5 +46,7 @@ jobs:
             -Dsonar.verbose=true
             -Dsonar.sources=lib
             -Dsonar.tests=test
+            -Dsonar.test.inclusions=test/features/**/*_test.dart
+            -Dsonar.exclusions=**/*.g.dart,**/*.freezed.dart,**/generated/**,**/__generated__/**,**/mocks.dart,**/*.css
             -Dsonar.dart.lcov.reportPaths=coverage/lcov.info
             -Dsonar.sourceEncoding=UTF-8
