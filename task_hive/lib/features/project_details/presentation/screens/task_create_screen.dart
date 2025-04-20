@@ -5,6 +5,8 @@ import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
 
+import '../../domain/entity/assignee_entity.dart';
+
 class CreateTaskScreen extends StatefulWidget {
   final Map<String, dynamic> keyData;
   const CreateTaskScreen({super.key, required this.keyData});
@@ -537,7 +539,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 // const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    _assignedMembers[i].name,
+                                    _assignedMembers[i].name ?? 'N/A',
                                   ),
                                 ),
                                 IconButton(
@@ -644,7 +646,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Process data and submit form
+                        ///todo: Process data and submit form
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Task created successfully')),
@@ -772,14 +774,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           items: _projectMembers.map((member) {
             return DropdownMenuItem<Assignee>(
               value: member,
-              child: Text(member?.name ?? 'N/A'),
+              child: Text(member.name ?? 'N/A'),
             );
           }).toList(),
           onChanged: (value) {
             if (value != null) {
               setState(() {
-                if (!_assignedMembers.contains(value))
+                if (!_assignedMembers.contains(value)) {
                   _assignedMembers.add(value);
+                }
                 _selectedMember = null;
               });
             }
@@ -863,20 +866,4 @@ class SubTask {
   bool isCompleted;
 
   SubTask({required this.title, this.isCompleted = false});
-}
-
-class Assignee {
-  final String name;
-
-  Assignee({required this.name});
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Assignee &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
-
-  @override
-  int get hashCode => name.hashCode;
 }

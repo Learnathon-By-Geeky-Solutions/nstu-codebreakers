@@ -16,6 +16,11 @@ package:task_hive/features/home/data/data_source/remote/home_remote.dart''';
 import '''
 package:task_hive/features/home/data/data_source/remote/home_remote_imp.dart''';
 import 'package:task_hive/features/home/presentation/cubits/create_project/create_project_cubit.dart';
+import 'package:task_hive/features/project_details/data/data/remote/project_details_remote_imp.dart';
+import 'package:task_hive/features/project_details/data/repository_imp/project_details_repo_imp.dart';
+import 'package:task_hive/features/project_details/domain/repository/project_details_repo.dart';
+import 'package:task_hive/features/project_details/domain/use_case/project_details_use_case.dart';
+import 'package:task_hive/features/project_details/presentation/cubits/create_task/create_task_cubit.dart';
 
 import '../../features/auth/data/data_source/local/auth_local_imp.dart';
 import '../../features/auth/data/repository_impl/auth_reposity_impl.dart';
@@ -26,6 +31,7 @@ import '../../features/home/domain/repository/home_repository.dart';
 import '../../features/home/domain/use_cases/home_use_cases.dart';
 import '../../features/home/presentation/cubits/fetch_projects/fetch_projects_cubit.dart';
 import '../../features/home/presentation/cubits/fetch_user/fetch_user_cubit.dart';
+import '../../features/project_details/data/data/remote/project_details_remote.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/auth_service/supabase_impl.dart';
 import '../../features/onboarding/presentation/onboarding_cubit/onboarding_cubit.dart';
@@ -60,6 +66,8 @@ void setupLocator() {
       () => FetchUserCubit(getIt.call()));
   getIt.registerCachedFactory<CreateProjectCubit>(
       () => CreateProjectCubit(getIt.call()));
+  getIt.registerCachedFactory<CreateTaskCubit>(
+      () => CreateTaskCubit(getIt.call()));
 
   ///Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(
@@ -74,6 +82,8 @@ void setupLocator() {
       () => FetchUserUseCase(getIt.call()));
   getIt.registerLazySingleton<CreateProjectUseCase>(
       () => CreateProjectUseCase(getIt.call()));
+  getIt.registerLazySingleton<CreateTaskUseCase>(
+      () => CreateTaskUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(
@@ -82,6 +92,8 @@ void setupLocator() {
       () => AuthReposityImpl(getIt.call(), getIt.call()));
   getIt.registerLazySingleton<HomeRepository>(
       () => HomeRepositoryImpl(getIt.call(), getIt.call()));
+  getIt.registerLazySingleton<ProjectDetailsRepo>(
+      () => ProjectDetailsRepoImp(getIt.call()));
 
   /// Register DataSources
   getIt.registerLazySingleton<OnboardingLocalDataSource>(
@@ -92,4 +104,6 @@ void setupLocator() {
   getIt.registerLazySingleton<AuthLocal>(() => AuthLocalImpl());
   getIt.registerLazySingleton<HomeRemote>(() => HomeRemoteImpl());
   getIt.registerLazySingleton<HomeLocal>(() => HomeLocalImpl());
+  getIt.registerLazySingleton<ProjectDetailsRemote>(
+      () => ProjectDetailsRemoteImp());
 }
