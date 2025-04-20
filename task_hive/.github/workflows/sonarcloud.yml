@@ -2,9 +2,9 @@ name: SonarQube Analysis
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
 
 jobs:
   sonarqube:
@@ -44,9 +44,9 @@ jobs:
             -Dsonar.organization=learnathon-by-geeky-solutions
             -Dsonar.java.version=17
             -Dsonar.verbose=true
-            -Dsonar.sources=lib
-            -Dsonar.tests=test
-            -Dsonar.test.inclusions=test/features/**/*_test.dart
+            -Dsonar.sources=task_hive/lib
+            -Dsonar.tests=task_hive/test
+            -Dsonar.test.inclusions=task_hive/test/features/**/*_test.dart
             -Dsonar.exclusions=**/*.g.dart,**/*.freezed.dart,**/generated/**,**/__generated__/**,**/mocks.dart,**/*.css
-            -Dsonar.dart.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.dart.lcov.reportPaths=task_hive/coverage/lcov.info
             -Dsonar.sourceEncoding=UTF-8
