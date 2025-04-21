@@ -49,6 +49,7 @@ dependencies:
 #  file_picker: ^5.3.2
   file_picker: 10.1.0
   intl: ^0.18.0
+  mocktail: ^1.0.4
 
 
 dev_dependencies:
