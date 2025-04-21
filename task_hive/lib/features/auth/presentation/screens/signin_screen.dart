@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:task_hive/features/auth/presentation/widgets/google_sign_in.dart';
 
 import '../cubits/auth/sign_in/sign_in_cubit.dart';
 import '../../../../core/di/di.dart';
@@ -83,7 +84,7 @@ class _SignInScreenState extends State<SignInScreen> {
         Text(
           'Task Management  App',
           style: textTheme.textBaseMedium.copyWith(
-            color: colorScheme.tertiary.withOpacity(0.4),
+            color: colorScheme.tertiary.withValues(alpha: 0.4),
           ),
         ),
         const SizedBox(height: 60),
@@ -113,7 +114,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Text(
                 "Forgot Password?",
                 style: textTheme.textXsRegular.copyWith(
-                  color: colorScheme.primary.withOpacity(0.8),
+                  color: colorScheme.primary.withValues(alpha: 0.8),
                 ),
               ),
               onTap: () {
@@ -130,7 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        _googleSignIn(textTheme),
+        GoogleSignInSignUpBtn(textTheme: textTheme, onPressed: (){}, placeholderText: 'Sign in with Google'),
         const SizedBox(height: 20),
         _redirectSignUp(colorScheme),
       ],
@@ -169,14 +170,14 @@ class _SignInScreenState extends State<SignInScreen> {
         bloc: _signInCubit,
         listener: (context, state) {
           if (state is SignInSuccess) {
-            _showSnackbar(
+            _showMessage(
               context,
               state.success.message,
               colorTheme.primary,
             );
             context.go(MyRoutes.home);
           } else if (state is SignInFailed) {
-            _showSnackbar(context, state.failure.message, colorTheme.error);
+            _showMessage(context, state.failure.message, colorTheme.error);
           }
         },
         builder: (context, state) {
@@ -192,35 +193,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _googleSignIn(TextTheme textTheme) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 30,
-            height: 30,
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
-            ),
-            child: Image.asset(
-              'assets/icons/google.png',
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            'Sign in with Google',
-            style: textTheme.textSmRegular,
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showSnackbar(BuildContext context, String msg, Color color) {
+  void _showMessage(BuildContext context, String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: color,

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/app_extension.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/navigation/routes.dart';
 import '../onboarding_cubit/onboarding_cubit.dart';
@@ -117,7 +116,7 @@ class OnboardScreen3 extends StatelessWidget {
       width: 10,
       height: 10,
       decoration: BoxDecoration(
-        color: (isActive) ? primaryColor : primaryColor.withOpacity(0.1),
+        color: (isActive) ? primaryColor : primaryColor.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
     );

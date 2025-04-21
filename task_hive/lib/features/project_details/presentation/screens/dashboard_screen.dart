@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
-import 'package:task_hive/features/auth/presentation/screens/forget_pass_screen.dart';
 import 'package:task_hive/features/home/presentation/widgets/priority_task_card.dart';
 import 'package:task_hive/features/home/presentation/widgets/upcoming_delivery_card.dart';
 
 import '../../../../core/navigation/routes.dart';
-import '../../../home/domain/entities/project_entity.dart';
 import '../../../home/domain/entity/project_info.dart';
-// import 'package:intl/intl.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
   final Map<String, dynamic> keyData;
@@ -19,7 +16,7 @@ class ProjectDetailsScreen extends StatefulWidget {
 }
 
 class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
   late final String userName;
   late final int projectId;
   // Sample delivery task data
@@ -58,11 +55,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     projectId = widget.keyData['project_id'] ?? 0;
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
