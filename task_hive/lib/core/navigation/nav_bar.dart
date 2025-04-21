@@ -16,8 +16,6 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) {
-    final selectedColor =
-        Theme.of(context).colorScheme.primary.withValues(alpha: 0.5);
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: navigationShell.currentIndex,

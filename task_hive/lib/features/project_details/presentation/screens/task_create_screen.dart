@@ -842,7 +842,7 @@ class CustomTextFormField extends StatelessWidget {
 class _FieldLabel extends StatelessWidget {
   final String label;
 
-  const _FieldLabel({super.key, required this.label});
+  const _FieldLabel({required this.label});
 
   @override
   Widget build(BuildContext context) {
