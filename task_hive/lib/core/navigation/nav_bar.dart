@@ -17,12 +17,12 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
   Widget _buildBottomNavigationBar(BuildContext context) {
     final selectedColor =
-        Theme.of(context).colorScheme.primary.withOpacity(0.5);
+        Theme.of(context).colorScheme.primary.withValues(alpha: 0.5);
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: navigationShell.currentIndex,
       elevation: 0,
-      items: [
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.house_outlined),
           label: 'Home',
