@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Text(
           'Task Management App',
           style: textTheme.textBaseMedium.copyWith(
-            color: colorScheme.tertiary.withOpacity(0.4),
+            color: colorScheme.tertiary.withValues(alpha: 0.4),
           ),
         ),
         const SizedBox(height: 60),

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/core/navigation/router_config.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/features/home/presentation/widgets/priority_task_card.dart';
 import 'package:task_hive/features/home/presentation/widgets/upcoming_delivery_card.dart';
-
-import '../../../project_details/presentation/screens/task_create_screen.dart';
 import '../../domain/entities/project_entity.dart';
 import '../../domain/entity/project_info.dart';
-// import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   final ProjectEntity? projectEntity;
@@ -19,9 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  // int _selectedIndex = 0;
 
-  // Sample delivery task data
   final List<ProjectData> _deliveryTasks = [
     ProjectData(
         title: 'Package #1452',
@@ -50,11 +45,11 @@ class _HomePageState extends State<HomePage> {
         percentage: 60)
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

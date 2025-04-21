@@ -83,7 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
         Text(
           'Task Management  App',
           style: textTheme.textBaseMedium.copyWith(
-            color: colorScheme.tertiary.withOpacity(0.4),
+            color: colorScheme.tertiary.withValues(alpha: 0.4),
           ),
         ),
         const SizedBox(height: 60),
@@ -113,7 +113,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Text(
                 "Forgot Password?",
                 style: textTheme.textXsRegular.copyWith(
-                  color: colorScheme.primary.withOpacity(0.8),
+                  color: colorScheme.primary.withValues(alpha: 0.8),
                 ),
               ),
               onTap: () {
@@ -169,14 +169,14 @@ class _SignInScreenState extends State<SignInScreen> {
         bloc: _signInCubit,
         listener: (context, state) {
           if (state is SignInSuccess) {
-            _showSnackbar(
+            _showMessage(
               context,
               state.success.message,
               colorTheme.primary,
             );
             context.go(MyRoutes.home);
           } else if (state is SignInFailed) {
-            _showSnackbar(context, state.failure.message, colorTheme.error);
+            _showMessage(context, state.failure.message, colorTheme.error);
           }
         },
         builder: (context, state) {
@@ -220,7 +220,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _showSnackbar(BuildContext context, String msg, Color color) {
+  void _showMessage(BuildContext context, String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: color,

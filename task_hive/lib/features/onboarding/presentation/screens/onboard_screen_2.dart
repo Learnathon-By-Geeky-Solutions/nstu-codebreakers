@@ -116,7 +116,7 @@ class OnboardScreen2 extends StatelessWidget {
       width: 10,
       height: 10,
       decoration: BoxDecoration(
-        color: (isActive) ? primaryColor : primaryColor.withOpacity(0.1),
+        color: (isActive) ? primaryColor : primaryColor.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
     );

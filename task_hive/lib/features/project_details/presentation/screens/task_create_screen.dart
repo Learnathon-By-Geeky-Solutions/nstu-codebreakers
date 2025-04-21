@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
 
@@ -20,15 +19,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final _subtaskController = TextEditingController();
   late final int projectId;
   late final int userId;
-
-  String _selectedProject = 'Task Hive';
   String _status = 'To Do';
   String _summary = '';
   String _description = '';
   String? _selectedLabel;
   String? _selectedPriority;
   Assignee? _selectedMember;
-  bool _assignToMe = false;
+  // bool _assignToMe = false;
   final List<File> _attachments = [];
   final List<SubTask> _subtasks = [];
   final List<Assignee> _projectMembers =
@@ -67,12 +64,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     'Medium',
     'Low',
   ];
-  final List<String> _memberOptions = [
-    'John Doe',
-    'Jane Smith',
-    'Alex Johnson',
-    'Taylor Swift'
-  ];
+  // final List<String> _memberOptions = [
+  //   'John Doe',
+  //   'Jane Smith',
+  //   'Alex Johnson',
+  //   'Taylor Swift'
+  // ];
 
   Future<void> _pickFiles() async {
     try {
@@ -501,7 +498,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          _assignToMe = true;
+                          // _assignToMe = true;
                           _selectedMember = Assignee(name: 'Me');
                         });
                       },
