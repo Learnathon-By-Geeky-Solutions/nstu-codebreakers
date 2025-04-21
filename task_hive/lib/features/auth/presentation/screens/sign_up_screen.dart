@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:task_hive/features/auth/presentation/widgets/google_sign_in.dart';
 
 import '../../domain/entity/user_entity.dart';
 import '../cubits/auth/sign_up/sign_up_cubit.dart';
@@ -134,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        _googleSignUp(textTheme),
+        GoogleSignInSignUpBtn(textTheme: textTheme, onPressed: (){}, placeholderText: 'Sign Up with Google'),
         const SizedBox(height: 20),
         _redirectSignIn(textTheme, colorScheme),
         const SizedBox(height: 20),
@@ -170,33 +171,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _googleSignUp(TextTheme textTheme) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 30,
-            height: 30,
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
-            ),
-            child: Image.asset(
-              'assets/icons/google.png',
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            'Sign Up with Google',
-            style: textTheme.textSmRegular,
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _redirectSignIn(TextTheme textTheme, ColorScheme colorScheme) {
     return InkWell(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:task_hive/features/auth/presentation/widgets/google_sign_in.dart';
 
 import '../cubits/auth/sign_in/sign_in_cubit.dart';
 import '../../../../core/di/di.dart';
@@ -130,7 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        _googleSignIn(textTheme),
+        GoogleSignInSignUpBtn(textTheme: textTheme, onPressed: (){}, placeholderText: 'Sign in with Google'),
         const SizedBox(height: 20),
         _redirectSignUp(colorScheme),
       ],
@@ -188,34 +189,6 @@ class _SignInScreenState extends State<SignInScreen> {
             style: textTheme.textSmRegular,
           );
         },
-      ),
-    );
-  }
-
-  Widget _googleSignIn(TextTheme textTheme) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 30,
-            height: 30,
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
-            ),
-            child: Image.asset(
-              'assets/icons/google.png',
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text(
-            'Sign in with Google',
-            style: textTheme.textSmRegular,
-          ),
-        ],
       ),
     );
   }
