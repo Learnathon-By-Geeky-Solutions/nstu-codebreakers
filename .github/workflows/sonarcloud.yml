@@ -47,8 +47,8 @@ jobs:
             -Dsonar.java.version=17
             -Dsonar.verbose=true
             -Dsonar.sources=task_hive/lib
-            -Dsonar.tests=task_hive/test
-            -Dsonar.test.inclusions=task_hive/test/features/**/*_test.dart
+            # -Dsonar.tests=task_hive/test
+            # -Dsonar.test.inclusions=task_hive/test/features/**/*_test.dart
             -Dsonar.exclusions=**/*.g.dart,**/*.freezed.dart,**/generated/**,**/__generated__/**,**/mocks.dart,**/*.css
             -Dsonar.dart.lcov.reportPaths=task_hive/coverage/lcov.info
             -Dsonar.sourceEncoding=UTF-8
