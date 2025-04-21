@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
-import 'package:task_hive/core/navigation/router_config.dart';
-
 import '../../../../core/di/di.dart';
 import '../../../../core/navigation/routes.dart';
 import '../../domain/entities/home_user_entity.dart';
@@ -45,7 +43,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    HomePageUserEntity? _userData;
+    HomePageUserEntity? userData;
     return Scaffold(
       floatingActionButton: SizedBox(
         height: 60,
@@ -65,7 +63,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
               isScrollControlled: true,
               builder: (context) => CreateProjectBottomSheet(
                 createProjectCubit: _createProjectCubit,
-                userData: _userData,
+                userData: userData,
                 fetchProjectsCubit: _fetchProjectCubit,
               ),
             );
@@ -93,11 +91,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                       } else if (state is FetchUserSuccess) {
                         _fetchProjectCubit.fetchProjects(
                             userId: state.userData.userId ?? 0);
-                        _userData = state.userData;
-                        // return Text(
-                        //   'Welcome ${state.userData.name}',
-                        //   style: textTheme.textxlRegular,
-                        // );
+                        userData = state.userData;
                         return const SizedBox.shrink();
                       } else if (state is FetchUserFailed) {
                         return Text('Error: ${state.error}');
@@ -148,7 +142,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                             '${MyRoutes.home}/${MyRoutes.projectDetails}',
                                             extra: {
                                               'project_id': project?.id ?? 0,
-                                              'user_name': _userData?.name ?? 0,
+                                              'user_name': userData?.name ?? 0,
                                             },
                                           );
                                         },
@@ -222,7 +216,7 @@ class RecentProjectsCard extends StatelessWidget {
                 Text(
                   project?.description ?? 'N/A',
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.6),
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -359,7 +353,6 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
     );
   }
 
-  ///show snackbar
   void _showSnackBar(String message) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(
