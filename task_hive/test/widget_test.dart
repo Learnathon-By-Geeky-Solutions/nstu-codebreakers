@@ -7,10 +7,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:task_hive/core/di/di.dart';
 
 import 'package:task_hive/task_hive.dart';
 
 void main() {
+  setUpAll(() {
+    setupLocator(); // Register GetIt dependencies for the test
+  });
+
+  tearDownAll(() {
+    getIt.reset(); // Clean up GetIt after tests
+  });
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
