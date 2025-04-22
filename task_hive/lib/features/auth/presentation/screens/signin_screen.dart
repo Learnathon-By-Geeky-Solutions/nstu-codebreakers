@@ -48,12 +48,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme
-        .of(context)
-        .colorScheme;
-    final textTheme = Theme
-        .of(context)
-        .textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       body: _buildBody(textTheme, colorScheme),
     );
@@ -71,8 +67,10 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _bodyElements(TextTheme textTheme,
-      ColorScheme colorScheme,) {
+  Widget _bodyElements(
+    TextTheme textTheme,
+    ColorScheme colorScheme,
+  ) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -85,7 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
         Text(
           'Task Management  App',
           style: textTheme.textBaseMedium.copyWith(
-            color: colorScheme.tertiary.withValues(alpha: 0.4),
+            color: colorScheme.tertiary,
           ),
         ),
         const SizedBox(height: 60),
@@ -95,18 +93,14 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         const SizedBox(height: 30),
         EmailField(
-          screenSize: MediaQuery
-              .sizeOf(context)
-              .width,
+          screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Email',
           controller: _emailCtrl,
           emailCubit: _emailValidationCubit,
         ),
         const SizedBox(height: 20),
         PasswordField(
-          screenSize: MediaQuery
-              .sizeOf(context)
-              .width,
+          screenSize: MediaQuery.sizeOf(context).width,
           hintText: 'Password',
           controller: _passCtrl,
           passCubit: _passValidationCubit,
@@ -119,7 +113,7 @@ class _SignInScreenState extends State<SignInScreen> {
               child: Text(
                 "Forgot Password?",
                 style: textTheme.textXsRegular.copyWith(
-                  color: colorScheme.primary.withValues(alpha: 0.8),
+                  color: colorScheme.primary,
                 ),
               ),
               onTap: () {
@@ -136,28 +130,26 @@ class _SignInScreenState extends State<SignInScreen> {
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        GoogleSignInSignUpBtn(textTheme: textTheme, placeholderText: "Sign in with Google"),
+        GoogleSignInSignUpBtn(
+            textTheme: textTheme,
+            onPressed: () {},
+            placeholderText: 'Sign in with Google'),
         const SizedBox(height: 20),
         _redirectSignUp(colorScheme),
       ],
     );
   }
 
-
   Widget _redirectSignUp(ColorScheme colorScheme) {
     return InkWell(
       child: RichText(
         text: TextSpan(
           text: "Don't have an account? ",
-          style: Theme
-              .of(context)
-              .textTheme
-              .bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
           children: [
             TextSpan(
               text: 'Sign up!',
-              style: Theme
-                  .of(context)
+              style: Theme.of(context)
                   .textTheme
                   .bodyMedium
                   ?.copyWith(color: colorScheme.primary),
@@ -209,10 +201,7 @@ class _SignInScreenState extends State<SignInScreen> {
         backgroundColor: color,
         content: Text(
           msg,
-          style: Theme
-              .of(context)
-              .textTheme
-              .textSmRegular,
+          style: Theme.of(context).textTheme.textSmRegular,
         ),
       ),
     );

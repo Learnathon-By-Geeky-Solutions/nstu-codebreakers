@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.task_hive"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

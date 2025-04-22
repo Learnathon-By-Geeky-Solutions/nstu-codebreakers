@@ -8,15 +8,14 @@ class UpcomingDeliveryCard extends StatelessWidget {
   final List<String> assignees;
   final String priority;
 
-  const UpcomingDeliveryCard({
-    super.key,
-    this.taskName = 'Untitled Task',
-    this.timeRange = '9:00 AM - 5:00 PM',
-    this.dueDate = 'N/A',
-    this.progressPercentage = 0,
-    this.assignees = const [],
-    this.priority = 'High'
-  });
+  const UpcomingDeliveryCard(
+      {super.key,
+      this.taskName = 'Untitled Task',
+      this.timeRange = '9:00 AM - 5:00 PM',
+      this.dueDate = 'N/A',
+      this.progressPercentage = 0,
+      this.assignees = const [],
+      this.priority = 'High'});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +25,13 @@ class UpcomingDeliveryCard extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 350),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color:  getBgColorFromPriority(priority),
+        color: getBgColorFromPriority(priority),
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
+            color: Colors.black,
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -47,8 +46,8 @@ class UpcomingDeliveryCard extends StatelessWidget {
               // High priority tag
               Container(
                 padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
                   color: getPriorityColor(priority),
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -135,7 +134,6 @@ class UpcomingDeliveryCard extends StatelessWidget {
           ),
         ],
       ),
-
     );
   }
 }
