@@ -90,9 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 10),
         Text(
           'Task Management App',
-          style: textTheme.textBaseMedium.copyWith(
-            color: colorScheme.tertiary.withValues(alpha: 0.4),
-          ),
+          style: textTheme.textBaseMedium.copyWith(color: colorScheme.tertiary),
         ),
         const SizedBox(height: 60),
         Text(
@@ -135,7 +133,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        GoogleSignInSignUpBtn(textTheme: textTheme, placeholderText: 'Sign Up with Google'),
+        GoogleSignInSignUpBtn(
+            textTheme: textTheme,
+            onPressed: () {},
+            placeholderText: 'Sign Up with Google'),
         const SizedBox(height: 20),
         _redirectSignIn(textTheme, colorScheme),
         const SizedBox(height: 20),
@@ -170,7 +171,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-
 
   Widget _redirectSignIn(TextTheme textTheme, ColorScheme colorScheme) {
     return InkWell(

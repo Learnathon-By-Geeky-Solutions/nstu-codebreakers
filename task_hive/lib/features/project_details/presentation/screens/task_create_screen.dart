@@ -1,10 +1,17 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
+import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
 
+import '../../../../core/di/di.dart';
 import '../../domain/entity/assignee_entity.dart';
+import '../../domain/entity/sub_task_entity.dart';
+import '../cubits/create_task/create_task_cubit.dart';
+import '../cubits/create_task/create_task_state.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   final Map<String, dynamic> keyData;
@@ -19,19 +26,22 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final _subtaskController = TextEditingController();
   late final int projectId;
   late final int userId;
+  final _createTaskCubit = getIt<CreateTaskCubit>();
+
+  String _selectedProject = 'Task Hive';
   String _status = 'To Do';
   String _summary = '';
   String _description = '';
   String? _selectedLabel;
   String? _selectedPriority;
   Assignee? _selectedMember;
-  // bool _assignToMe = false;
   final List<File> _attachments = [];
   final List<SubTask> _subtasks = [];
   final List<Assignee> _projectMembers =
       ['John Doe', 'Jane Smith', 'Alex Johnson', 'Taylor Swift']
           .map((name) => Assignee(
                 name: name,
+                id: 0,
               ))
           .toList();
   final List<Assignee> _assignedMembers = [];
@@ -43,6 +53,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   void initState() {
     projectId = widget.keyData['project_id'] ?? 0;
     userId = widget.keyData['user_id'] ?? 0;
+    print('dbg user id $userId');
     super.initState();
   }
 
@@ -184,6 +195,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   @override
   void dispose() {
     _subtaskController.dispose();
+    _createTaskCubit.close();
     super.dispose();
   }
 
@@ -498,8 +510,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          // _assignToMe = true;
-                          _selectedMember = Assignee(name: 'Me');
+                          _selectedMember = Assignee(name: 'Me', id: userId);
                         });
                       },
                       child: const Text('Assign To Me',
@@ -643,23 +654,52 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        ///todo: Process data and submit form
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Task created successfully')),
-                        );
+                        _createTaskCubit.createTask(TaskEntity(
+                          projectId: projectId,
+                          userId: userId,
+                          status: _status,
+                          title: _summary,
+                          description: _description,
+                          subTasks: _subtasks
+                              .map((subtask) => subtask.title)
+                              .toList(),
+                          dueDate: _dueDate,
+                          createdAt: _startDate,
+                          priority: _selectedPriority,
+                          label: _selectedLabel,
+                          createdBy: userId,
+                          assigneeIds:
+                              _assignedMembers.map((e) => e.id).toList(),
+                          attachments: _attachments,
+                        ));
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: Text(
-                      'Create Task',
-                      style: textTheme.labelLarge?.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                      bloc: _createTaskCubit,
+                      builder: (context, state) {
+                        if (state is CreateTaskLoadingState) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (state is CreateTaskErrorState) {
+                          _showSnackbar(context, state.failure.message);
+                        }
+                        if (state is CreateTaskSuccessState) {
+                          _showSnackbar(context, state.success.message);
+                          //TODO: Handle success state
+                          //TODO: Navigate to Task Details page
+                        }
+                        return Text(
+                          'Create Task',
+                          style: textTheme.labelLarge?.copyWith(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -669,6 +709,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         ),
       ),
     );
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+        ),
+      );
+    });
   }
 
   IconData _getFileIcon(String filePath) {
@@ -858,9 +908,3 @@ class _FieldLabel extends StatelessWidget {
 }
 
 // Model class for subtasks
-class SubTask {
-  String title;
-  bool isCompleted;
-
-  SubTask({required this.title, this.isCompleted = false});
-}

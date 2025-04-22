@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'assignee_entity.dart';
-
 class TaskEntity {
   int? projectId;
+  int? userId;
   String? status;
   String? title;
   String? description;
@@ -11,13 +10,14 @@ class TaskEntity {
   DateTime? dueDate;
   String? priority;
   String? label;
-  String? createdBy;
+  int? createdBy;
   List<int>? assigneeIds;
   List<File>? attachments;
   DateTime? createdAt, updatedAt;
 
   TaskEntity({
     this.projectId,
+    this.userId,
     this.status,
     this.title,
     this.description,
@@ -55,6 +55,7 @@ class TaskEntity {
       'updated_at': updatedAt?.toIso8601String(),
       'created_at': createdAt?.toIso8601String(),
       'project_id': projectId,
+      'label': label,
     };
   }
 }
