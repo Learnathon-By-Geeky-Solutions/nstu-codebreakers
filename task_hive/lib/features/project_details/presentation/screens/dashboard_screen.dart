@@ -82,6 +82,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
             ),
             onPressed: () {
+              print('dbg in project details page ${widget.keyData} ::');
               context.go(
                   "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
                   extra: {

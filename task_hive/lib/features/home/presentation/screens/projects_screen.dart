@@ -142,7 +142,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                             '${MyRoutes.home}/${MyRoutes.projectDetails}',
                                             extra: {
                                               'project_id': project?.id ?? 0,
-                                              'user_name': userData?.name ?? 0,
+                                              'user_name':
+                                                  userData?.name ?? 'N/A',
+                                              'user_id': userData?.userId ?? 0,
                                             },
                                           );
                                         },
@@ -216,7 +218,7 @@ class RecentProjectsCard extends StatelessWidget {
                 Text(
                   project?.description ?? 'N/A',
                   style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    color: colorScheme.onSurface.withOpacity(0.6),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
