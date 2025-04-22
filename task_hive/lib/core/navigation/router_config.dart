@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/features/auth/presentation/screens/forget_pass_screen.dart';
-import 'package:task_hive/features/auth/presentation/screens/sign_up_screen.dart';
-import 'package:task_hive/features/auth/presentation/screens/signin_screen.dart';
-import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_1.dart';
-import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_2.dart';
-import 'package:task_hive/features/profile/presentation/screens/profile_screen.dart';
-import 'package:task_hive/features/project_details/presentation/screens/task_create_screen.dart';
-import 'package:task_hive/features/task_details/presentation/TaskDetailsScreen.dart';
+
+import '../../features/auth/presentation/screens/forget_pass_screen.dart';
+import '../../features/auth/presentation/screens/sign_up_screen.dart';
+import '../../features/auth/presentation/screens/signin_screen.dart';
 import '../../features/home/presentation/screens/projects_screen.dart';
+import '../../features/onboarding/presentation/screens/onboard_screen_1.dart';
+import '../../features/onboarding/presentation/screens/onboard_screen_2.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/project_details/presentation/screens/task_create_screen.dart';
+import '../../features/task_details/presentation/TaskDetailsScreen.dart';
 import '../../features/project_details/presentation/screens/dashboard_screen.dart';
 import '../../features/onboarding/presentation/screens/onboard_screen_3.dart';
 import 'error_page.dart';
@@ -49,29 +50,36 @@ class MyRouterConfig {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                  path: MyRoutes.home,
-                  builder: (context, state) {
-                    // return AuthWrapper();
-                    return const ProjectsScreen();
-                  },
-                  routes: [
-                    GoRoute(
-                        path: MyRoutes.projectDetails,
+                path: MyRoutes.home,
+                builder: (context, state) {
+                  return const ProjectsScreen();
+                },
+                routes: [
+                  GoRoute(
+                    path: MyRoutes.projectDetails,
+                    builder: (context, state) {
+                      final keyData = state.extra as Map<String, dynamic>;
+                      return ProjectDetailsScreen(keyData: keyData);
+                    },
+                    routes: [
+                      GoRoute(
+                        path: MyRoutes.createTask,
                         builder: (context, state) {
                           final keyData = state.extra as Map<String, dynamic>;
-                          return ProjectDetailsScreen(keyData: keyData);
+                          return CreateTaskScreen(keyData: keyData);
                         },
                         routes: [
                           GoRoute(
-                            path: MyRoutes.createTask,
-                            builder: (context, state) {
-                              final keyData =
-                                  state.extra as Map<String, dynamic>;
-                              return CreateTaskScreen(keyData: keyData);
-                            },
+                            path: MyRoutes.taskDetails,
+                            builder: (context, state) =>
+                                const TaskDetailsPage(),
                           ),
-                        ]),
-                  ]),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
           StatefulShellBranch(
@@ -123,10 +131,6 @@ class MyRouterConfig {
       GoRoute(
         path: MyRoutes.forgotPassword,
         builder: (context, state) => const ForgetPasswordScreen(),
-      ),
-      GoRoute(
-        path: MyRoutes.taskDetails,
-        builder: (context, state) => const TaskDetailsPage(),
       ),
     ],
   );
