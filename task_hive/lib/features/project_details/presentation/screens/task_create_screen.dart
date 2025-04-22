@@ -2,9 +2,11 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
+import 'package:task_hive/core/navigation/dummy_pages/dummy_page_2.dart';
+import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
 
 import '../../../../core/di/di.dart';
@@ -53,7 +55,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   void initState() {
     projectId = widget.keyData['project_id'] ?? 0;
     userId = widget.keyData['user_id'] ?? 0;
-    print('dbg user id $userId');
     super.initState();
   }
 
@@ -687,6 +688,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           _showSnackbar(context, state.failure.message);
                         }
                         if (state is CreateTaskSuccessState) {
+                          _navigateTaskDetails(context);
                           _showSnackbar(context, state.success.message);
                           //TODO: Handle success state
                           //TODO: Navigate to Task Details page
@@ -709,6 +711,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         ),
       ),
     );
+  }
+
+  void _navigateTaskDetails(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.go(
+        "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}/${MyRoutes.taskDetails}",
+      );
+    });
   }
 
   void _showSnackbar(BuildContext context, String message) {
