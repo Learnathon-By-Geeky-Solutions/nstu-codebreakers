@@ -21,10 +21,18 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
-
-      - run: flutter build apk --release --split-per-abi
+            
+      - name: Install dependencies
+        run: flutter pub get
+        working-directory: ./task_hive
+        
+      - name: Build Android APK
+        run: flutter build apk --release --split-per-abi
+        working-directory: ./task_hive
+        
       - run: |
-          flutter build ios --no-codesign
+          flutter build ios --release --no-codesign
+          working-directory: ./task_hive
           cd build/ios/iphoneos
           mkdir Payload
           cd Payload
