@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:task_hive/core/navigation/dummy_pages/dummy_page_1.dart';
 
 import '../../features/auth/presentation/screens/forget_pass_screen.dart';
 import '../../features/auth/presentation/screens/sign_up_screen.dart';
@@ -71,8 +72,7 @@ class MyRouterConfig {
                         routes: [
                           GoRoute(
                             path: MyRoutes.taskDetails,
-                            builder: (context, state) =>
-                                const TaskDetailsPage(),
+                            builder: (context, state) => const DummyPage1(),
                           ),
                         ],
                       ),
