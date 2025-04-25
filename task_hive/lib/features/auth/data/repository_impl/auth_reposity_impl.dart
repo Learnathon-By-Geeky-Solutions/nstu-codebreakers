@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:task_hive/features/auth/data/data_source/local/auth_local.dart';
-
 import '../../../../core/io/failure.dart';
 import '../../../../core/io/success.dart';
 import '../data_source/remote/auth_remote.dart';
@@ -42,9 +42,7 @@ class AuthReposityImpl implements AuthRepository {
   Future<Either<Success, Failure>> signUp(UserEntity userInfo) async {
     try {
       await _authRemoteDataSource.signUp(userInfo);
-
       await _authRemoteDataSource.addUser(userInfo);
-
       return Left(Success('Verification email is sent.'));
     } catch (e) {
       return Right(Failure(e.toString()));
@@ -54,5 +52,34 @@ class AuthReposityImpl implements AuthRepository {
   @override
   Future<Either<UserEntity, Failure>> verifyOtp() async {
     return Right(Failure('verifyOtp() not yet implemented'));
+  }
+
+  @override
+  Future<Either<Success, Failure>> signInWithGoogle() async {
+    try {
+      final response = await _authRemoteDataSource.signInWithGoogle();
+      if (response.user == null) {
+        return Right(Failure('User not found'));
+      }
+      if (kDebugMode) {
+        print('User data: ${response.user?.userMetadata}');
+      }
+      await _authRemoteDataSource.addUser(
+        UserEntity(
+          id: int.tryParse(response.user!.id.toString()) ?? 0,
+          email: response.user!.email ?? '',
+          name: response.user!.userMetadata?['full_name']?.toString() ?? 'Unknown',
+          profilePictureUrl: response.user!.userMetadata?['picture']?.toString() ?? '',
+        ),
+      );
+      final userData = await _authRemoteDataSource.getUser(response.user!.email ?? '');
+      await _authLocalDataSource.saveUser(userData);
+      return Left(Success('User successfully signed in with Google'));
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error signing in with Google: $e');
+      }
+      return Right(Failure(e.toString()));
+    }
   }
 }

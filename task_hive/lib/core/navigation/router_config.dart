@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/core/navigation/dummy_pages/dummy_page_1.dart';
-import 'package:task_hive/core/navigation/dummy_pages/dummy_page_2.dart';
 import 'package:task_hive/features/auth/presentation/screens/forget_pass_screen.dart';
 import 'package:task_hive/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:task_hive/features/auth/presentation/screens/signin_screen.dart';
-import 'package:task_hive/features/home/domain/entities/home_user_entity.dart';
-import 'package:task_hive/features/home/presentation/screens/home_screen.dart';
-import 'package:task_hive/features/home/presentation/screens/projects_screen.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_1.dart';
 import 'package:task_hive/features/onboarding/presentation/screens/onboard_screen_2.dart';
 import 'package:task_hive/features/profile/presentation/screens/profile_screen.dart';
 import 'package:task_hive/features/project_details/presentation/screens/task_create_screen.dart';
-
-import '../../features/auth/domain/entity/user_entity.dart';
-import '../../features/home/domain/entities/project_entity.dart';
+import '../../features/home/presentation/screens/projects_screen.dart';
 import '../../features/project_details/presentation/screens/dashboard_screen.dart';
 import '../../features/onboarding/presentation/screens/onboard_screen_3.dart';
 import 'error_page.dart';
@@ -55,6 +48,7 @@ class MyRouterConfig {
               GoRoute(
                   path: MyRoutes.home,
                   builder: (context, state) {
+                    // return AuthWrapper();
                     return const ProjectsScreen();
                   },
                   routes: [

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/core/services/auth_service/auth_service.dart';
 import 'package:task_hive/features/auth/domain/entity/user_entity.dart';
 
 import '../../../../core/di/di.dart';
+import '../../../../core/services/local/shared_preference_services.dart';
 
 class ProfileScreen extends StatefulWidget {
   final UserEntity? userData;
@@ -15,8 +17,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   Future<void> _logout() async {
     await getIt<AuthService>().getAuthClient().signOut();
+
+    // Sign out from Google (if user signed in with Google)
+    if (await _googleSignIn.isSignedIn()) {
+      await _googleSignIn.signOut();
+    }
+
     if (mounted) {
       context.go(MyRoutes.signInRoute);
     }

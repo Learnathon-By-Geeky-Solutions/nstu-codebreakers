@@ -24,6 +24,7 @@ import 'package:task_hive/features/project_details/presentation/cubits/create_ta
 
 import '../../features/auth/data/data_source/local/auth_local_imp.dart';
 import '../../features/auth/data/repository_impl/auth_reposity_impl.dart';
+import '../../features/auth/presentation/cubits/auth/sign_in/google_sign_in_cubit.dart';
 import '../../features/auth/presentation/cubits/auth/sign_in/sign_in_cubit.dart';
 import '../../features/home/data/data_source/local/home_local_impl.dart';
 import '../../features/home/data/repository_imp/home_repo_imp.dart';
@@ -58,6 +59,8 @@ void setupLocator() {
   getIt.registerFactory(() => OnboardingCubit(getIt.call()));
   getIt.registerFactory<SignUpCubit>(() => SignUpCubit(getIt.call()));
   getIt.registerFactory<SignInCubit>(() => SignInCubit(getIt.call()));
+  getIt.registerFactory<GoogleSignInCubit>(
+      () => GoogleSignInCubit(getIt.call()));
   getIt.registerFactory<ForgetPasswordCubit>(
       () => ForgetPasswordCubit(getIt.call()));
   getIt.registerCachedFactory<FetchProjectsCubit>(
@@ -74,6 +77,8 @@ void setupLocator() {
       () => OnboardingUseCase(getIt.call()));
   getIt.registerLazySingleton<SignUpUseCase>(() => SignUpUseCase(getIt.call()));
   getIt.registerLazySingleton<SignInUseCase>(() => SignInUseCase(getIt.call()));
+  getIt.registerLazySingleton<GoogleSignInUseCase>(
+      () => GoogleSignInUseCase(getIt.call()));
   getIt.registerLazySingleton<ForgetPasswordUseCase>(
       () => ForgetPasswordUseCase(getIt.call()));
   getIt.registerLazySingleton<FetchProjectsUseCase>(
