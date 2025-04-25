@@ -26,6 +26,16 @@ class SignInUseCase extends BaseUseCase<UserEntity, Success, Failure> {
   }
 }
 
+class GoogleSignInUseCase extends BaseUseCase<void, Success, Failure> {
+  final AuthRepository _authRepository;
+  GoogleSignInUseCase(this._authRepository);
+
+  @override
+  Future<Either<Success, Failure>> call(void input) async {
+    return await _authRepository.signInWithGoogle();
+  }
+}
+
 class ForgetPasswordUseCase extends BaseUseCase<String, Success, Failure> {
   final AuthRepository _authRepository;
   ForgetPasswordUseCase(this._authRepository);
