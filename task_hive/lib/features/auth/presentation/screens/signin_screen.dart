@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/features/auth/presentation/widgets/google_sign_in.dart';
-
 import '../cubits/auth/sign_in/sign_in_cubit.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/app_extension.dart';
@@ -49,8 +48,12 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme
+        .of(context)
+        .colorScheme;
+    final textTheme = Theme
+        .of(context)
+        .textTheme;
     return Scaffold(
       body: _buildBody(textTheme, colorScheme),
     );
@@ -68,10 +71,8 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _bodyElements(
-    TextTheme textTheme,
-    ColorScheme colorScheme,
-  ) {
+  Widget _bodyElements(TextTheme textTheme,
+      ColorScheme colorScheme,) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -94,14 +95,18 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         const SizedBox(height: 30),
         EmailField(
-          screenSize: MediaQuery.sizeOf(context).width,
+          screenSize: MediaQuery
+              .sizeOf(context)
+              .width,
           hintText: 'Email',
           controller: _emailCtrl,
           emailCubit: _emailValidationCubit,
         ),
         const SizedBox(height: 20),
         PasswordField(
-          screenSize: MediaQuery.sizeOf(context).width,
+          screenSize: MediaQuery
+              .sizeOf(context)
+              .width,
           hintText: 'Password',
           controller: _passCtrl,
           passCubit: _passValidationCubit,
@@ -131,23 +136,28 @@ class _SignInScreenState extends State<SignInScreen> {
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        GoogleSignInSignUpBtn(textTheme: textTheme, onPressed: (){}, placeholderText: 'Sign in with Google'),
+        GoogleSignInSignUpBtn(textTheme: textTheme, placeholderText: "Sign in with Google"),
         const SizedBox(height: 20),
         _redirectSignUp(colorScheme),
       ],
     );
   }
 
+
   Widget _redirectSignUp(ColorScheme colorScheme) {
     return InkWell(
       child: RichText(
         text: TextSpan(
           text: "Don't have an account? ",
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme
+              .of(context)
+              .textTheme
+              .bodyMedium,
           children: [
             TextSpan(
               text: 'Sign up!',
-              style: Theme.of(context)
+              style: Theme
+                  .of(context)
                   .textTheme
                   .bodyMedium
                   ?.copyWith(color: colorScheme.primary),
@@ -170,14 +180,14 @@ class _SignInScreenState extends State<SignInScreen> {
         bloc: _signInCubit,
         listener: (context, state) {
           if (state is SignInSuccess) {
-            _showMessage(
+            showMessage(
               context,
               state.success.message,
               colorTheme.primary,
             );
             context.go(MyRoutes.home);
           } else if (state is SignInFailed) {
-            _showMessage(context, state.failure.message, colorTheme.error);
+            showMessage(context, state.failure.message, colorTheme.error);
           }
         },
         builder: (context, state) {
@@ -193,13 +203,16 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _showMessage(BuildContext context, String msg, Color color) {
+  void showMessage(BuildContext context, String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: color,
         content: Text(
           msg,
-          style: Theme.of(context).textTheme.textSmRegular,
+          style: Theme
+              .of(context)
+              .textTheme
+              .textSmRegular,
         ),
       ),
     );

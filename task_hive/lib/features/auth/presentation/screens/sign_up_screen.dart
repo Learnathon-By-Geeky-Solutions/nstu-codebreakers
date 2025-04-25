@@ -135,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: textTheme.textSmRegular,
         ),
         const SizedBox(height: 20),
-        GoogleSignInSignUpBtn(textTheme: textTheme, onPressed: (){}, placeholderText: 'Sign Up with Google'),
+        GoogleSignInSignUpBtn(textTheme: textTheme, placeholderText: 'Sign Up with Google'),
         const SizedBox(height: 20),
         _redirectSignIn(textTheme, colorScheme),
         const SizedBox(height: 20),
