@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:task_hive/core/di/di.dart';
+import 'package:task_hive/features/project_details/domain/entity/assignee_entity.dart';
+
+import '../../../../core/base/app_data/app_data.dart';
+import '../../domain/entity/sub_task_entity.dart';
+import '../cubits/fetch_task/fetch_task_cubit.dart';
 
 class TaskDetailsPage extends StatefulWidget {
   const TaskDetailsPage({super.key});
@@ -17,6 +24,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   String description =
       "user interface (UI) is anything a user may interact with to use a digital product or service. This includes everything from screens and touchscreens, keyboards, sounds, and even lights. To understand the evolution of UI, however, it's helpful to learn a bit more about its history and how it has evolved into best practices and a profession.";
   String assignee = "Tahsin";
+  List<AssigneeEntity> assignees = [];
 
   List<SubTask> subtasks = [
     SubTask(title: "UI Design", isCompleted: true),
@@ -32,11 +40,19 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   ];
 
   TextEditingController newSubtaskController = TextEditingController();
+  final _appData = getIt<AppData>();
+  final _fetchTaskCubit = getIt<FetchTaskCubit>();
 
   @override
   void dispose() {
     newSubtaskController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    _fetchTaskCubit.fetchTask(_appData.currentTaskId ?? 0);
+    super.initState();
   }
 
   @override
@@ -46,20 +62,48 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildAppBar(colorScheme, textTheme),
-              _buildProgressSection(colorScheme, textTheme),
-              _buildDateSection(colorScheme, textTheme),
-              _buildTitleSection(colorScheme, textTheme),
-              _buildLabelSection(colorScheme, textTheme),
-              _buildDescriptionSection(colorScheme, textTheme),
-              _buildSubtasksSection(colorScheme, textTheme),
-              _buildAssigneeSection(colorScheme, textTheme),
-              _buildAttachmentsSection(colorScheme, textTheme),
-              const SizedBox(height: 20),
-            ],
+          child: BlocConsumer<FetchTaskCubit, FetchTaskState>(
+            bloc: _fetchTaskCubit,
+            listener: (context, state) {
+              if (state is FetchTaskSuccessState) {
+                setState(() {
+                  taskTitle = state.task.title ?? 'N/A';
+                  priority = state.task.priority ?? 'N/A';
+                  description = state.task.description ?? 'N/A';
+                  startDate = state.task.createdAt ?? DateTime.now();
+                  endDate = state.task.dueDate ?? DateTime.now();
+                  progressValue = _getProgressValue(state.task.subTasks ?? []);
+                  subtasks = (state.task.subTasks ?? []);
+                  assignees = (state.task.assignees ?? []);
+                });
+              }
+              if (state is FetchTaskErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.failure.message)),
+                );
+              }
+            },
+            builder: (context, state) {
+              if (state is FetchTaskLoadingState) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              print('dbg: subtasks: ${subtasks.length}');
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildAppBar(colorScheme, textTheme),
+                  _buildProgressSection(colorScheme, textTheme),
+                  _buildDateSection(colorScheme, textTheme),
+                  _buildTitleSection(colorScheme, textTheme),
+                  _buildLabelSection(colorScheme, textTheme),
+                  _buildDescriptionSection(colorScheme, textTheme),
+                  _buildSubtasksSection(colorScheme, textTheme),
+                  _buildAssigneeSection(colorScheme, textTheme),
+                  _buildAttachmentsSection(colorScheme, textTheme),
+                  const SizedBox(height: 20),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -94,7 +138,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                 color: colorScheme.onPrimaryContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child:  Icon(Icons.arrow_back_ios_new,
+              child: Icon(Icons.arrow_back_ios_new,
                   color: colorScheme.primary, size: 16),
             ),
           ),
@@ -103,7 +147,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("UI Design",
+                Text(taskTitle,
                     style: textTheme.headlineMedium?.copyWith(
                       color: colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
@@ -162,8 +206,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                 Row(children: [
                   Expanded(child: _buildLabel("Start", colorScheme, textTheme)),
                   _buildEditIcon(colorScheme, () => _selectDate(true)),
-                ]
-                ),
+                ]),
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: () => _selectDate(true),
@@ -199,8 +242,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                 Row(children: [
                   Expanded(child: _buildLabel("Ends", colorScheme, textTheme)),
                   _buildEditIcon(colorScheme, () => _selectDate(false)),
-                ]
-                ),
+                ]),
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: () => _selectDate(false),
@@ -244,12 +286,17 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               _buildLabel("Title", colorScheme, textTheme),
               GestureDetector(
                 onTap: () => _editTitle(),
-                child: _buildEditIcon(colorScheme, ()=> _editTitle()),
+                child: _buildEditIcon(colorScheme, () => _editTitle()),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          _buildCustomContainer(text: taskTitle, colorScheme: colorScheme, textTheme: textTheme,isBorderEnabled: true,),
+          _buildCustomContainer(
+            text: taskTitle,
+            colorScheme: colorScheme,
+            textTheme: textTheme,
+            isBorderEnabled: true,
+          ),
           // Container(
           //   padding: const EdgeInsets.all(12),
           //   decoration: BoxDecoration(
@@ -324,7 +371,11 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             ],
           ),
           const SizedBox(height: 8),
-          _buildCustomContainer(text: description, colorScheme: colorScheme, textTheme: textTheme,bgColor: colorScheme.primary.withOpacity(0.1)),
+          _buildCustomContainer(
+              text: description,
+              colorScheme: colorScheme,
+              textTheme: textTheme,
+              bgColor: colorScheme.primary.withOpacity(0.1)),
         ],
       ),
     );
@@ -414,7 +465,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: colorScheme.primary.withOpacity(0.1)),
+                  borderSide:
+                      BorderSide(color: colorScheme.primary.withOpacity(0.1)),
                 ),
                 filled: true,
                 suffixIcon: IconButton(
@@ -434,7 +486,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   },
                 ),
                 fillColor: colorScheme.primary.withOpacity(0.1),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               ),
             ),
           ],
@@ -442,8 +495,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       ),
     );
   }
-
-
 
   Widget _buildAssigneeSection(ColorScheme colorScheme, TextTheme textTheme) {
     return Padding(
@@ -462,7 +513,11 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             ],
           ),
           const SizedBox(height: 8),
-          _buildCustomContainer(text: assignee, colorScheme: colorScheme, textTheme: textTheme,isBorderEnabled: true),
+          _buildCustomContainer(
+              text: assignee,
+              colorScheme: colorScheme,
+              textTheme: textTheme,
+              isBorderEnabled: true),
         ],
       ),
     );
@@ -522,13 +577,16 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),
-        border: isBorderEnabled
-            ? Border.all(color: colorScheme.primary)
-            : null,
+        border: isBorderEnabled ? Border.all(color: colorScheme.primary) : null,
       ),
       child: Row(
         children: [
-          Expanded(child: Text(text,style: TextStyle(color:colorScheme.onSecondaryContainer),),),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(color: colorScheme.onSecondaryContainer),
+            ),
+          ),
         ],
       ),
     );
@@ -542,7 +600,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
         ));
   }
 
-  Widget _buildEditIcon(ColorScheme colorScheme,onEdit) {
+  Widget _buildEditIcon(ColorScheme colorScheme, onEdit) {
     return GestureDetector(
       onTap: () {
         onEdit();
@@ -698,12 +756,14 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       progressValue = completed / subtasks.length;
     });
   }
-}
 
-class SubTask {
-  String title;
-  bool isCompleted;
-  SubTask({required this.title, required this.isCompleted});
+  double _getProgressValue(List<SubTask> list) {
+    if (list.isEmpty) {
+      return 0.0;
+    }
+    int completed = list.where((task) => task.isCompleted).length;
+    return completed / list.length;
+  }
 }
 
 class Attachment {

@@ -9,6 +9,7 @@ import 'package:task_hive/core/navigation/dummy_pages/dummy_page_2.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
 
+import '../../../../core/base/app_data/app_data.dart';
 import '../../../../core/di/di.dart';
 import '../../domain/entity/assignee_entity.dart';
 import '../../domain/entity/sub_task_entity.dart';
@@ -16,8 +17,9 @@ import '../cubits/create_task/create_task_cubit.dart';
 import '../cubits/create_task/create_task_state.dart';
 
 class CreateTaskScreen extends StatefulWidget {
-  final Map<String, dynamic> keyData;
-  const CreateTaskScreen({super.key, required this.keyData});
+  // final Map<String, dynamic> keyData;
+  // const CreateTaskScreen({super.key, required this.keyData});
+  const CreateTaskScreen({super.key});
 
   @override
   _CreateTaskScreenState createState() => _CreateTaskScreenState();
@@ -29,6 +31,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   late final int projectId;
   late final int userId;
   final _createTaskCubit = getIt<CreateTaskCubit>();
+  final _appData = getIt<AppData>();
 
   String _selectedProject = 'Task Hive';
   String _status = 'To Do';
@@ -36,25 +39,29 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   String _description = '';
   String? _selectedLabel;
   String? _selectedPriority;
-  Assignee? _selectedMember;
+  AssigneeEntity? _selectedMember;
   final List<File> _attachments = [];
   final List<SubTask> _subtasks = [];
-  final List<Assignee> _projectMembers =
-      ['John Doe', 'Jane Smith', 'Alex Johnson', 'Taylor Swift']
-          .map((name) => Assignee(
-                name: name,
-                id: 0,
-              ))
-          .toList();
-  final List<Assignee> _assignedMembers = [];
+  final List<AssigneeEntity> _projectMembers = [
+    AssigneeEntity(name: 'John Doe', id: 0),
+    AssigneeEntity(name: 'Jane Smith', id: 1),
+    AssigneeEntity(name: 'Alex Johnson', id: 2),
+    AssigneeEntity(name: 'Taylor Swift', id: 3)
+  ]
+      .map((entity) => AssigneeEntity(
+            name: entity.name,
+            id: entity.id,
+          ))
+      .toList();
+  final List<AssigneeEntity> _assignedMembers = [];
 
   DateTime? _startDate;
   DateTime? _dueDate;
 
   @override
   void initState() {
-    projectId = widget.keyData['project_id'] ?? 0;
-    userId = widget.keyData['user_id'] ?? 0;
+    projectId = _appData.currentProjectId ?? 0;
+    userId = _appData.userId ?? 0;
     super.initState();
   }
 
@@ -511,7 +518,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          _selectedMember = Assignee(name: 'Me', id: userId);
+                          _selectedMember = AssigneeEntity(
+                            name: _appData.userName,
+                            id: userId,
+                          );
                         });
                       },
                       child: const Text('Assign To Me',
@@ -661,16 +671,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           status: _status,
                           title: _summary,
                           description: _description,
-                          subTasks: _subtasks
-                              .map((subtask) => subtask.title)
-                              .toList(),
+                          subTasks:
+                              _subtasks.map((subtask) => subtask).toList(),
                           dueDate: _dueDate,
                           createdAt: _startDate,
                           priority: _selectedPriority,
                           label: _selectedLabel,
                           createdBy: userId,
-                          assigneeIds:
-                              _assignedMembers.map((e) => e.id).toList(),
+                          assignees: _assignedMembers,
                           attachments: _attachments,
                         ));
                       }
@@ -678,30 +686,33 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                    child: BlocListener<CreateTaskCubit, CreateTaskState>(
                       bloc: _createTaskCubit,
-                      builder: (context, state) {
-                        if (state is CreateTaskLoadingState) {
-                          return const CircularProgressIndicator();
-                        }
+                      listener: (context, state) {
                         if (state is CreateTaskErrorState) {
                           _showSnackbar(context, state.failure.message);
                         }
                         if (state is CreateTaskSuccessState) {
+                          _appData.currentTaskId = state.taskId;
                           _navigateTaskDetails(context);
-                          _showSnackbar(context, state.success.message);
-                          //TODO: Handle success state
-                          //TODO: Navigate to Task Details page
                         }
-                        return Text(
-                          'Create Task',
-                          style: textTheme.labelLarge?.copyWith(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        );
                       },
+                      child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                        bloc: _createTaskCubit,
+                        builder: (context, state) {
+                          if (state is CreateTaskLoadingState) {
+                            return const CircularProgressIndicator();
+                          }
+                          return Text(
+                            'Create Task',
+                            style: textTheme.labelLarge?.copyWith(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -714,11 +725,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   }
 
   void _navigateTaskDetails(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.go(
-        "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}/${MyRoutes.taskDetails}",
-      );
-    });
+    context.go(
+      "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}/${MyRoutes.taskDetails}",
+    );
   }
 
   void _showSnackbar(BuildContext context, String message) {
@@ -824,12 +833,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DropdownButtonFormField<Assignee>(
+        DropdownButtonFormField<AssigneeEntity>(
           value: _selectedMember,
           hint: const Text('Select Member'),
           isExpanded: true,
           items: _projectMembers.map((member) {
-            return DropdownMenuItem<Assignee>(
+            return DropdownMenuItem<AssigneeEntity>(
               value: member,
               child: Text(member.name ?? 'N/A'),
             );
@@ -918,3 +927,4 @@ class _FieldLabel extends StatelessWidget {
 }
 
 // Model class for subtasks
+

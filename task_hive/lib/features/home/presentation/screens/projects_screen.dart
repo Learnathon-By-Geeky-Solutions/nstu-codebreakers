@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/core/extensions/app_extension.dart';
+
+import '../../../../core/extensions/app_extension.dart';
+import '../../../../core/base/app_data/app_data.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/navigation/routes.dart';
 import '../../domain/entities/home_user_entity.dart';
@@ -24,6 +26,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   final _fetchProjectCubit = getIt.get<FetchProjectsCubit>();
   final _fetchUserCubit = getIt.get<FetchUserCubit>();
   final _createProjectCubit = getIt.get<CreateProjectCubit>();
+  final _appData = getIt.get<AppData>();
 
   @override
   void initState() {
@@ -92,6 +95,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         _fetchProjectCubit.fetchProjects(
                             userId: state.userData.userId ?? 0);
                         userData = state.userData;
+                        _appData.userEmail = state.userData.email;
+                        _appData.userName = state.userData.name;
+                        _appData.userId = state.userData.userId;
                         return const SizedBox.shrink();
                       } else if (state is FetchUserFailed) {
                         return Text('Error: ${state.error}');
@@ -127,6 +133,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                   child: Text('No projects found'),
                                 );
                               }
+
                               return ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -138,14 +145,10 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                         vertical: 8.0),
                                     child: GestureDetector(
                                         onTap: () {
+                                          _appData.currentProjectId =
+                                              project?.id ?? 0;
                                           context.go(
                                             '${MyRoutes.home}/${MyRoutes.projectDetails}',
-                                            extra: {
-                                              'project_id': project?.id ?? 0,
-                                              'user_name':
-                                                  userData?.name ?? 'N/A',
-                                              'user_id': userData?.userId ?? 0,
-                                            },
                                           );
                                         },
                                         child: RecentProjectsCard(

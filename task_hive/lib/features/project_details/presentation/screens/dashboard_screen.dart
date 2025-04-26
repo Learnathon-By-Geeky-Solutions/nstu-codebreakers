@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:task_hive/core/di/di.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
 import 'package:task_hive/features/home/presentation/widgets/priority_task_card.dart';
 import 'package:task_hive/features/home/presentation/widgets/upcoming_delivery_card.dart';
 
+import '../../../../core/base/app_data/app_data.dart';
 import '../../../../core/navigation/routes.dart';
 import '../../../home/domain/entity/project_info.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
-  final Map<String, dynamic> keyData;
-  const ProjectDetailsScreen({super.key, required this.keyData});
+  // final Map<String, dynamic> keyData;
+  // const ProjectDetailsScreen({super.key, required this.keyData});
+  const ProjectDetailsScreen({super.key});
 
   @override
   State<ProjectDetailsScreen> createState() => _ProjectDetailsScreenState();
@@ -19,6 +22,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   // int _selectedIndex = 0;
   late final String userName;
   late final int projectId;
+  final _appData = getIt<AppData>();
   // Sample delivery task data
   final List<ProjectData> _deliveryTasks = [
     ProjectData(
@@ -51,8 +55,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    userName = widget.keyData['user_name'] ?? 'No name';
-    projectId = widget.keyData['project_id'] ?? 0;
+    userName = _appData.userName ?? 'No name';
+    projectId = _appData.currentProjectId ?? 0;
   }
 
   // void _onItemTapped(int index) {
@@ -83,11 +87,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
             ),
             onPressed: () {
               context.go(
-                  "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
-                  extra: {
-                    'project_id': widget.keyData['project_id'],
-                    'user_id': widget.keyData['user_id'],
-                  });
+                "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
+                // extra: {
+                //   'project_id': _appData.currentProjectId,
+                //   'user_id': _appData.userId,
+                // },
+              );
             },
             icon: Icon(Icons.add, color: colorScheme.surface),
           ),
