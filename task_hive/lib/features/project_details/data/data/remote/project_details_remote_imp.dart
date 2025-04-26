@@ -30,10 +30,13 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
     for (final file in files) {
       final fileName = file.path.split('/').last;
       try {
-        final response = await supabaseClient.storage
-            .from('attachments')
-            .upload(fileName, file);
-        if (response.isNotEmpty) {
+        // Check if the file already exists
+        final existingFile = await supabaseClient.storage
+            .from('attachments') // Replace with your bucket name
+            .list(path: '', searchOptions: SearchOptions(search: fileName));
+
+        if (existingFile.isNotEmpty) {
+          // If the file exists, get its public URL
           final publicUrl = supabaseClient.storage
               .from('attachments') // Replace with your bucket name
               .getPublicUrl(fileName);
@@ -41,10 +44,23 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
             {'fileName': fileName, 'url': publicUrl},
           );
         } else {
-          throw Exception('Failed to upload file');
+          // If the file does not exist, upload it
+          final response = await supabaseClient.storage
+              .from('attachments') // Replace with your bucket name
+              .upload(fileName, file);
+          if (response.isNotEmpty) {
+            final publicUrl = supabaseClient.storage
+                .from('attachments') // Replace with your bucket name
+                .getPublicUrl(fileName);
+            uploadedFiles.add(
+              {'fileName': fileName, 'url': publicUrl},
+            );
+          } else {
+            throw Exception('Failed to upload file');
+          }
         }
       } catch (e) {
-        throw Exception('Error uploading file: $e');
+        throw Exception('Error processing file: $e');
       }
     }
     return uploadedFiles;
@@ -69,5 +85,26 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
   @override
   Future<void> addAttachment(Map<String, dynamic> attachment) async {
     await supabaseClient.from('attachments').insert(attachment);
+  }
+
+  @override
+  Future<Map<String, dynamic>> fetchTask(int taskId) async {
+    final assigneesJson = await supabaseClient
+        .from('task_assignments')
+        .select()
+        .eq('task_id', taskId);
+
+    final attachmentsJson =
+        await supabaseClient.from('attachments').select().eq('task_id', taskId);
+
+    final subTasksJson =
+        await supabaseClient.from('subtasks').select().eq('task_id', taskId);
+
+    Map<String, dynamic> taskJson =
+        await supabaseClient.from('tasks').select().eq('id', taskId).single();
+    taskJson.putIfAbsent('attachments', () => attachmentsJson);
+    taskJson.putIfAbsent('assignees', () => assigneesJson);
+    taskJson.putIfAbsent('subtasks', () => subTasksJson);
+    return taskJson;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:task_hive/core/base/app_data/app_data.dart';
 import 'package:task_hive/features/auth/data/data_source/local/auth_local.dart';
 import 'package:task_hive/features/auth/data/data_source/remote/auth_remote.dart';
 import 'package:task_hive/features/auth/data/data_source/remote/auth_remote_impl.dart';
@@ -33,6 +34,7 @@ import '../../features/home/domain/use_cases/home_use_cases.dart';
 import '../../features/home/presentation/cubits/fetch_projects/fetch_projects_cubit.dart';
 import '../../features/home/presentation/cubits/fetch_user/fetch_user_cubit.dart';
 import '../../features/project_details/data/data/remote/project_details_remote.dart';
+import '../../features/project_details/presentation/cubits/fetch_task/fetch_task_cubit.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/auth_service/supabase_impl.dart';
 import '../../features/onboarding/presentation/onboarding_cubit/onboarding_cubit.dart';
@@ -54,6 +56,7 @@ void setupLocator() {
   getIt.registerLazySingleton<SharedPreferenceService>(
       () => SharedPreferenceService());
   getIt.registerLazySingleton<AuthService>(() => SupabaseImpl());
+  getIt.registerLazySingleton<AppData>(() => AppData());
 
   /// Register Cubits
   getIt.registerFactory(() => OnboardingCubit(getIt.call()));
@@ -69,8 +72,8 @@ void setupLocator() {
       () => FetchUserCubit(getIt.call()));
   getIt.registerCachedFactory<CreateProjectCubit>(
       () => CreateProjectCubit(getIt.call()));
-  getIt.registerCachedFactory<CreateTaskCubit>(
-      () => CreateTaskCubit(getIt.call()));
+  getIt.registerFactory<CreateTaskCubit>(() => CreateTaskCubit(getIt.call()));
+  getIt.registerFactory<FetchTaskCubit>(() => FetchTaskCubit(getIt.call()));
 
   ///Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(
@@ -89,6 +92,8 @@ void setupLocator() {
       () => CreateProjectUseCase(getIt.call()));
   getIt.registerLazySingleton<CreateTaskUseCase>(
       () => CreateTaskUseCase(getIt.call()));
+  getIt.registerLazySingleton<FetchTaskUseCase>(
+      () => FetchTaskUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(

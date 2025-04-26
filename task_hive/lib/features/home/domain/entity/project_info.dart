@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ProjectData {
   final String title;
   final String address;

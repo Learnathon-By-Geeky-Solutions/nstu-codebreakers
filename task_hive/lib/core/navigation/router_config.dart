@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_hive/core/navigation/dummy_pages/dummy_page_1.dart';
 
 import '../../features/auth/presentation/screens/forget_pass_screen.dart';
 import '../../features/auth/presentation/screens/sign_up_screen.dart';
@@ -10,7 +9,7 @@ import '../../features/onboarding/presentation/screens/onboard_screen_1.dart';
 import '../../features/onboarding/presentation/screens/onboard_screen_2.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/project_details/presentation/screens/task_create_screen.dart';
-import '../../features/task_details/presentation/TaskDetailsScreen.dart';
+import '../../features/project_details/presentation/screens/TaskDetailsScreen.dart';
 import '../../features/project_details/presentation/screens/dashboard_screen.dart';
 import '../../features/onboarding/presentation/screens/onboard_screen_3.dart';
 import 'error_page.dart';
@@ -38,8 +37,6 @@ class MyRouterConfig {
       return null;
     },
     initialLocation: MyRoutes.initialRoute,
-    // initialLocation: MyRoutes.taskDetails,
-
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -59,36 +56,25 @@ class MyRouterConfig {
                   GoRoute(
                     path: MyRoutes.projectDetails,
                     builder: (context, state) {
-                      final keyData = state.extra as Map<String, dynamic>;
-                      return ProjectDetailsScreen(keyData: keyData);
+                      return const ProjectDetailsScreen();
                     },
                     routes: [
                       GoRoute(
                         path: MyRoutes.createTask,
                         builder: (context, state) {
-                          final keyData = state.extra as Map<String, dynamic>;
-                          return CreateTaskScreen(keyData: keyData);
+                          return const CreateTaskScreen();
                         },
                         routes: [
                           GoRoute(
                             path: MyRoutes.taskDetails,
-                            builder: (context, state) => const DummyPage1(),
+                            builder: (context, state) =>
+                                const TaskDetailsPage(),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: MyRoutes.dummyPage2,
-                builder: (context, state) {
-                  return const CreateTaskScreen(keyData: {'project_id': 0});
-                },
               ),
             ],
           ),

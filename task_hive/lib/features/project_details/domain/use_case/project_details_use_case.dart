@@ -4,13 +4,21 @@ import 'package:task_hive/features/project_details/domain/entity/task_entity.dar
 import 'package:task_hive/features/project_details/domain/repository/project_details_repo.dart';
 
 import '../../../../core/io/failure.dart';
-import '../../../../core/io/success.dart';
 
-class CreateTaskUseCase extends BaseUseCase<TaskEntity, Success, Failure> {
+class CreateTaskUseCase extends BaseUseCase<TaskEntity, int, Failure> {
   final ProjectDetailsRepo _projectDetailsRepo;
   CreateTaskUseCase(this._projectDetailsRepo);
   @override
-  Future<Either<Success, Failure>> call(TaskEntity input) {
+  Future<Either<int, Failure>> call(TaskEntity input) {
     return _projectDetailsRepo.createTask(input);
+  }
+}
+
+class FetchTaskUseCase extends BaseUseCase<int, TaskEntity, Failure> {
+  final ProjectDetailsRepo _projectDetailsRepo;
+  FetchTaskUseCase(this._projectDetailsRepo);
+  @override
+  Future<Either<TaskEntity, Failure>> call(int input) async {
+    return await _projectDetailsRepo.fetchTask(input);
   }
 }

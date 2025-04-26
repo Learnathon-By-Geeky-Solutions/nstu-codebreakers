@@ -1,18 +1,24 @@
 import 'dart:io';
 
+import 'package:task_hive/features/project_details/domain/entity/assignee_entity.dart';
+
+import 'sub_task_entity.dart';
+
 class TaskEntity {
   int? projectId;
   int? userId;
   String? status;
   String? title;
   String? description;
-  List<String>? subTasks;
+  List<SubTask>? subTasks;
   DateTime? dueDate;
   String? priority;
   String? label;
   int? createdBy;
   List<int>? assigneeIds;
+  List<AssigneeEntity>? assignees;
   List<File>? attachments;
+  List<String>? attachmentUrls;
   DateTime? createdAt, updatedAt;
 
   TaskEntity({
@@ -30,11 +36,14 @@ class TaskEntity {
     this.createdBy,
     this.createdAt,
     this.updatedAt,
+    this.assignees,
+    this.attachmentUrls,
   });
 
   TaskEntity.fromJson(Map<String, dynamic> json) {
     projectId = json['project_id'];
     status = json['status'];
+    label = json['label'];
     title = json['title'];
     description = json['description'];
     dueDate = DateTime.tryParse(json['due_date'] ?? '');
@@ -42,6 +51,17 @@ class TaskEntity {
     createdBy = json['created_by'];
     createdAt = DateTime.tryParse(json['created_at'] ?? '');
     updatedAt = DateTime.tryParse(json['updated_at'] ?? '');
+    assignees = (json['assignees'] as List?)
+        ?.map((e) => AssigneeEntity(
+              id: e['user_id'],
+            ))
+        .toList();
+    attachmentUrls = (json['attachments'] as List?)
+        ?.map((e) => e['file_path'] as String)
+        .toList();
+    subTasks = (json['subtasks'] as List?)
+        ?.map((e) => SubTask(title: e['title'], isCompleted: e['status']))
+        .toList();
   }
 
   Map<String, dynamic> toJson() {
