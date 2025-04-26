@@ -35,6 +35,7 @@ import '../../features/home/presentation/cubits/fetch_projects/fetch_projects_cu
 import '../../features/home/presentation/cubits/fetch_user/fetch_user_cubit.dart';
 import '../../features/project_details/data/data/remote/project_details_remote.dart';
 import '../../features/project_details/presentation/cubits/fetch_task/fetch_task_cubit.dart';
+import '../../features/project_details/presentation/cubits/fetch_tasks/fetch_tasks_cubit.dart';
 import '../services/auth_service/auth_service.dart';
 import '../services/auth_service/supabase_impl.dart';
 import '../../features/onboarding/presentation/onboarding_cubit/onboarding_cubit.dart';
@@ -74,6 +75,7 @@ void setupLocator() {
       () => CreateProjectCubit(getIt.call()));
   getIt.registerFactory<CreateTaskCubit>(() => CreateTaskCubit(getIt.call()));
   getIt.registerFactory<FetchTaskCubit>(() => FetchTaskCubit(getIt.call()));
+  getIt.registerFactory<FetchTasksCubit>(() => FetchTasksCubit(getIt.call()));
 
   ///Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(
@@ -94,6 +96,8 @@ void setupLocator() {
       () => CreateTaskUseCase(getIt.call()));
   getIt.registerLazySingleton<FetchTaskUseCase>(
       () => FetchTaskUseCase(getIt.call()));
+  getIt.registerLazySingleton<FetchTasksUseCase>(
+      () => FetchTasksUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(
