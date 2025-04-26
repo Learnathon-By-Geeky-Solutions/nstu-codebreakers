@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:task_hive/core/di/di.dart';
+import 'package:task_hive/core/extensions/app_extension.dart';
 import 'package:task_hive/features/project_details/domain/entity/assignee_entity.dart';
 
 import '../../../../core/base/app_data/app_data.dart';
@@ -25,6 +26,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       "user interface (UI) is anything a user may interact with to use a digital product or service. This includes everything from screens and touchscreens, keyboards, sounds, and even lights. To understand the evolution of UI, however, it's helpful to learn a bit more about its history and how it has evolved into best practices and a profession.";
   String assignee = "Tahsin";
   List<AssigneeEntity> assignees = [];
+  String taskLabel = "Design";
 
   List<SubTask> subtasks = [
     SubTask(title: "UI Design", isCompleted: true),
@@ -33,11 +35,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     SubTask(title: "UI Design", isCompleted: false),
   ];
 
-  List<Attachment> attachments = [
-    Attachment(name: "File 1.pdf"),
-    Attachment(name: "File 2.pdf"),
-    Attachment(name: "File 3.pdf"),
-  ];
+  List<Attachment> attachments = [];
 
   TextEditingController newSubtaskController = TextEditingController();
   final _appData = getIt<AppData>();
@@ -75,6 +73,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   progressValue = _getProgressValue(state.task.subTasks ?? []);
                   subtasks = (state.task.subTasks ?? []);
                   assignees = (state.task.assignees ?? []);
+                  taskLabel = state.task.label ?? 'N/A';
+                  attachments = state.task.attachmentUrls
+                          ?.map((e) =>
+                              Attachment(name: e.split('/').last, url: e))
+                          .toList() ??
+                      [];
                 });
               }
               if (state is FetchTaskErrorState) {
@@ -87,7 +91,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               if (state is FetchTaskLoadingState) {
                 return const Center(child: CircularProgressIndicator());
               }
-              print('dbg: subtasks: ${subtasks.length}');
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,8 +98,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   _buildProgressSection(colorScheme, textTheme),
                   _buildDateSection(colorScheme, textTheme),
                   _buildTitleSection(colorScheme, textTheme),
-                  _buildLabelSection(colorScheme, textTheme),
                   _buildDescriptionSection(colorScheme, textTheme),
+                  _buildLabelSection(colorScheme, textTheme),
+                  _buildPrioritySection(colorScheme, textTheme),
                   _buildSubtasksSection(colorScheme, textTheme),
                   _buildAssigneeSection(colorScheme, textTheme),
                   _buildAttachmentsSection(colorScheme, textTheme),
@@ -316,6 +320,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Widget _buildLabelSection(ColorScheme colorScheme, TextTheme textTheme) {
+    //TODO
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -325,6 +330,45 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildLabel("Labels", colorScheme, textTheme),
+              GestureDetector(
+                onTap: () => _editLabels(),
+                child: _buildEditIcon(colorScheme, () => _editLabels()),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colorScheme.primary,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                taskLabel,
+                style: textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPrioritySection(ColorScheme colorScheme, TextTheme textTheme) {
+    //TODO
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildLabel("Priority", colorScheme, textTheme),
               GestureDetector(
                 onTap: () => _editLabels(),
                 child: _buildEditIcon(colorScheme, () => _editLabels()),
@@ -508,16 +552,59 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               _buildLabel("Assignees", colorScheme, textTheme),
               GestureDetector(
                 onTap: () => _editAssignee(),
-                child: _buildEditIcon(colorScheme, () => _editAssignee()),
+                child: Icon(
+                  Icons.add_circle_outline,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          _buildCustomContainer(
-              text: assignee,
-              colorScheme: colorScheme,
-              textTheme: textTheme,
-              isBorderEnabled: true),
+          // _buildCustomContainer(
+          //     text: assignee,
+          //     colorScheme: colorScheme,
+          //     textTheme: textTheme,
+          //     isBorderEnabled: true),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: assignees.length,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.person, color: colorScheme.primary),
+                    ),
+                    Expanded(
+                      child: Text(
+                        assignees[index].name ?? assignees[index].id.toString(),
+                        style: textTheme.textSmRegular.copyWith(
+                          color: colorScheme.onSecondaryContainer,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline,
+                          color: Colors.red, size: 20),
+                      onPressed: () {
+                        setState(() {
+                          assignees.removeAt(index);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -693,7 +780,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               child: const Text("Delete", style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
-                // Handle delete task action
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Task deleted")),
                 );
@@ -768,5 +854,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
 
 class Attachment {
   final String name;
-  Attachment({required this.name});
+  final String url;
+  Attachment({required this.name, required this.url});
 }

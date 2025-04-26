@@ -7,6 +7,7 @@ import 'sub_task_entity.dart';
 class TaskEntity {
   int? projectId;
   int? userId;
+  int? taskId;
   String? status;
   String? title;
   String? description;
@@ -38,6 +39,7 @@ class TaskEntity {
     this.updatedAt,
     this.assignees,
     this.attachmentUrls,
+    this.taskId,
   });
 
   TaskEntity.fromJson(Map<String, dynamic> json) {
@@ -48,17 +50,20 @@ class TaskEntity {
     description = json['description'];
     dueDate = DateTime.tryParse(json['due_date'] ?? '');
     priority = json['priority'];
+    taskId = json['id'];
     createdBy = json['created_by'];
     createdAt = DateTime.tryParse(json['created_at'] ?? '');
     updatedAt = DateTime.tryParse(json['updated_at'] ?? '');
     assignees = (json['assignees'] as List?)
         ?.map((e) => AssigneeEntity(
               id: e['user_id'],
+              name: e['name'],
             ))
         .toList();
     attachmentUrls = (json['attachments'] as List?)
         ?.map((e) => e['file_path'] as String)
         .toList();
+
     subTasks = (json['subtasks'] as List?)
         ?.map((e) => SubTask(title: e['title'], isCompleted: e['status']))
         .toList();

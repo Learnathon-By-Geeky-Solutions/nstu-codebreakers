@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:task_hive/core/extensions/app_extension.dart';
+import 'package:task_hive/features/project_details/presentation/screens/TaskDetailsScreen.dart';
 
 class UpcomingDeliveryCard extends StatelessWidget {
-  final String taskName;
-  final String timeRange;
-  final String dueDate;
-  final int progressPercentage;
-  final List<String> assignees;
-  final String priority;
+  final String? taskName;
+  // final String timeRange;
+  final String? dueDate;
+  final String? progressPercentage;
+  final String? label;
+  final String? priority;
 
   const UpcomingDeliveryCard(
       {super.key,
-      this.taskName = 'Untitled Task',
-      this.timeRange = '9:00 AM - 5:00 PM',
-      this.dueDate = 'N/A',
-      this.progressPercentage = 0,
-      this.assignees = const [],
-      this.priority = 'High'});
+      this.taskName,
+      // this.timeRange = '9:00 AM - 5:00 PM',
+      this.dueDate,
+      this.progressPercentage,
+      this.label,
+      this.priority});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class UpcomingDeliveryCard extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 350),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: getBgColorFromPriority(priority),
+        color: getBgColorFromPriority(priority ?? 'N/A'),
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
@@ -48,11 +50,11 @@ class UpcomingDeliveryCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: getPriorityColor(priority),
+                  color: getPriorityColor(priority ?? 'N/A'),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  priority,
+                  priority ?? 'N/A',
                   style: textTheme.headlineSmall?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -75,7 +77,7 @@ class UpcomingDeliveryCard extends StatelessWidget {
 
           // Task name
           Text(
-            taskName,
+            taskName ?? 'No Task Name',
             style: textTheme.headlineMedium?.copyWith(
               color: Colors.white,
               fontSize: 18,
@@ -85,23 +87,12 @@ class UpcomingDeliveryCard extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          // Time range with icon
-          Row(
-            children: [
-              const Icon(
-                Icons.access_time,
-                color: Colors.white,
-                size: 16,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                timeRange,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: Colors.white54,
-                  fontSize: 14,
-                ),
-              ),
-            ],
+          Text(
+            'Label: ${label ?? 'N/A'}',
+            style: textTheme.textSmRegular.copyWith(
+              color: Colors.white,
+              // fontWeight: FontWeight.bold,
+            ),
           ),
 
           const SizedBox(height: 8),
