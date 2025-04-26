@@ -7,4 +7,5 @@ abstract class ProjectDetailsRemote {
   Future<void> assignTaskMember(Map<String, dynamic> taskMember);
   Future<void> addTaskLabel(Map<String, dynamic> taskLabel);
   Future<void> addAttachment(Map<String, dynamic> attachment);
+  Future<Map<String, dynamic>> fetchTask(int taskId);
 }

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../../core/io/failure.dart';
-import '../../../../../core/io/success.dart';
+import '../../../../../../core/io/failure.dart';
+import '../../../../../../core/io/success.dart';
 
 class CreateTaskState extends Equatable {
   @override
@@ -14,10 +14,11 @@ class CreateTaskLoadingState extends CreateTaskState {}
 
 class CreateTaskSuccessState extends CreateTaskState {
   final Success success;
-  CreateTaskSuccessState({required this.success});
+  final int taskId;
+  CreateTaskSuccessState({required this.success, this.taskId = 0});
 
   @override
-  List<Object?> get props => [success];
+  List<Object?> get props => [success, taskId];
 }
 
 class CreateTaskErrorState extends CreateTaskState {

@@ -1,5 +1,6 @@
-class Assignee {
+class AssigneeEntity {
   final String? name;
-  final int id;
-  Assignee({required this.name, required this.id});
+  final int? id;
+  final int? taskId;
+  AssigneeEntity({this.name, this.id, this.taskId});
 }
