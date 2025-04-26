@@ -22,3 +22,12 @@ class FetchTaskUseCase extends BaseUseCase<int, TaskEntity, Failure> {
     return await _projectDetailsRepo.fetchTask(input);
   }
 }
+
+class FetchTasksUseCase extends BaseUseCase<int, List<TaskEntity>, Failure> {
+  final ProjectDetailsRepo _projectDetailsRepo;
+  FetchTasksUseCase(this._projectDetailsRepo);
+  @override
+  Future<Either<List<TaskEntity>, Failure>> call(int input) {
+    return _projectDetailsRepo.fetchTasks(input);
+  }
+}

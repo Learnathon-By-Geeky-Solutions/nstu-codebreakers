@@ -29,7 +29,7 @@ Widget priorityTaskCard({
               ),
               child: Icon(
                 icon,
-                color: Colors.white,
+                color: Colors.blue,
                 size: 20,
               ),
             ),
@@ -42,7 +42,7 @@ Widget priorityTaskCard({
               child: Text(
                 '$days days',
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: Colors.blue,
                   fontSize: 12,
                 ),
               ),
@@ -68,13 +68,15 @@ Widget priorityTaskCard({
         ),
         const SizedBox(height: 5),
         LinearProgressIndicator(
-          value: progress,
+          value: progress / 100,
           backgroundColor: Colors.white24,
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
         ),
         const SizedBox(height: 5),
         Text(
-          '${(progress * 100).toInt()}%',
+          progress < 100
+              ? '${(progress).toStringAsFixed(0)}% completed'
+              : 'Completed',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 12,

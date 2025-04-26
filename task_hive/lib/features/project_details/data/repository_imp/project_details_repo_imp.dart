@@ -65,11 +65,21 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
   Future<Either<TaskEntity, Failure>> fetchTask(int? taskId) async {
     try {
       final res = await _projectDetailsRemote.fetchTask(taskId ?? 0);
-      print('dbg res: $res');
       final task = TaskEntity.fromJson(res);
       return Left(task);
     } catch (e) {
       return Right(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<List<TaskEntity>, Failure>> fetchTasks(int projectId) async {
+    final res = await _projectDetailsRemote.fetchTasks(projectId);
+    if (res.isNotEmpty) {
+      final tasks = res.map((e) => TaskEntity.fromJson(e)).toList();
+      return Left(tasks);
+    } else {
+      return Right(Failure('No tasks found'));
     }
   }
 }

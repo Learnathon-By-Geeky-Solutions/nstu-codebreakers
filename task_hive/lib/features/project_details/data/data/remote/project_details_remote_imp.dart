@@ -89,10 +89,21 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
   @override
   Future<Map<String, dynamic>> fetchTask(int taskId) async {
-    final assigneesJson = await supabaseClient
+    List<Map<String, dynamic>> assigneesJson = await supabaseClient
         .from('task_assignments')
         .select()
         .eq('task_id', taskId);
+    assigneesJson = await Future.wait(assigneesJson.map((e) async {
+      final userName = await supabaseClient
+          .from('users')
+          .select('full_name')
+          .eq('id', e['user_id'])
+          .single();
+      return {
+        'user_id': e['user_id'],
+        'name': userName['full_name'],
+      };
+    }).toList());
 
     final attachmentsJson =
         await supabaseClient.from('attachments').select().eq('task_id', taskId);
@@ -106,5 +117,18 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
     taskJson.putIfAbsent('assignees', () => assigneesJson);
     taskJson.putIfAbsent('subtasks', () => subTasksJson);
     return taskJson;
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> fetchTasks(int projectId) async {
+    final taskIds = await supabaseClient
+        .from('tasks')
+        .select('id')
+        .eq('project_id', projectId);
+    final res = await Future.wait(taskIds.map((e) async {
+      final task = await fetchTask(e['id']);
+      return task;
+    }).toList());
+    return res;
   }
 }
