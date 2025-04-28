@@ -147,7 +147,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                         onTap: () {
                                           _appData.currentProjectId =
                                               project?.id ?? 0;
-                                          context.go(
+                                          context.push(
                                             '${MyRoutes.home}/${MyRoutes.projectDetails}',
                                           );
                                         },

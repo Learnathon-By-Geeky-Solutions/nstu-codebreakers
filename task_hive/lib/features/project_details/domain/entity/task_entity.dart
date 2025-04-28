@@ -80,6 +80,7 @@ class TaskEntity {
       'updated_at': updatedAt?.toIso8601String(),
       'created_at': createdAt?.toIso8601String(),
       'project_id': projectId,
+      'id': taskId,
       'label': label,
     };
   }

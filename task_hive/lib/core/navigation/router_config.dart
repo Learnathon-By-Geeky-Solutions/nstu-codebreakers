@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:task_hive/core/navigation/dummy_pages/dummy_page_1.dart';
 
 import '../../features/auth/presentation/screens/forget_pass_screen.dart';
 import '../../features/auth/presentation/screens/sign_up_screen.dart';
@@ -31,9 +33,25 @@ class MyRouterConfig {
       return const ErrorPage();
     },
     redirect: (context, state) {
-      if (state.uri.path == '/') {
+      print('dbg state location: ${state.fullPath}');
+      final isLoggedIn = Supabase.instance.client.auth.currentSession != null;
+      final isOnboarding = state.uri.toString().contains(MyRoutes.onboard1) ||
+          state.uri.toString().contains(MyRoutes.onboard2) ||
+          state.uri.toString().contains(MyRoutes.onboard3);
+      print('dbg isLoggedIn: $isLoggedIn');
+      print('dbg isOnboarding: $isOnboarding');
+      if (isLoggedIn && isOnboarding) {
         return MyRoutes.home;
       }
+      if (isLoggedIn && !isOnboarding) {
+        return (state.fullPath == null || state.fullPath!.isEmpty)
+            ? MyRoutes.home
+            : state.fullPath!;
+      }
+      if (!isLoggedIn && !isOnboarding) {
+        return MyRoutes.signInRoute;
+      }
+
       return null;
     },
     initialLocation: MyRoutes.initialRoute,
@@ -75,6 +93,16 @@ class MyRouterConfig {
                     ],
                   ),
                 ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: MyRoutes.dummyPage1,
+                builder: (context, state) {
+                  return const DummyPage1();
+                },
               ),
             ],
           ),
