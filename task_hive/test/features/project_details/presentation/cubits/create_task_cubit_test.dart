@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:task_hive/core/io/failure.dart';
-import 'package:task_hive/core/io/success.dart';
 import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
 import 'package:task_hive/features/project_details/domain/use_case/project_details_use_case.dart';
 import 'package:task_hive/features/project_details/presentation/cubits/create_task/create_task_cubit.dart';
@@ -34,47 +34,51 @@ void main() {
   });
 
   group('createTask', () {
-    test(
-        'should emit [CreateTaskLoadingState, CreateTaskSuccessState] when successful',
-        () {
+    blocTest<CreateTaskCubit, CreateTaskState>(
+      'should emit [CreateTaskLoadingState, CreateTaskSuccessState] when successful',
+      build: () => createTaskCubit,
+      act: (cubit) {
+        when(() => mockCreateTaskUseCase.call(testTask))
+            .thenAnswer((_) async => const Left(1));
+        cubit.createTask(testTask);
+      },
+      expect: () => [
+        isA<CreateTaskLoadingState>(),
+        isA<CreateTaskSuccessState>().having(
+          (state) => state.taskId,
+          'taskId',
+          1,
+        ),
+      ],
+    );
+
+    blocTest<CreateTaskCubit, CreateTaskState>(
+      'should emit [CreateTaskLoadingState, CreateTaskErrorState] when failed',
+      build: () => createTaskCubit,
+      act: (cubit) {
+        final failure = Failure('Failed to create task');
+        when(() => mockCreateTaskUseCase.call(testTask))
+            .thenAnswer((_) async => Right(failure));
+        cubit.createTask(testTask);
+      },
+      expect: () => [
+        isA<CreateTaskLoadingState>(),
+        isA<CreateTaskErrorState>().having(
+          (state) => state.failure,
+          'failure',
+          isA<Failure>()
+              .having((f) => f.message, 'message', 'Failed to create task'),
+        ),
+      ],
+    );
+
+    test('verifies create task use case is called with correct task', () {
       when(() => mockCreateTaskUseCase.call(testTask))
           .thenAnswer((_) async => const Left(1));
 
       createTaskCubit.createTask(testTask);
 
-      expect(
-        createTaskCubit.stream,
-        emitsInOrder([
-          isA<CreateTaskLoadingState>(),
-          isA<CreateTaskSuccessState>().having(
-            (state) => state.taskId,
-            'taskId',
-            1,
-          ),
-        ]),
-      );
-    });
-
-    test(
-        'should emit [CreateTaskLoadingState, CreateTaskErrorState] when failed',
-        () {
-      final failure = Failure('Failed to create task');
-      when(() => mockCreateTaskUseCase.call(testTask))
-          .thenAnswer((_) async => Right(failure));
-
-      createTaskCubit.createTask(testTask);
-
-      expect(
-        createTaskCubit.stream,
-        emitsInOrder([
-          isA<CreateTaskLoadingState>(),
-          isA<CreateTaskErrorState>().having(
-            (state) => state.failure,
-            'failure',
-            failure,
-          ),
-        ]),
-      );
+      verify(() => mockCreateTaskUseCase.call(testTask)).called(1);
     });
   });
 }
