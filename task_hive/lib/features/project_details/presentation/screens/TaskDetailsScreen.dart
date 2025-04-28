@@ -808,7 +808,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   Widget _buildEditIcon(ColorScheme colorScheme, onEdit) {
     return GestureDetector(
       onTap: () {
-        print('dbg onpressed');
         onEdit();
 
         // Edit dates
@@ -818,14 +817,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Future<void> _selectDate(bool isStart) async {
-    print('dbg enter $isStart');
     final picked = await showDatePicker(
       context: context,
       initialDate: isStart ? startDate : endDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
-    print('dbg day ${picked?.day}');
     if (picked != null) {
       setState(() {
         edited = true;
