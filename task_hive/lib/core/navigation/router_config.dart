@@ -33,13 +33,10 @@ class MyRouterConfig {
       return const ErrorPage();
     },
     redirect: (context, state) {
-      print('dbg state location: ${state.fullPath}');
       final isLoggedIn = Supabase.instance.client.auth.currentSession != null;
       final isOnboarding = state.uri.toString().contains(MyRoutes.onboard1) ||
           state.uri.toString().contains(MyRoutes.onboard2) ||
           state.uri.toString().contains(MyRoutes.onboard3);
-      print('dbg isLoggedIn: $isLoggedIn');
-      print('dbg isOnboarding: $isOnboarding');
       if (isLoggedIn && isOnboarding) {
         return MyRoutes.home;
       }
