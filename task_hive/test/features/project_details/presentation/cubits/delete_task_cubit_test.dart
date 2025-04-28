@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:task_hive/core/io/failure.dart';
 import 'package:task_hive/core/io/success.dart';
@@ -26,49 +27,46 @@ void main() {
   });
 
   group('deleteTask', () {
-    test('should emit [DeleteTaskLoading, DeleteTaskSuccess] when successful',
-        () {
-      final success = Success('Task deleted successfully');
-      when(() => mockDeleteTaskUseCase.call(1))
-          .thenAnswer((_) async => Left(success));
+    final success = Success('Task deleted successfully');
 
-      deleteTaskCubit.deleteTask(1);
+    blocTest<DeleteTaskCubit, DeleteTaskState>(
+      'should emit [DeleteTaskLoading, DeleteTaskSuccess] when successful',
+      build: () => deleteTaskCubit,
+      act: (cubit) {
+        when(() => mockDeleteTaskUseCase.call(1))
+            .thenAnswer((_) async => Left(success));
+        cubit.deleteTask(1);
+      },
+      expect: () => [
+        isA<DeleteTaskLoading>(),
+        isA<DeleteTaskSuccess>().having(
+          (state) => state.success,
+          'success',
+          success,
+        ),
+      ],
+    );
 
-      expect(
-        deleteTaskCubit.stream,
-        emitsInOrder([
-          isA<DeleteTaskLoading>(),
-          isA<DeleteTaskSuccess>().having(
-            (state) => state.success,
-            'success',
-            success,
-          ),
-        ]),
-      );
-    });
-
-    test('should emit [DeleteTaskLoading, DeleteTaskFailure] when failed', () {
-      final failure = Failure('Failed to delete task');
-      when(() => mockDeleteTaskUseCase.call(1))
-          .thenAnswer((_) async => Right(failure));
-
-      deleteTaskCubit.deleteTask(1);
-
-      expect(
-        deleteTaskCubit.stream,
-        emitsInOrder([
-          isA<DeleteTaskLoading>(),
-          isA<DeleteTaskFailure>().having(
-            (state) => state.failure,
-            'failure',
-            failure,
-          ),
-        ]),
-      );
-    });
+    blocTest<DeleteTaskCubit, DeleteTaskState>(
+      'should emit [DeleteTaskLoading, DeleteTaskFailure] when failed',
+      build: () => deleteTaskCubit,
+      act: (cubit) {
+        final failure = Failure('Failed to delete task');
+        when(() => mockDeleteTaskUseCase.call(1))
+            .thenAnswer((_) async => Right(failure));
+        cubit.deleteTask(1);
+      },
+      expect: () => [
+        isA<DeleteTaskLoading>(),
+        isA<DeleteTaskFailure>().having(
+          (state) => state.failure,
+          'failure',
+          isA<Failure>().having((f) => f.message, 'message', 'Failed to delete task'),
+        ),
+      ],
+    );
 
     test('verifies delete task use case is called with correct task id', () {
-      final success = Success('Task deleted successfully');
       when(() => mockDeleteTaskUseCase.call(1))
           .thenAnswer((_) async => Left(success));
 
