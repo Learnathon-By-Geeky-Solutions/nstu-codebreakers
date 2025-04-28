@@ -1,5 +1,6 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:task_hive/core/logger/logger.dart';
 import '../../../../../core/services/auth_service/auth_service.dart';
 import '../../../../../core/di/di.dart';
 import '../../../domain/entity/user_entity.dart';
@@ -15,10 +16,19 @@ class AuthRemoteImpl implements AuthRemote {
 
   @override
   Future<AuthResponse> signIn(UserEntity userInfo) async {
-    return await authClient.signInWithPassword(
-      email: userInfo.email ?? '',
-      password: userInfo.password ?? '',
-    );
+    try {
+      final response = await authClient.signInWithPassword(
+        email: userInfo.email ?? '',
+        password: userInfo.password ?? '',
+      );
+      if (response.user == null) {
+        throw const AuthException('Invalid credentials');
+      }
+      return response;
+    } catch (e) {
+      logger.e('Error in signIn: $e');
+      throw AuthException(e.toString());
+    }
   }
 
   @override
@@ -64,7 +74,7 @@ class AuthRemoteImpl implements AuthRemote {
     } catch (e) {
       // logger.e('Error in addUser: $e');
       throw Exception('Failed to add user: $e');
-    }// Important: Specify the conflict column
+    } // Important: Specify the conflict column
   }
 
   @override

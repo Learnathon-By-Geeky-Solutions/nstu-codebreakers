@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:task_hive/core/di/di.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
 import 'package:task_hive/features/project_details/domain/entity/assignee_entity.dart';
+import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
+import 'package:task_hive/features/project_details/presentation/cubits/create_task/create_task_cubit.dart';
 
 import '../../../../core/base/app_data/app_data.dart';
+import '../../../../core/navigation/routes.dart';
 import '../../domain/entity/sub_task_entity.dart';
+import '../cubits/create_task/create_task_state.dart';
+import '../cubits/delete_task/detele_task_cubit.dart';
 import '../cubits/fetch_task/fetch_task_cubit.dart';
 
 class TaskDetailsPage extends StatefulWidget {
@@ -21,12 +27,14 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   DateTime startDate = DateTime(2022, 2, 21);
   DateTime endDate = DateTime(2022, 3, 3);
   String taskTitle = "UI Design";
-  String priority = "Priority Task";
+  String priority = "High";
   String description =
       "user interface (UI) is anything a user may interact with to use a digital product or service. This includes everything from screens and touchscreens, keyboards, sounds, and even lights. To understand the evolution of UI, however, it's helpful to learn a bit more about its history and how it has evolved into best practices and a profession.";
   String assignee = "Tahsin";
   List<AssigneeEntity> assignees = [];
   String taskLabel = "Design";
+  String taskStatus = "To Do";
+  bool edited = false;
 
   List<SubTask> subtasks = [
     SubTask(title: "UI Design", isCompleted: true),
@@ -35,22 +43,54 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     SubTask(title: "UI Design", isCompleted: false),
   ];
 
+  List<String> labels = ['Bug', 'Feature', 'Documentation', 'Enhancement'];
+  List<String> priorities = ['High', 'Medium', 'Low'];
+  List<String> statuses = ['To Do', 'In Progress', 'Done'];
   List<Attachment> attachments = [];
 
   TextEditingController newSubtaskController = TextEditingController();
   final _appData = getIt<AppData>();
   final _fetchTaskCubit = getIt<FetchTaskCubit>();
+  final _createTaskCubit = getIt<CreateTaskCubit>();
+  final _deleteTaskCubit = getIt<DeleteTaskCubit>();
 
   @override
   void dispose() {
     newSubtaskController.dispose();
+    _fetchTaskCubit.close();
+    _createTaskCubit.close();
+    _deleteTaskCubit.close();
     super.dispose();
   }
 
   @override
   void initState() {
-    _fetchTaskCubit.fetchTask(_appData.currentTaskId ?? 0);
+    _callFetchTaskCubit();
+    _createTaskCubit.stream.listen((state) {
+      if (state is CreateTaskSuccessState) {
+        _callFetchTaskCubit();
+      }
+      if (state is CreateTaskErrorState && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(state.failure.message)),
+        );
+      }
+    });
+    _deleteTaskCubit.stream.listen((state) {
+      if (state is DeleteTaskSuccess && mounted) {
+        context.go(MyRoutes.projectDetails);
+      }
+      if (state is DeleteTaskFailure && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(state.failure.message)),
+        );
+      }
+    });
     super.initState();
+  }
+
+  void _callFetchTaskCubit() {
+    _fetchTaskCubit.fetchTask(_appData.currentTaskId ?? 0);
   }
 
   @override
@@ -58,6 +98,31 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
+      floatingActionButton: (edited == true)
+          ? FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  edited = false;
+                });
+                _createTaskCubit.createTask(TaskEntity(
+                  projectId: _appData.currentProjectId,
+                  taskId: _appData.currentTaskId,
+                  userId: _appData.userId,
+                  title: taskTitle,
+                  description: description,
+                  priority: priority,
+                  createdAt: startDate,
+                  updatedAt: DateTime.now(),
+                  dueDate: endDate,
+                  subTasks: subtasks,
+                  assignees: assignees,
+                  label: taskLabel,
+                  status: taskStatus,
+                ));
+              },
+              child: const Icon(Icons.done),
+            )
+          : null,
       body: SafeArea(
         child: SingleChildScrollView(
           child: BlocConsumer<FetchTaskCubit, FetchTaskState>(
@@ -99,6 +164,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   _buildDateSection(colorScheme, textTheme),
                   _buildTitleSection(colorScheme, textTheme),
                   _buildDescriptionSection(colorScheme, textTheme),
+                  _buildStatusSection(colorScheme, textTheme),
                   _buildLabelSection(colorScheme, textTheme),
                   _buildPrioritySection(colorScheme, textTheme),
                   _buildSubtasksSection(colorScheme, textTheme),
@@ -162,8 +228,23 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
           // const Spacer(),
           GestureDetector(
             onTap: () => _showDeleteTaskDialog(),
-            child: Icon(Icons.delete_outline,
-                color: colorScheme.onPrimary, size: 30),
+            child: BlocBuilder<DeleteTaskCubit, DeleteTaskState>(
+              bloc: _deleteTaskCubit,
+              builder: (context, state) {
+                if (state is DeleteTaskLoading) {
+                  return const CircularProgressIndicator();
+                }
+                return Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.onPrimaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(Icons.delete_outline,
+                      color: colorScheme.primary, size: 16),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -319,6 +400,44 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     );
   }
 
+  Widget _buildStatusSection(ColorScheme colorScheme, TextTheme textTheme) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildLabel("Status", colorScheme, textTheme),
+              GestureDetector(
+                onTap: () => _editLabels(),
+                child: _buildEditIcon(colorScheme, () => _editStatus()),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colorScheme.primary,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                taskStatus,
+                style: textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onPrimaryContainer,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildLabelSection(ColorScheme colorScheme, TextTheme textTheme) {
     //TODO
     return Padding(
@@ -359,7 +478,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Widget _buildPrioritySection(ColorScheme colorScheme, TextTheme textTheme) {
-    //TODO
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -371,7 +489,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               _buildLabel("Priority", colorScheme, textTheme),
               GestureDetector(
                 onTap: () => _editLabels(),
-                child: _buildEditIcon(colorScheme, () => _editLabels()),
+                child: _buildEditIcon(colorScheme, () => _editPriority()),
               ),
             ],
           ),
@@ -690,7 +808,9 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   Widget _buildEditIcon(ColorScheme colorScheme, onEdit) {
     return GestureDetector(
       onTap: () {
+        print('dbg onpressed');
         onEdit();
+
         // Edit dates
       },
       child: Icon(Icons.edit, color: colorScheme.primary, size: 20),
@@ -698,14 +818,17 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Future<void> _selectDate(bool isStart) async {
-    final DateTime? picked = await showDatePicker(
+    print('dbg enter $isStart');
+    final picked = await showDatePicker(
       context: context,
       initialDate: isStart ? startDate : endDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
     );
+    print('dbg day ${picked?.day}');
     if (picked != null) {
       setState(() {
+        edited = true;
         if (isStart) {
           startDate = picked;
         } else {
@@ -716,40 +839,66 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   void _editTitle() {
-    _showEditDialog("Edit Title", taskTitle, (value) {
+    _showEditDialog("Edit Title", taskTitle, null, (value) {
       setState(() {
+        edited = true;
         taskTitle = value;
       });
     });
   }
 
-  void _editLabels() {
-    _showEditDialog("Edit Priority", priority, (value) {
+  void _editStatus() {
+    _showEditDialog("Edit Status", taskStatus, statuses.toSet().toList(),
+        (value) {
       setState(() {
+        edited = true;
+        taskStatus = value;
+      });
+    });
+  }
+
+  void _editLabels() {
+    _showEditDialog("Edit Priority", taskLabel, labels.toSet().toList(),
+        (value) {
+      setState(() {
+        edited = true;
+        taskLabel = value;
+      });
+    });
+  }
+
+  void _editPriority() {
+    _showEditDialog("Edit Priority", priority, priorities.toSet().toList(),
+        (value) {
+      setState(() {
+        edited = true;
         priority = value;
       });
     });
   }
 
   void _editDescription() {
-    _showEditDialog("Edit Description", description, (value) {
+    _showEditDialog("Edit Description", description, null, (value) {
       setState(() {
+        edited = true;
         description = value;
       });
     }, multiline: true);
   }
 
   void _editAssignee() {
-    _showEditDialog("Edit Assignee", assignee, (value) {
+    _showEditDialog("Edit Assignee", assignee, null, (value) {
       setState(() {
+        edited = true;
         assignee = value;
       });
     });
   }
 
   void _editSubtask(int index) {
-    _showEditDialog("Edit Subtask", subtasks[index].title, (value) {
+    _showEditDialog("Edit Subtask", subtasks[index].title, null, (value) {
       setState(() {
+        edited = true;
         subtasks[index].title = value;
       });
     });
@@ -757,7 +906,10 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
 
   void _deleteSubtask(int index) {
     setState(() {
-      subtasks.removeAt(index);
+      edited = true;
+      final newSubTasks =
+          subtasks.where((task) => subtasks.indexOf(task) != index).toList();
+      subtasks = newSubTasks;
       _updateProgress();
     });
   }
@@ -779,10 +931,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             TextButton(
               child: const Text("Delete", style: TextStyle(color: Colors.red)),
               onPressed: () {
+                _deleteTaskCubit.deleteTask(_appData.currentTaskId ?? 0);
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Task deleted")),
-                );
               },
             ),
           ],
@@ -791,8 +941,8 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     );
   }
 
-  void _showEditDialog(
-      String title, String initialValue, Function(String) onSave,
+  void _showEditDialog(String title, String initialValue, List<String>? options,
+      Function(String) onSave,
       {bool multiline = false}) {
     final TextEditingController controller =
         TextEditingController(text: initialValue);
@@ -801,14 +951,31 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(title),
-          content: TextField(
-            controller: controller,
-            maxLines: multiline ? 5 : 1,
-            decoration: InputDecoration(
-              hintText: "Enter $title",
-              border: const OutlineInputBorder(),
-            ),
-          ),
+          content: (options != null)
+              ? DropdownButtonFormField<String>(
+                  value: initialValue,
+                  items: options
+                      .map((option) => DropdownMenuItem<String>(
+                            value: option,
+                            child: Text(option),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    controller.text = value ?? '';
+                  },
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                  ),
+                )
+              : TextField(
+                  //TODO: implement option selection
+                  controller: controller,
+                  maxLines: multiline ? 5 : 1,
+                  decoration: InputDecoration(
+                    hintText: "Enter $title",
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
           actions: <Widget>[
             TextButton(
               child: const Text("Cancel"),

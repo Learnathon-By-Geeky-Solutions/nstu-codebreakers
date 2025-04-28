@@ -131,9 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         const SizedBox(height: 20),
         GoogleSignInSignUpBtn(
-            textTheme: textTheme,
-            onPressed: () {},
-            placeholderText: 'Sign in with Google'),
+            textTheme: textTheme, placeholderText: 'Sign in with Google'),
         const SizedBox(height: 20),
         _redirectSignUp(colorScheme),
       ],
@@ -179,6 +177,7 @@ class _SignInScreenState extends State<SignInScreen> {
             );
             context.go(MyRoutes.home);
           } else if (state is SignInFailed) {
+            print("dbg ${state.failure.message}");
             showMessage(context, state.failure.message, colorTheme.error);
           }
         },

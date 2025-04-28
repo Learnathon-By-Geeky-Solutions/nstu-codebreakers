@@ -9,4 +9,5 @@ abstract class ProjectDetailsRemote {
   Future<void> addAttachment(Map<String, dynamic> attachment);
   Future<Map<String, dynamic>> fetchTask(int taskId);
   Future<List<Map<String, dynamic>>> fetchTasks(int projectId);
+  Future<void> deleteTasks(int taskId);
 }
