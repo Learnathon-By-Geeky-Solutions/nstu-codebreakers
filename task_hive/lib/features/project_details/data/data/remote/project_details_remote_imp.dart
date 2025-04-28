@@ -13,8 +13,6 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
             supabaseClient ?? getIt<AuthService>().getSupabaseClient();
   @override
   Future<int?> createTask(Map<String, dynamic> task) async {
-    print('dbg: Task data - $task');
-
     if (task.containsKey('id') && task['id'] != null) {
       final taskId = task['id'];
       final response = await supabaseClient
@@ -23,7 +21,6 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
           .eq('id', taskId)
           .select('id')
           .single();
-      print('dbg : Task updated - $response');
       return taskId;
     }
 
@@ -149,8 +146,6 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
   @override
   Future<void> deleteTasks(int taskId) async {
-    print('dbg before delete task - $taskId');
     await supabaseClient.from('tasks').delete().eq('id', taskId);
-    print('dbg after delete task - $taskId');
   }
 }

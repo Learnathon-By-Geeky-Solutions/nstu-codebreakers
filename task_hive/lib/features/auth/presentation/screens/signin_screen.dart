@@ -177,7 +177,6 @@ class _SignInScreenState extends State<SignInScreen> {
             );
             context.go(MyRoutes.home);
           } else if (state is SignInFailed) {
-            print("dbg ${state.failure.message}");
             showMessage(context, state.failure.message, colorTheme.error);
           }
         },

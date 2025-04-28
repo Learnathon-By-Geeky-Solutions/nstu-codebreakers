@@ -61,18 +61,18 @@ class AuthReposityImpl implements AuthRepository {
       if (response.user == null) {
         return Right(Failure('User not found'));
       }
-      if (kDebugMode) {
-        print('User data: ${response.user?.userMetadata}');
-      }
       await _authRemoteDataSource.addUser(
         UserEntity(
           id: int.tryParse(response.user!.id.toString()) ?? 0,
           email: response.user!.email ?? '',
-          name: response.user!.userMetadata?['full_name']?.toString() ?? 'Unknown',
-          profilePictureUrl: response.user!.userMetadata?['picture']?.toString() ?? '',
+          name: response.user!.userMetadata?['full_name']?.toString() ??
+              'Unknown',
+          profilePictureUrl:
+              response.user!.userMetadata?['picture']?.toString() ?? '',
         ),
       );
-      final userData = await _authRemoteDataSource.getUser(response.user!.email ?? '');
+      final userData =
+          await _authRemoteDataSource.getUser(response.user!.email ?? '');
       await _authLocalDataSource.saveUser(userData);
       return Left(Success('User successfully signed in with Google'));
     } catch (e) {
