@@ -62,7 +62,7 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
   }
 
   @override
-  Future<Either<TaskEntity, Failure>> fetchTask(int? taskId) async {
+  Future<Either<TaskEntity, Failure>> fetchTask(int taskId) async {
     try {
       final res = await _projectDetailsRemote.fetchTask(taskId ?? 0);
       final task = TaskEntity.fromJson(res);
@@ -80,6 +80,18 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
       return Left(tasks);
     } else {
       return Right(Failure('No tasks found'));
+    }
+  }
+
+  @override
+  Future<Either<Success, Failure>> deleteTask(int taskId) async {
+    try {
+      await _projectDetailsRemote.deleteTasks(taskId);
+      return Left(Success(
+          'Task deleted successfully')); // Return a placeholder TaskEntity or appropriate value
+    } catch (e) {
+      return Right(
+          Failure(e.toString())); // Return a Failure in case of an error
     }
   }
 }

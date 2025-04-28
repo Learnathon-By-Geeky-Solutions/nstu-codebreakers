@@ -13,56 +13,71 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
             supabaseClient ?? getIt<AuthService>().getSupabaseClient();
   @override
   Future<int?> createTask(Map<String, dynamic> task) async {
+    print('dbg: Task data - $task');
+
+    if (task.containsKey('id') && task['id'] != null) {
+      final taskId = task['id'];
+      final response = await supabaseClient
+          .from('tasks')
+          .update(task)
+          .eq('id', taskId)
+          .select('id')
+          .single();
+      print('dbg : Task updated - $response');
+      return taskId;
+    }
+
     final response =
-        await supabaseClient.from('tasks').insert(task).select('id').single();
+        await supabaseClient.from('tasks').upsert(task).select('id').single();
 
     if (response.isEmpty) {
       throw Exception('Failed to create task');
     }
 
-    final createdTaskId = response['id'];
-    return createdTaskId;
+    return response['id'];
   }
 
   @override
   Future<List<Map<String, dynamic>>> uploadFiles(List<File> files) async {
     final List<Map<String, dynamic>> uploadedFiles = [];
+
     for (final file in files) {
       final fileName = file.path.split('/').last;
+
       try {
         // Check if the file already exists
-        final existingFile = await supabaseClient.storage
+        final existingFiles = await supabaseClient.storage
             .from('attachments') // Replace with your bucket name
             .list(path: '', searchOptions: SearchOptions(search: fileName));
 
-        if (existingFile.isNotEmpty) {
-          // If the file exists, get its public URL
+        if (existingFiles.isNotEmpty) {
+          // File exists, get its public URL
           final publicUrl = supabaseClient.storage
               .from('attachments') // Replace with your bucket name
               .getPublicUrl(fileName);
-          uploadedFiles.add(
-            {'fileName': fileName, 'url': publicUrl},
-          );
+
+          uploadedFiles.add({'fileName': fileName, 'url': publicUrl});
         } else {
-          // If the file does not exist, upload it
-          final response = await supabaseClient.storage
+          // File does not exist, upload it
+          final uploadResponse = await supabaseClient.storage
               .from('attachments') // Replace with your bucket name
               .upload(fileName, file);
-          if (response.isNotEmpty) {
+
+          if (uploadResponse.isNotEmpty) {
             final publicUrl = supabaseClient.storage
                 .from('attachments') // Replace with your bucket name
                 .getPublicUrl(fileName);
-            uploadedFiles.add(
-              {'fileName': fileName, 'url': publicUrl},
-            );
+
+            uploadedFiles.add({'fileName': fileName, 'url': publicUrl});
           } else {
-            throw Exception('Failed to upload file');
+            throw Exception('Failed to upload file: $fileName');
           }
         }
       } catch (e) {
-        throw Exception('Error processing file: $e');
+        throw Exception('Error processing file "$fileName": $e');
       }
     }
+
     return uploadedFiles;
   }
 
@@ -74,17 +89,17 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
   @override
   Future<void> assignTaskMember(Map<String, dynamic> taskMember) async {
-    await supabaseClient.from('task_assignments').insert(taskMember);
+    await supabaseClient.from('task_assignments').upsert(taskMember);
   }
 
   @override
   Future<void> createSubTask(Map<String, dynamic> subTask) async {
-    await supabaseClient.from('subtasks').insert(subTask);
+    await supabaseClient.from('subtasks').upsert(subTask);
   }
 
   @override
   Future<void> addAttachment(Map<String, dynamic> attachment) async {
-    await supabaseClient.from('attachments').insert(attachment);
+    await supabaseClient.from('attachments').upsert(attachment);
   }
 
   @override
@@ -130,5 +145,12 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
       return task;
     }).toList());
     return res;
+  }
+
+  @override
+  Future<void> deleteTasks(int taskId) async {
+    print('dbg before delete task - $taskId');
+    await supabaseClient.from('tasks').delete().eq('id', taskId);
+    print('dbg after delete task - $taskId');
   }
 }
