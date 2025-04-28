@@ -16,13 +16,6 @@ DA:35,1
 LF:14
 LH:14
 end_of_record
-SF:lib/core/io/failure.dart
-DA:4,6
-DA:6,5
-DA:7,5
-LF:3
-LH:3
-end_of_record
 SF:lib/features/auth/domain/use_case/auth_use_case.dart
 DA:11,1
 DA:13,1
@@ -38,6 +31,13 @@ DA:43,1
 DA:45,2
 LF:12
 LH:10
+end_of_record
+SF:lib/core/io/failure.dart
+DA:4,6
+DA:6,5
+DA:7,5
+LF:3
+LH:3
 end_of_record
 SF:lib/core/io/success.dart
 DA:3,4
