@@ -26,4 +26,13 @@ class UserEntity {
       'updated_at': updatedAt ?? DateTime.now().toIso8601String(),
     };
   }
+
+  static UserEntity fromJson(json) {
+    return UserEntity(
+      id: json['id'],
+      name: json['full_name'],
+      email: json['email'],
+      password: json['password'],
+    );
+  }
 }
