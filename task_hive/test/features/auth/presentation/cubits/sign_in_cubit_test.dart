@@ -37,7 +37,7 @@ void main() {
         () async {
       final success = Success('Sign in successful');
       when(() => mockSignInUseCase.call(testUser))
-          .thenAnswer((_) async => Left(success));
+          .thenAnswer((_) async => Right(success));
 
       final expectedStates = [
         isA<SignInLoading>(),
@@ -54,7 +54,7 @@ void main() {
     test('emits [SignInLoading, SignInFailed] when signIn fails', () async {
       final failure = Failure('Invalid credentials');
       when(() => mockSignInUseCase.call(testUser))
-          .thenAnswer((_) async => Right(failure));
+          .thenAnswer((_) async => Left(failure));
 
       final expectedStates = [
         isA<SignInLoading>(),

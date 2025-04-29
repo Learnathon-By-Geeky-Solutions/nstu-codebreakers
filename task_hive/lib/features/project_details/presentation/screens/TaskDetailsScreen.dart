@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -643,6 +645,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         newSubtaskController.clear();
                         _updateProgress();
                         _showSubtaskInput = false;
+                        edited = true;
                       });
                     }
                   },
@@ -714,6 +717,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                           color: Colors.red, size: 20),
                       onPressed: () {
                         setState(() {
+                          edited = true;
                           assignees.removeAt(index);
                         });
                       },

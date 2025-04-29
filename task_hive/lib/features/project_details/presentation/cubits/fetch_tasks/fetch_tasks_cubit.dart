@@ -13,9 +13,9 @@ class FetchTasksCubit extends Cubit<FetchTasksState> {
     try {
       final res = await fetchTaskUseCase.call(porjectId);
       res.fold((l) {
-        emit(FetchTasksSuccessState(tasks: l));
+        emit(FetchTasksErrorState(failure: l));
       }, (r) {
-        emit(FetchTasksErrorState(failure: r));
+        emit(FetchTasksSuccessState(tasks: r));
       });
     } catch (e) {
       emit(FetchTasksErrorState(failure: Failure('Failed to fetch tasks')));

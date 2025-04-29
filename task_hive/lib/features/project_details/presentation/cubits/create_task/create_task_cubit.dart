@@ -14,13 +14,13 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
     final res = await _createTaskUseCase.call(task);
     res.fold(
       (l) {
-        emit(CreateTaskSuccessState(
-          success: Success('Task Created Successfully'),
-          taskId: l,
-        ));
+        emit(CreateTaskErrorState(failure: l));
       },
       (r) {
-        emit(CreateTaskErrorState(failure: r));
+        emit(CreateTaskSuccessState(
+          success: Success('Task Created Successfully'),
+          taskId: r,
+        ));
       },
     );
   }

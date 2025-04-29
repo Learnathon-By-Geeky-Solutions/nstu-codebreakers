@@ -14,52 +14,52 @@ class AuthReposityImpl implements AuthRepository {
   AuthReposityImpl(this._authRemoteDataSource, this._authLocalDataSource);
 
   @override
-  Future<Either<Success, Failure>> forgetPassword(String email) async {
+  Future<Either<Failure, Success>> forgetPassword(String email) async {
     try {
       await _authRemoteDataSource.forgetPassword(email);
-      return Left(Success('OTP sent to your email'));
+      return Right(Success('OTP sent to your email'));
     } catch (e) {
-      return Right(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Success, Failure>> signIn(UserEntity userInfo) async {
+  Future<Either<Failure, Success>> signIn(UserEntity userInfo) async {
     try {
       final response = await _authRemoteDataSource.signIn(userInfo);
       if (response.user == null) {
-        return Right(Failure('User not found'));
+        return Left(Failure('User not found'));
       }
       final userData = await _authRemoteDataSource.getUser(userInfo.email);
       await _authLocalDataSource.saveUser(userData);
-      return Left(Success('User Successfully signed in'));
+      return Right(Success('User Successfully signed in'));
     } catch (e) {
-      return Right(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Success, Failure>> signUp(UserEntity userInfo) async {
+  Future<Either<Failure, Success>> signUp(UserEntity userInfo) async {
     try {
       await _authRemoteDataSource.signUp(userInfo);
       await _authRemoteDataSource.addUser(userInfo);
-      return Left(Success('Verification email is sent.'));
+      return Right(Success('Verification email is sent.'));
     } catch (e) {
-      return Right(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 
   @override
-  Future<Either<UserEntity, Failure>> verifyOtp() async {
-    return Right(Failure('verifyOtp() not yet implemented'));
+  Future<Either<Failure, UserEntity>> verifyOtp() async {
+    return Left(Failure('verifyOtp() not yet implemented'));
   }
 
   @override
-  Future<Either<Success, Failure>> signInWithGoogle() async {
+  Future<Either<Failure, Success>> signInWithGoogle() async {
     try {
       final response = await _authRemoteDataSource.signInWithGoogle();
       if (response.user == null) {
-        return Right(Failure('User not found'));
+        return Left(Failure('User not found'));
       }
       await _authRemoteDataSource.addUser(
         UserEntity(
@@ -74,12 +74,12 @@ class AuthReposityImpl implements AuthRepository {
       final userData =
           await _authRemoteDataSource.getUser(response.user!.email ?? '');
       await _authLocalDataSource.saveUser(userData);
-      return Left(Success('User successfully signed in with Google'));
+      return Right(Success('User successfully signed in with Google'));
     } catch (e) {
       if (kDebugMode) {
         print('Error signing in with Google: $e');
       }
-      return Right(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 }

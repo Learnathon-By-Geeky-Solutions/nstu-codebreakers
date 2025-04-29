@@ -14,16 +14,21 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
   @override
   Future<int?> createTask(Map<String, dynamic> task) async {
     if (task.containsKey('id') && task['id'] != null) {
+      print('dbg update task $task');
       final taskId = task['id'];
-      final response = await supabaseClient
-          .from('tasks')
-          .update(task)
-          .eq('id', taskId)
-          .select('id')
-          .single();
+
+      // Update the task by performing an upsert operation
+      final response =
+          await supabaseClient.from('tasks').upsert(task).select('id').single();
+
+      if (response.isEmpty) {
+        throw Exception('Failed to update task');
+      }
+
       return taskId;
     }
-
+    print('dbg create task $task');
+    task.remove('id');
     final response =
         await supabaseClient.from('tasks').upsert(task).select('id').single();
 
@@ -91,7 +96,16 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
   @override
   Future<void> createSubTask(Map<String, dynamic> subTask) async {
-    await supabaseClient.from('subtasks').upsert(subTask);
+    final existingSubTask = await supabaseClient
+        .from('subtasks')
+        .select()
+        .eq('title', subTask['title'])
+        .eq('task_id', subTask['task_id'])
+        .maybeSingle();
+
+    if (existingSubTask == null) {
+      await supabaseClient.from('subtasks').upsert(subTask);
+    }
   }
 
   @override
@@ -147,5 +161,24 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
   @override
   Future<void> deleteTasks(int taskId) async {
     await supabaseClient.from('tasks').delete().eq('id', taskId);
+  }
+
+  @override
+  Future<void> deleteSubTasks(int taskId) async {
+    await supabaseClient.from('subtasks').delete().eq('task_id', taskId);
+  }
+
+  @override
+  Future<void> deleteAssignees(int taskId) {
+    return supabaseClient
+        .from('task_assignments')
+        .delete()
+        .eq('task_id', taskId);
+  }
+
+  @override
+  Future<void> deleteAttachments(int taskId) {
+    // TODO: implement deleteAttachments
+    throw UnimplementedError();
   }
 }

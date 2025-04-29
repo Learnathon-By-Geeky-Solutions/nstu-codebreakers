@@ -7,17 +7,17 @@ import 'package:dartz/dartz.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {
   @override
-  Future<Either<Success, Failure>> signIn(UserEntity userEntity) async {
-    return Left(Success('Sign in successful'));
+  Future<Either<Failure, Success>> signIn(UserEntity userEntity) async {
+    return Right(Success('Sign in successful'));
   }
 
   @override
-  Future<Either<Success, Failure>> signUp(UserEntity userEntity) async {
-    return Left(Success('Sign up successful'));
+  Future<Either<Failure, Success>> signUp(UserEntity userEntity) async {
+    return Right(Success('Sign up successful'));
   }
 
   @override
-  Future<Either<Success, Failure>> googleSignIn() async {
-    return Left(Success('Google sign in successful'));
+  Future<Either<Failure, Success>> googleSignIn() async {
+    return Right(Success('Google sign in successful'));
   }
 }

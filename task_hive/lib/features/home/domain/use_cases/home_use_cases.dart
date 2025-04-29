@@ -9,34 +9,34 @@ import '../entities/project_entity.dart';
 import '../repository/home_repository.dart';
 
 class FetchProjectsUseCase
-    extends BaseUseCase<int, List<ProjectEntity?>, String> {
+    extends BaseUseCase<int, String, List<ProjectEntity?>> {
   final HomeRepository _projectRepository;
   FetchProjectsUseCase(this._projectRepository);
 
   @override
-  Future<Either<List<ProjectEntity?>, String>> call(int input) async {
+  Future<Either<String, List<ProjectEntity?>>> call(int input) async {
     return await _projectRepository.fetchProject(input);
   }
 }
 
 class FetchUserUseCase
-    extends BaseUseCase<NoInput, HomePageUserEntity, String> {
+    extends BaseUseCase<NoInput, String, HomePageUserEntity> {
   final HomeRepository _projectRepository;
   FetchUserUseCase(this._projectRepository);
 
   @override
-  Future<Either<HomePageUserEntity, String>> call(NoInput input) async {
+  Future<Either<String, HomePageUserEntity>> call(NoInput input) async {
     return await _projectRepository.fetchUser();
   }
 }
 
 class CreateProjectUseCase
-    extends BaseUseCase<ProjectEntity, Success, Failure> {
+    extends BaseUseCase<ProjectEntity, Failure, Success> {
   final HomeRepository _projectRepository;
   CreateProjectUseCase(this._projectRepository);
 
   @override
-  Future<Either<Success, Failure>> call(ProjectEntity input) async {
+  Future<Either<Failure, Success>> call(ProjectEntity input) async {
     return await _projectRepository.createProject(input);
   }
 }

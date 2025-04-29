@@ -18,9 +18,9 @@ class SignUpCubit extends Cubit<SignUpState> {
     final res = await _signUpUseCase.call(userEntity);
 
     res.fold((l) {
-      emit(SignUpSuccess(l));
+      emit(SignUpFailed(l));
     }, (r) {
-      emit(SignUpFailed(r));
+      emit(SignUpSuccess(r));
     });
   }
 }

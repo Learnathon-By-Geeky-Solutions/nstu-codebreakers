@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:task_hive/core/io/failure.dart';
 import 'package:task_hive/features/home/domain/entities/project_entity.dart';
 import 'package:task_hive/features/home/domain/use_cases/home_use_cases.dart';
@@ -27,91 +28,71 @@ void main() {
   });
 
   group('fetchProjects', () {
-    final testProjects = [
-      ProjectEntity(
-        id: 1,
-        name: 'Test Project 1',
-        description: 'Description 1',
-        createdAt: DateTime.now(),
-      ),
-      ProjectEntity(
-        id: 2,
-        name: 'Test Project 2',
-        description: 'Description 2',
-        createdAt: DateTime.now(),
-      ),
-    ];
+    final userId = 1;
+    final testProject = ProjectEntity(
+      id: 1,
+      name: 'Test Project 1',
+      description: 'Description 1',
+      createdAt: DateTime.now(),
+    );
 
-    test(
-        'should emit [FetchProjectsLoading, FetchProjectsSuccess] when successful',
-        () {
-      when(() => mockFetchProjectsUseCase.call(1))
-          .thenAnswer((_) async => Left(testProjects));
+    blocTest<FetchProjectsCubit, FetchProjectsState>(
+      'should emit [FetchProjectsLoading, FetchProjectsSuccess] when successful',
+      build: () {
+        when(() => mockFetchProjectsUseCase.call(userId)).thenAnswer(
+            (_) async => Right<String, List<ProjectEntity?>>([testProject]));
+        return fetchProjectsCubit;
+      },
+      act: (cubit) => cubit.fetchProjects(userId),
+      expect: () => [
+        isA<FetchProjectsLoading>(),
+        isA<FetchProjectsSuccess>().having(
+          (state) => state.projects,
+          'projects',
+          [testProject],
+        ),
+      ],
+      verify: (_) {
+        verify(() => mockFetchProjectsUseCase.call(userId)).called(1);
+      },
+    );
 
-      fetchProjectsCubit.fetchProjects(userId: 1);
+    blocTest<FetchProjectsCubit, FetchProjectsState>(
+      'should emit [FetchProjectsLoading, FetchProjectsFailure] when failed',
+      build: () {
+        final failure = Failure('Failed to fetch projects');
+        when(() => mockFetchProjectsUseCase.call(userId)).thenAnswer(
+            (_) async => Left<String, List<ProjectEntity?>>(failure.message));
+        return fetchProjectsCubit;
+      },
+      act: (cubit) => cubit.fetchProjects(userId),
+      expect: () => [
+        isA<FetchProjectsLoading>(),
+        isA<FetchProjectsFailure>().having(
+          (state) => state.failure,
+          'failure',
+          isA<Failure>()
+              .having((f) => f.message, 'message', 'Failed to fetch projects'),
+        ),
+      ],
+    );
 
-      expect(
-        fetchProjectsCubit.stream,
-        emitsInOrder([
-          isA<FetchProjectsLoading>(),
-          isA<FetchProjectsSuccess>().having(
-            (state) => state.projects,
-            'projects',
-            testProjects,
-          ),
-        ]),
-      );
-    });
-
-    test('should emit [FetchProjectsLoading, FetchProjectsFailure] when failed',
-        () {
-      final errorMessage = 'Failed to fetch projects';
-      when(() => mockFetchProjectsUseCase.call(1))
-          .thenAnswer((_) async => Right(errorMessage));
-
-      fetchProjectsCubit.fetchProjects(userId: 1);
-
-      expect(
-        fetchProjectsCubit.stream,
-        emitsInOrder([
-          isA<FetchProjectsLoading>(),
-          isA<FetchProjectsFailed>().having(
-            (state) => state.error,
-            'failure',
-            errorMessage,
-          ),
-        ]),
-      );
-    });
-
-    test(
-        'should emit [FetchProjectsLoading, FetchProjectsFailure] when exception occurs',
-        () {
-      when(() => mockFetchProjectsUseCase.call(1))
-          .thenThrow(Exception('Network error'));
-
-      fetchProjectsCubit.fetchProjects(userId: 1);
-
-      expect(
-        fetchProjectsCubit.stream,
-        emitsInOrder([
-          isA<FetchProjectsLoading>(),
-          isA<FetchProjectsFailed>().having(
-            (state) => state.error,
-            'failure message',
-            'Failed to fetch projects',
-          ),
-        ]),
-      );
-    });
-
-    test('verifies fetch projects use case is called with correct user id', () {
-      when(() => mockFetchProjectsUseCase.call(1))
-          .thenAnswer((_) async => Left(testProjects));
-
-      fetchProjectsCubit.fetchProjects(userId: 1);
-
-      verify(() => mockFetchProjectsUseCase.call(1)).called(1);
-    });
+    blocTest<FetchProjectsCubit, FetchProjectsState>(
+      'should emit [FetchProjectsLoading, FetchProjectsFailure] when exception occurs',
+      build: () {
+        when(() => mockFetchProjectsUseCase.call(userId))
+            .thenThrow(Exception('Network error'));
+        return fetchProjectsCubit;
+      },
+      act: (cubit) => cubit.fetchProjects(userId),
+      expect: () => [
+        isA<FetchProjectsLoading>(),
+        isA<FetchProjectsFailure>().having(
+          (state) => state.failure.message,
+          'failure message',
+          'Failed to fetch projects',
+        ),
+      ],
+    );
   });
 }

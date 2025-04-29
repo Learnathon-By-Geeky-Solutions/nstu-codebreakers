@@ -13,9 +13,9 @@ class FetchUserCubit extends Cubit<FetchUserState> {
     try {
       final res = await _fetchUserUseCase.call(NoInput());
       res.fold((l) {
-        emit(FetchUserSuccess(l));
+        emit(FetchUserFailed(l));
       }, (r) {
-        emit(FetchUserFailed(r));
+        emit(FetchUserSuccess(r));
       });
     } catch (e) {
       emit(FetchUserFailed(e.toString()));

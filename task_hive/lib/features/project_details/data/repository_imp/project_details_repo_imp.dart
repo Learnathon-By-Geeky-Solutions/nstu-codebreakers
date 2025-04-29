@@ -14,7 +14,7 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
   ProjectDetailsRemote _projectDetailsRemote;
   ProjectDetailsRepoImp(this._projectDetailsRemote);
   @override
-  Future<Either<int, Failure>> createTask(TaskEntity task) async {
+  Future<Either<Failure, int>> createTask(TaskEntity task) async {
     try {
       final filePaths =
           await _projectDetailsRemote.uploadFiles(task.attachments ?? []);
@@ -29,7 +29,8 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
           'file_path': element['url'],
         });
       }
-      if (task.subTasks != null) {
+      if (task.subTasks != null && taskId != null) {
+        await _projectDetailsRemote.deleteSubTasks(taskId);
         for (final subTask in task.subTasks!) {
           await _projectDetailsRemote.createSubTask({
             'task_id': taskId,
@@ -38,13 +39,9 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
           });
         }
       }
-      // task.assigneeIds?.map((assigneeId) async {
-      //   await _projectDetailsRemote.assignTaskMember({
-      //     'task_id': taskId,
-      //     'user_id': assigneeId,
-      //   });
-      // });
-      if (task.assignees != null) {
+      if (task.assignees != null && taskId != null) {
+        print('dbg assignee task ${task.assignees?.length}');
+        await _projectDetailsRemote.deleteAssignees(taskId);
         for (final assignee in task.assignees!) {
           await _projectDetailsRemote.assignTaskMember({
             'task_id': taskId,
@@ -55,42 +52,42 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
       if (taskId == null) {
         throw Exception('Task not created');
       }
-      return Left(taskId);
+      return Right(taskId);
     } catch (e) {
-      return Right(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 
   @override
-  Future<Either<TaskEntity, Failure>> fetchTask(int taskId) async {
+  Future<Either<Failure, TaskEntity>> fetchTask(int taskId) async {
     try {
       final res = await _projectDetailsRemote.fetchTask(taskId ?? 0);
       final task = TaskEntity.fromJson(res);
-      return Left(task);
+      return Right(task);
     } catch (e) {
-      return Right(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 
   @override
-  Future<Either<List<TaskEntity>, Failure>> fetchTasks(int projectId) async {
+  Future<Either<Failure, List<TaskEntity>>> fetchTasks(int projectId) async {
     final res = await _projectDetailsRemote.fetchTasks(projectId);
     if (res.isNotEmpty) {
       final tasks = res.map((e) => TaskEntity.fromJson(e)).toList();
-      return Left(tasks);
+      return Right(tasks);
     } else {
-      return Right(Failure('No tasks found'));
+      return Left(Failure('No tasks found'));
     }
   }
 
   @override
-  Future<Either<Success, Failure>> deleteTask(int taskId) async {
+  Future<Either<Failure, Success>> deleteTask(int taskId) async {
     try {
       await _projectDetailsRemote.deleteTasks(taskId);
-      return Left(Success(
+      return Right(Success(
           'Task deleted successfully')); // Return a placeholder TaskEntity or appropriate value
     } catch (e) {
-      return Right(
+      return Left(
           Failure(e.toString())); // Return a Failure in case of an error
     }
   }

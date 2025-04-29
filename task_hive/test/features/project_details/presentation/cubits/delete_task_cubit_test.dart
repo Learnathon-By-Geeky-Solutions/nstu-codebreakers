@@ -34,7 +34,7 @@ void main() {
       build: () => deleteTaskCubit,
       act: (cubit) {
         when(() => mockDeleteTaskUseCase.call(1))
-            .thenAnswer((_) async => Left(success));
+            .thenAnswer((_) async => Right(success));
         cubit.deleteTask(1);
       },
       expect: () => [
@@ -53,7 +53,7 @@ void main() {
       act: (cubit) {
         final failure = Failure('Failed to delete task');
         when(() => mockDeleteTaskUseCase.call(1))
-            .thenAnswer((_) async => Right(failure));
+            .thenAnswer((_) async => Left(failure));
         cubit.deleteTask(1);
       },
       expect: () => [
@@ -61,14 +61,15 @@ void main() {
         isA<DeleteTaskFailure>().having(
           (state) => state.failure,
           'failure',
-          isA<Failure>().having((f) => f.message, 'message', 'Failed to delete task'),
+          isA<Failure>()
+              .having((f) => f.message, 'message', 'Failed to delete task'),
         ),
       ],
     );
 
     test('verifies delete task use case is called with correct task id', () {
       when(() => mockDeleteTaskUseCase.call(1))
-          .thenAnswer((_) async => Left(success));
+          .thenAnswer((_) async => Right(success));
 
       deleteTaskCubit.deleteTask(1);
 

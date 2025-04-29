@@ -39,7 +39,7 @@ void main() {
       build: () => createTaskCubit,
       act: (cubit) {
         when(() => mockCreateTaskUseCase.call(testTask))
-            .thenAnswer((_) async => const Left(1));
+            .thenAnswer((_) async => const Right(1));
         cubit.createTask(testTask);
       },
       expect: () => [
@@ -58,7 +58,7 @@ void main() {
       act: (cubit) {
         final failure = Failure('Failed to create task');
         when(() => mockCreateTaskUseCase.call(testTask))
-            .thenAnswer((_) async => Right(failure));
+            .thenAnswer((_) async => Left(failure));
         cubit.createTask(testTask);
       },
       expect: () => [
@@ -74,7 +74,7 @@ void main() {
 
     test('verifies create task use case is called with correct task', () {
       when(() => mockCreateTaskUseCase.call(testTask))
-          .thenAnswer((_) async => const Left(1));
+          .thenAnswer((_) async => const Right(1));
 
       createTaskCubit.createTask(testTask);
 

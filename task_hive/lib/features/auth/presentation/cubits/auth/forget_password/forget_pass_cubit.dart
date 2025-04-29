@@ -18,9 +18,9 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     final res = await _forgetPasswordUseCase.call(email);
 
     res.fold((l) {
-      emit(ForgetPasswordSuccess(l));
+      emit(ForgetPasswordFailed(l));
     }, (r) {
-      emit(ForgetPasswordFailed(r));
+      emit(ForgetPasswordSuccess(r));
     });
   }
 }

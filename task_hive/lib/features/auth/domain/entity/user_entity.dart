@@ -18,21 +18,26 @@ class UserEntity {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'full_name': name ?? 'No name',
-      'email': email ?? 'No email',
-      'profile_picture': profilePictureUrl,
-      'created_at': createdAt ?? DateTime.now().toIso8601String(),
-      'updated_at': updatedAt ?? DateTime.now().toIso8601String(),
-    };
+    final map = <String, dynamic>{};
+    if (id != null) map['id'] = id;
+    if (name != null) map['full_name'] = name;
+    if (email != null) map['email'] = email;
+    if (password != null) map['password'] = password;
+    if (profilePictureUrl != null) map['profile_picture'] = profilePictureUrl;
+    if (createdAt != null) map['created_at'] = createdAt;
+    if (updatedAt != null) map['updated_at'] = updatedAt;
+    return map;
   }
 
-  static UserEntity fromJson(json) {
+  static UserEntity fromJson(Map<String, dynamic> json) {
     return UserEntity(
       id: json['id'],
       name: json['full_name'],
       email: json['email'],
       password: json['password'],
+      profilePictureUrl: json['profile_picture'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
     );
   }
 }

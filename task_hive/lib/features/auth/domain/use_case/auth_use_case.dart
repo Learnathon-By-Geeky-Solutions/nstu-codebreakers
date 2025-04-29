@@ -6,42 +6,42 @@ import '../../../../core/io/success.dart';
 import '../../../../core/base/use_case/base_use_case.dart';
 import '../entity/user_entity.dart';
 
-class SignUpUseCase extends BaseUseCase<UserEntity, Success, Failure> {
+class SignUpUseCase extends BaseUseCase<UserEntity, Failure, Success> {
   final AuthRepository _authRepository;
   SignUpUseCase(this._authRepository);
 
   @override
-  Future<Either<Success, Failure>> call(UserEntity input) async {
+  Future<Either<Failure, Success>> call(UserEntity input) async {
     return await _authRepository.signUp(input);
   }
 }
 
-class SignInUseCase extends BaseUseCase<UserEntity, Success, Failure> {
+class SignInUseCase extends BaseUseCase<UserEntity, Failure, Success> {
   final AuthRepository _authRepository;
   SignInUseCase(this._authRepository);
 
   @override
-  Future<Either<Success, Failure>> call(UserEntity input) async {
+  Future<Either<Failure, Success>> call(UserEntity input) async {
     return await _authRepository.signIn(input);
   }
 }
 
-class GoogleSignInUseCase extends BaseUseCase<void, Success, Failure> {
+class GoogleSignInUseCase extends BaseUseCase<void, Failure, Success> {
   final AuthRepository _authRepository;
   GoogleSignInUseCase(this._authRepository);
 
   @override
-  Future<Either<Success, Failure>> call(void input) async {
+  Future<Either<Failure, Success>> call(void input) async {
     return await _authRepository.signInWithGoogle();
   }
 }
 
-class ForgetPasswordUseCase extends BaseUseCase<String, Success, Failure> {
+class ForgetPasswordUseCase extends BaseUseCase<String, Failure, Success> {
   final AuthRepository _authRepository;
   ForgetPasswordUseCase(this._authRepository);
 
   @override
-  Future<Either<Success, Failure>> call(String input) async {
+  Future<Either<Failure, Success>> call(String input) async {
     return await _authRepository.forgetPassword(input);
   }
 }

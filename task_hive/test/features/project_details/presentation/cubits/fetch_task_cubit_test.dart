@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:task_hive/core/io/failure.dart';
 import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
 import 'package:task_hive/features/project_details/domain/use_case/project_details_use_case.dart';
@@ -33,67 +34,60 @@ void main() {
   });
 
   group('fetchTask', () {
-    test(
-        'should emit [FetchTaskLoadingState, FetchTaskSuccessState] when successful',
-        () {
-      when(() => mockFetchTaskUseCase.call(1))
-          .thenAnswer((_) async => Left(testTask));
+    blocTest<FetchTaskCubit, FetchTaskState>(
+      'should emit [FetchTaskLoadingState, FetchTaskSuccessState] when successful',
+      build: () {
+        when(() => mockFetchTaskUseCase.call(1))
+            .thenAnswer((_) async => Right(testTask));
+        return fetchTaskCubit;
+      },
+      act: (cubit) => cubit.fetchTask(1),
+      expect: () => [
+        isA<FetchTaskLoadingState>(),
+        isA<FetchTaskSuccessState>().having(
+          (state) => state.task,
+          'task',
+          testTask,
+        ),
+      ],
+    );
 
-      fetchTaskCubit.fetchTask(1);
+    blocTest<FetchTaskCubit, FetchTaskState>(
+      'should emit [FetchTaskLoadingState, FetchTaskErrorState] when failed',
+      build: () {
+        final failure = Failure('Failed to fetch task');
+        when(() => mockFetchTaskUseCase.call(1))
+            .thenAnswer((_) async => Left(failure));
+        return fetchTaskCubit;
+      },
+      act: (cubit) => cubit.fetchTask(1),
+      expect: () => [
+        isA<FetchTaskLoadingState>(),
+        isA<FetchTaskErrorState>().having(
+          (state) => state.failure,
+          'failure',
+          isA<Failure>()
+              .having((f) => f.message, 'message', 'Failed to fetch task'),
+        ),
+      ],
+    );
 
-      expect(
-        fetchTaskCubit.stream,
-        emitsInOrder([
-          isA<FetchTaskLoadingState>(),
-          isA<FetchTaskSuccessState>().having(
-            (state) => state.task,
-            'task',
-            testTask,
-          ),
-        ]),
-      );
-    });
-
-    test('should emit [FetchTaskLoadingState, FetchTaskErrorState] when failed',
-        () {
-      final failure = Failure('Failed to fetch task');
-      when(() => mockFetchTaskUseCase.call(1))
-          .thenAnswer((_) async => Right(failure));
-
-      fetchTaskCubit.fetchTask(1);
-
-      expect(
-        fetchTaskCubit.stream,
-        emitsInOrder([
-          isA<FetchTaskLoadingState>(),
-          isA<FetchTaskErrorState>().having(
-            (state) => state.failure,
-            'failure',
-            failure,
-          ),
-        ]),
-      );
-    });
-
-    test(
-        'should emit [FetchTaskLoadingState, FetchTaskErrorState] when exception occurs',
-        () {
-      when(() => mockFetchTaskUseCase.call(1))
-          .thenThrow(Exception('Network error'));
-
-      fetchTaskCubit.fetchTask(1);
-
-      expect(
-        fetchTaskCubit.stream,
-        emitsInOrder([
-          isA<FetchTaskLoadingState>(),
-          isA<FetchTaskErrorState>().having(
-            (state) => state.failure.message,
-            'failure message',
-            'Failed to fetch task',
-          ),
-        ]),
-      );
-    });
+    blocTest<FetchTaskCubit, FetchTaskState>(
+      'should emit [FetchTaskLoadingState, FetchTaskErrorState] when exception occurs',
+      build: () {
+        when(() => mockFetchTaskUseCase.call(1))
+            .thenThrow(Exception('Network error'));
+        return fetchTaskCubit;
+      },
+      act: (cubit) => cubit.fetchTask(1),
+      expect: () => [
+        isA<FetchTaskLoadingState>(),
+        isA<FetchTaskErrorState>().having(
+          (state) => state.failure.message,
+          'failure message',
+          'Failed to fetch task',
+        ),
+      ],
+    );
   });
 }

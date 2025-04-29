@@ -18,9 +18,9 @@ class SignInCubit extends Cubit<SignInState> {
     final res = await _signInUseCase.call(userInfo);
 
     res.fold((l) {
-      emit(SignInSuccess(l));
+      emit(SignInFailed(l));
     }, (r) {
-      emit(SignInFailed(r));
+      emit(SignInSuccess(r));
     });
   }
 }
