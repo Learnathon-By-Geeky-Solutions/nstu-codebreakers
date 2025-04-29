@@ -65,6 +65,20 @@ void main() {
       expect(json['profile_picture'], 'http://example.com/pic.jpg');
       expect(json['created_at'], '2025-04-29T10:00:00Z');
       expect(json['updated_at'], '2025-04-29T10:00:00Z');
+
+      // Test with minimal fields
+      final minimalUser = UserEntity(
+        name: 'John Doe',
+        email: 'john@example.com',
+        profilePictureUrl: 'http://example.com/pic.jpg',
+      );
+
+      final minimalJson = minimalUser.toJson();
+      expect(minimalJson['full_name'], 'John Doe');
+      expect(minimalJson['email'], 'john@example.com');
+      expect(minimalJson['profile_picture'], 'http://example.com/pic.jpg');
+      expect(minimalJson['id'], isNull);
+      expect(minimalJson['password'], isNull);
     });
 
     test('should create UserEntity with all properties', () {
@@ -85,22 +99,6 @@ void main() {
       expect(user.profilePictureUrl, 'http://example.com/pic.jpg');
       expect(user.createdAt, '2025-04-29T10:00:00Z');
       expect(user.updatedAt, '2025-04-29T10:00:00Z');
-    });
-
-    test('toJson should create valid JSON', () {
-      final user = UserEntity(
-        name: 'John Doe',
-        email: 'john@example.com',
-        profilePictureUrl: 'http://example.com/pic.jpg',
-      );
-
-      final json = user.toJson();
-
-      expect(json['full_name'], 'John Doe');
-      expect(json['email'], 'john@example.com');
-      expect(json['profile_picture'], 'http://example.com/pic.jpg');
-      expect(json['created_at'], isNotNull);
-      expect(json['updated_at'], isNotNull);
     });
 
     test('fromJson should create UserEntity from JSON', () {

@@ -14,8 +14,8 @@ class CreateProjectCubit extends Cubit<CreateProjectState> {
     try {
       final res = await _createProjectUseCase.call(project);
       res.fold(
-        (l) => emit(CreateProjectSuccess(success: l)),
-        (r) => emit(CreateProjectFailure(failure: r)),
+        (l) => emit(CreateProjectFailure(failure: l)),
+        (r) => emit(CreateProjectSuccess(success: r)),
       );
     } catch (e) {
       emit(CreateProjectFailure(failure: Failure(e.toString())));

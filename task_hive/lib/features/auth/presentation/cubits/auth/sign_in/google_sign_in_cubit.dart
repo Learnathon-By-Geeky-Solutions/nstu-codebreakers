@@ -6,22 +6,22 @@ import '../../../../../../core/io/success.dart';
 import '../../../../domain/use_case/auth_use_case.dart';
 part 'google_sign_in_state.dart';
 
-
 class GoogleSignInCubit extends Cubit<GoogleSignInState> {
-  GoogleSignInCubit(this._googleSignInUseCase) : super(GoogleSignInInitial());
-
   final GoogleSignInUseCase _googleSignInUseCase;
 
-  void signInWithGoogle() async {
-    emit(GoogleSignInLoading());
-    final res = await _googleSignInUseCase.call(null);
+  GoogleSignInCubit(this._googleSignInUseCase) : super(GoogleSignInInitial());
 
-    res.fold(
-      (l) => emit(GoogleSignInSuccess(l)),
-      (r) => emit(GoogleSignInFailed(r)),
-    );
+  Future<void> signInWithGoogle() async {
+    emit(GoogleSignInLoading());
+    try {
+      final result = await _googleSignInUseCase.call(null);
+      result.fold(
+        (failure) => emit(GoogleSignInFailed(failure)),
+        (success) => emit(GoogleSignInSuccess(success)),
+      );
+    } catch (e) {
+      final message = e.toString().replaceFirst('Exception: ', '');
+      emit(GoogleSignInFailed(Failure(message)));
+    }
   }
 }
-
-
-

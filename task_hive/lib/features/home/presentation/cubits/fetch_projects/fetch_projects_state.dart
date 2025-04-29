@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
-
 import '../../../domain/entities/project_entity.dart';
 
-class FetchProjectsState extends Equatable {
+abstract class FetchProjectsState extends Equatable {
   @override
   List<Object?> get props => [];
 }
@@ -14,11 +13,11 @@ class FetchProjectsSuccess extends FetchProjectsState {
   List<Object?> get props => [projects];
 }
 
-class FetchProjectsFailed extends FetchProjectsState {
-  final String error;
-  FetchProjectsFailed(this.error);
+class FetchProjectsFailure extends FetchProjectsState {
+  final dynamic failure;
+  FetchProjectsFailure(this.failure);
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [failure];
 }
 
 class FetchProjectsLoading extends FetchProjectsState {}

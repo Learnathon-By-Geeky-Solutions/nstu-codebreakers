@@ -75,101 +75,96 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         ),
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BlocBuilder<FetchUserCubit, FetchUserState>(
-                    bloc: _fetchUserCubit,
-                    builder: (context, state) {
-                      if (state is FetchUserLoading) {
-                        return const CircularProgressIndicator(
-                          color: Colors.blue,
-                        );
-                      } else if (state is FetchUserSuccess) {
-                        _fetchProjectCubit.fetchProjects(
-                            userId: state.userData.userId ?? 0);
-                        userData = state.userData;
-                        _appData.userEmail = state.userData.email;
-                        _appData.userName = state.userData.name;
-                        _appData.userId = state.userData.userId;
-                        return const SizedBox.shrink();
-                      } else if (state is FetchUserFailed) {
-                        return Text('Error: ${state.error}');
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  Text(
-                    'Recent Projects',
-                    style: textTheme.textxlMedium
-                        .copyWith(color: colorScheme.primary),
-                  ),
-                  Divider(
-                    color: colorScheme.tertiary,
-                    height: 1,
-                  ),
-                  const SizedBox(height: 16),
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        BlocBuilder<FetchProjectsCubit, FetchProjectsState>(
-                          bloc: _fetchProjectCubit,
-                          builder: (context, state) {
-                            if (state is FetchProjectsLoading) {
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.blue,
-                                ),
-                              );
-                            } else if (state is FetchProjectsSuccess) {
-                              if (state.projects.isEmpty) {
-                                return const Center(
-                                  child: Text('No projects found'),
-                                );
-                              }
-
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: state.projects.length,
-                                itemBuilder: (context, index) {
-                                  final project = state.projects[index];
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          _appData.currentProjectId =
-                                              project?.id ?? 0;
-                                          context.push(
-                                            '${MyRoutes.home}/${MyRoutes.projectDetails}',
-                                          );
-                                        },
-                                        child: RecentProjectsCard(
-                                            project: project)),
-                                  );
-                                },
-                              );
-                            } else if (state is FetchProjectsFailed) {
-                              return Text('Error: ${state.error}');
-                            }
-                            return const SizedBox.shrink();
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BlocBuilder<FetchUserCubit, FetchUserState>(
+                bloc: _fetchUserCubit,
+                builder: (context, state) {
+                  if (state is FetchUserLoading) {
+                    return const CircularProgressIndicator(
+                      color: Colors.blue,
+                    );
+                  } else if (state is FetchUserSuccess) {
+                    _fetchProjectCubit
+                        .fetchProjects(state.userData.userId ?? 0);
+                    userData = state.userData;
+                    _appData.userEmail = state.userData.email;
+                    _appData.userName = state.userData.name;
+                    _appData.userId = state.userData.userId;
+                    return const SizedBox.shrink();
+                  } else if (state is FetchUserFailed) {
+                    return Text('Error: ${state.error}');
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
-            ),
-          ],
+              Text(
+                'Recent Projects',
+                style:
+                    textTheme.textxlMedium.copyWith(color: colorScheme.primary),
+              ),
+              Divider(
+                color: colorScheme.tertiary,
+                height: 1,
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    BlocBuilder<FetchProjectsCubit, FetchProjectsState>(
+                      bloc: _fetchProjectCubit,
+                      builder: (context, state) {
+                        if (state is FetchProjectsLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.blue,
+                            ),
+                          );
+                        } else if (state is FetchProjectsSuccess) {
+                          if (state.projects.isEmpty) {
+                            return const Center(
+                              child: Text('No projects found'),
+                            );
+                          }
+
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.projects.length,
+                            itemBuilder: (context, index) {
+                              final project = state.projects[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      _appData.currentProjectId =
+                                          project?.id ?? 0;
+                                      context.push(
+                                        '${MyRoutes.home}/${MyRoutes.projectDetails}',
+                                      );
+                                    },
+                                    child:
+                                        RecentProjectsCard(project: project)),
+                              );
+                            },
+                          );
+                        } else if (state is FetchProjectsFailure) {
+                          return Text('Error: ${state.failure}');
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -339,7 +334,7 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
                       );
                     } else if (state is CreateProjectSuccess) {
                       widget.fetchProjectsCubit?.fetchProjects(
-                        userId: widget.userData?.userId ?? 0,
+                        widget.userData?.userId ?? 0,
                       );
                       _showSnackBar(state.success.message);
                       Navigator.pop(context);

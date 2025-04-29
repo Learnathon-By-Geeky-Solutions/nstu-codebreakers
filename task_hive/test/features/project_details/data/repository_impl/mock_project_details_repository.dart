@@ -7,14 +7,14 @@ import 'package:dartz/dartz.dart';
 
 class MockProjectDetailsRepository extends Mock implements ProjectDetailsRepo {
   @override
-  Future<Either<int, Failure>> createTask(TaskEntity task) async {
-    return Left(1); // Return task ID 1
+  Future<Either<Failure, int>> createTask(TaskEntity task) async {
+    return Right(1); // Return task ID 1
   }
 
   @override
-  Future<Either<TaskEntity, Failure>> fetchTask(int taskId) async {
+  Future<Either<Failure, TaskEntity>> fetchTask(int taskId) async {
     if (taskId > 0) {
-      return Left(TaskEntity(
+      return Right(TaskEntity(
         taskId: taskId,
         title: 'Test Task',
         description: 'Test Description',
@@ -22,12 +22,12 @@ class MockProjectDetailsRepository extends Mock implements ProjectDetailsRepo {
         priority: 'High',
       ));
     }
-    return Right(Failure('Task not found'));
+    return Left(Failure('Task not found'));
   }
 
   @override
-  Future<Either<List<TaskEntity>, Failure>> fetchTasks(int projectId) async {
-    return Left([
+  Future<Either<Failure, List<TaskEntity>>> fetchTasks(int projectId) async {
+    return Right([
       TaskEntity(
         taskId: 1,
         title: 'Task 1',
@@ -42,7 +42,7 @@ class MockProjectDetailsRepository extends Mock implements ProjectDetailsRepo {
   }
 
   @override
-  Future<Either<Success, Failure>> deleteTask(int taskId) async {
-    return Left(Success('Task deleted successfully'));
+  Future<Either<Failure, Success>> deleteTask(int taskId) async {
+    return Right(Success('Task deleted successfully'));
   }
 }

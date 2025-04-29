@@ -8,18 +8,18 @@ import '../../../domain/use_case/project_details_use_case.dart';
 part 'fetch_task_state.dart';
 
 class FetchTaskCubit extends Cubit<FetchTaskState> {
-  final FetchTaskUseCase fetchTaskUseCase;
-  FetchTaskCubit(this.fetchTaskUseCase) : super(FetchTaskInitialState());
+  final FetchTaskUseCase _fetchTaskUseCase;
 
-  void fetchTask(int taskId) async {
+  FetchTaskCubit(this._fetchTaskUseCase) : super(FetchTaskInitialState());
+
+  Future<void> fetchTask(int taskId) async {
     emit(FetchTaskLoadingState());
     try {
-      final res = await fetchTaskUseCase.call(taskId);
-      res.fold((l) {
-        emit(FetchTaskSuccessState(task: l));
-      }, (r) {
-        emit(FetchTaskErrorState(failure: r));
-      });
+      final result = await _fetchTaskUseCase.call(taskId);
+      result.fold(
+        (failure) => emit(FetchTaskErrorState(failure: failure)),
+        (task) => emit(FetchTaskSuccessState(task: task)),
+      );
     } catch (e) {
       emit(FetchTaskErrorState(failure: Failure('Failed to fetch task')));
     }

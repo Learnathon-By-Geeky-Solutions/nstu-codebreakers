@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/use_cases/home_use_cases.dart';
+import '../../../../../core/io/failure.dart';
 import 'fetch_projects_state.dart';
 
 class FetchProjectsCubit extends Cubit<FetchProjectsState> {
@@ -8,17 +9,17 @@ class FetchProjectsCubit extends Cubit<FetchProjectsState> {
   FetchProjectsCubit(this._fetchProjectsUseCase)
       : super(FetchProjectsInitial());
 
-  void fetchProjects({required int userId}) async {
+  Future<void> fetchProjects(int userId) async {
     emit(FetchProjectsLoading());
     try {
       final result = await _fetchProjectsUseCase.call(userId);
-      result.fold((l) {
-        emit(FetchProjectsSuccess(l));
-      }, (r) {
-        emit(FetchProjectsFailed(r));
-      });
+      result.fold(
+        (failure) => emit(FetchProjectsFailure(
+            failure is Failure ? failure : Failure(failure.toString()))),
+        (projects) => emit(FetchProjectsSuccess(projects)),
+      );
     } catch (e) {
-      emit(FetchProjectsFailed(e.toString()));
+      emit(FetchProjectsFailure(Failure('Failed to fetch projects')));
     }
   }
 }

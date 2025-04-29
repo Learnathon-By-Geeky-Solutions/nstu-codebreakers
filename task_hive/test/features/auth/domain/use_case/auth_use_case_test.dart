@@ -33,23 +33,7 @@ void main() {
     test('should return Success when repository returns Success', () async {
       // Arrange
       when(() => mockRepository.signIn(testUser))
-          .thenAnswer((_) async => Left(Success('Sign in successful')));
-
-      // Act
-      final result = await signInUseCase.call(testUser);
-
-      // Assert
-      expect(result.isLeft(), true);
-      result.fold(
-        (success) => expect(success.message, 'Sign in successful'),
-        (failure) => fail('Should not return failure'),
-      );
-    });
-
-    test('should return Failure when repository returns Failure', () async {
-      // Arrange
-      when(() => mockRepository.signIn(testUser))
-          .thenAnswer((_) async => Right(Failure('Invalid credentials')));
+          .thenAnswer((_) async => Right(Success('Sign in successful')));
 
       // Act
       final result = await signInUseCase.call(testUser);
@@ -57,8 +41,24 @@ void main() {
       // Assert
       expect(result.isRight(), true);
       result.fold(
-        (success) => fail('Should not return success'),
+        (failure) => fail('Should not return failure'),
+        (success) => expect(success.message, 'Sign in successful'),
+      );
+    });
+
+    test('should return Failure when repository returns Failure', () async {
+      // Arrange
+      when(() => mockRepository.signIn(testUser))
+          .thenAnswer((_) async => Left(Failure('Invalid credentials')));
+
+      // Act
+      final result = await signInUseCase.call(testUser);
+
+      // Assert
+      expect(result.isLeft(), true);
+      result.fold(
         (failure) => expect(failure.message, 'Invalid credentials'),
+        (success) => fail('Should not return success'),
       );
     });
   });
@@ -73,16 +73,16 @@ void main() {
     test('should return Success when repository returns Success', () async {
       // Arrange
       when(() => mockRepository.signUp(testUser))
-          .thenAnswer((_) async => Left(Success('Sign up successful')));
+          .thenAnswer((_) async => Right(Success('Sign up successful')));
 
       // Act
       final result = await signUpUseCase.call(testUser);
 
       // Assert
-      expect(result.isLeft(), true);
+      expect(result.isRight(), true);
       result.fold(
-        (success) => expect(success.message, 'Sign up successful'),
         (failure) => fail('Should not return failure'),
+        (success) => expect(success.message, 'Sign up successful'),
       );
     });
   });
@@ -111,16 +111,16 @@ void main() {
     test('should return Success when repository returns Success', () async {
       // Arrange
       when(() => mockRepository.forgetPassword(testUser.email!))
-          .thenAnswer((_) async => Left(Success('Password reset email sent')));
+          .thenAnswer((_) async => Right(Success('Password reset email sent')));
 
       // Act
       final result = await forgetPasswordUseCase.call(testUser.email!);
 
       // Assert
-      expect(result.isLeft(), true);
+      expect(result.isRight(), true);
       result.fold(
-        (success) => expect(success.message, 'Password reset email sent'),
         (failure) => fail('Should not return failure'),
+        (success) => expect(success.message, 'Password reset email sent'),
       );
     });
   });

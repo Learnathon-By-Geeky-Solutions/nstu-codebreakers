@@ -57,6 +57,8 @@ Widget priorityTaskCard({
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(height: 10),
         const Text(
@@ -80,7 +82,9 @@ Widget priorityTaskCard({
           style: const TextStyle(
             color: Colors.white,
             fontSize: 12,
+            overflow: TextOverflow.ellipsis,
           ),
+          maxLines: 1,
         ),
       ],
     ),

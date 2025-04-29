@@ -27,38 +27,38 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<Either<List<ProjectEntity?>, String>> fetchProject(int userId) async {
+  Future<Either<String, List<ProjectEntity?>>> fetchProject(int userId) async {
     try {
       final response = _homeRemoteDataSource.fetchProject(userId);
       final data = await response;
       final projectList =
           data.map((e) => ProjectModel.fromJson(e).toEntity()).toList();
-      return Left(projectList);
+      return Right(projectList);
     } catch (e) {
-      return Right(e.toString());
+      return Left(e.toString());
     }
   }
 
   @override
-  Future<Either<HomePageUserEntity, String>> fetchUser() async {
+  Future<Either<String, HomePageUserEntity>> fetchUser() async {
     try {
       final userId = await _homeLocalDataSource.getUserId();
       final response = await _homeRemoteDataSource.fetchUser(userId);
       final user = HomePageUserEntity.fromJson(response);
-      return Left(user);
+      return Right(user);
     } catch (e) {
-      return Right(e.toString());
+      return Left(e.toString());
     }
   }
 
   @override
-  Future<Either<Success, Failure>> createProject(ProjectEntity project) async {
+  Future<Either<Failure, Success>> createProject(ProjectEntity project) async {
     try {
       await _homeRemoteDataSource.addProject(project.toJson());
 
-      return Left(Success('Project created successfully'));
+      return Right(Success('Project created successfully'));
     } catch (e) {
-      return Right(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 }

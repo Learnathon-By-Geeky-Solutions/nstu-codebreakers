@@ -15,11 +15,11 @@ class DeleteTaskCubit extends Cubit<DeleteTaskState> {
     emit(DeleteTaskLoading());
     final res = await _deleteTaskUseCase.call(taskId);
     res.fold(
-      (success) {
-        emit(DeleteTaskSuccess(success: success));
-      },
       (failure) {
         emit(DeleteTaskFailure(failure: failure));
+      },
+      (success) {
+        emit(DeleteTaskSuccess(success: success));
       },
     );
   }
