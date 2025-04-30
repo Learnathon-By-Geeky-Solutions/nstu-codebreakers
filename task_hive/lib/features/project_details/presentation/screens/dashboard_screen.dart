@@ -29,7 +29,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   final _fetchTasks = getIt<FetchTasksCubit>();
   final colors = [Colors.blue, Colors.deepPurple, Colors.deepOrange];
   final icons = [Icons.design_services, Icons.code, Icons.edit_document];
-  // Sample delivery task data
+ 
   final List<ProjectData> _deliveryTasks = [
     ProjectData(
         title: 'Package #1452',
@@ -74,12 +74,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     super.dispose();
   }
 
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
@@ -103,10 +97,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           onPressed: () {
             context.go(
               "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
-              // extra: {
-              //   'project_id': _appData.currentProjectId,
-              //   'user_id': _appData.userId,
-              // },
+    
             );
           },
           icon: Icon(Icons.add, color: colorScheme.surface),
@@ -137,7 +128,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Welcome message
+   
               Text(
                 'Have a nice day!',
                 style: textTheme.textxlMedium,
@@ -261,7 +252,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                               const SizedBox(height: 12),
                             ],
                           );
-                          // return _buildDeliveryTaskCard(_deliveryTasks[index]);
                         },
                       ),
                     );
@@ -334,7 +324,7 @@ String _formatDate(DateTime date) {
   return '$weekday, $month ${date.day} ${date.year}';
 }
 
-// Model class for Delivery Tasks
+
 
 /**
  * [
