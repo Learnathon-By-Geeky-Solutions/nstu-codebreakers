@@ -77,7 +77,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Date and notification
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -161,14 +160,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 
               const SizedBox(height: 20),
 
-              // Delivery tasks section
               Text(
                 'My Priority Task',
                 style: textTheme.headlineMedium,
               ),
               const SizedBox(height: 15),
 
-              // Delivery task cards - Scrollable
               BlocBuilder<FetchTasksCubit, FetchTasksState>(
                 bloc: _fetchTasks,
                 builder: (context, state) {

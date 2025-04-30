@@ -5,10 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart';
-import 'package:task_hive/core/navigation/dummy_pages/dummy_page_2.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
-
 import '../../../../core/base/app_data/app_data.dart';
 import '../../../../core/di/di.dart';
 import '../../domain/entity/assignee_entity.dart';
@@ -115,7 +113,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     });
   }
 
-  // Subtask methods
   void _addSubtask() {
     if (_subtaskController.text.trim().isNotEmpty) {
       setState(() {
@@ -143,7 +140,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     });
   }
 
-  // Date picker methods
   Future<void> _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -166,7 +162,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     if (picked != null && picked != _startDate) {
       setState(() {
         _startDate = picked;
-        // If due date is before start date, update due date too
+
         if (_dueDate != null && _dueDate!.isBefore(_startDate!)) {
           _dueDate = _startDate;
         }
@@ -250,12 +246,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       }
                     },
                     validator: (value) => null,
-                    // Status always has a default value
                     backgroundColor: const Color(0xFFF5F5F5),
                   ),
                 ),
                 const SizedBox(height: 16),
-
                 const _FieldLabel(label: 'Title*'),
                 const SizedBox(height: 8),
                 CustomTextFormField(
@@ -273,7 +267,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-
                 const _FieldLabel(label: 'Description'),
                 const SizedBox(height: 8),
                 CustomTextFormField(
@@ -286,13 +279,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   hintText: '',
                 ),
                 const SizedBox(height: 16),
-
-                // Subtasks Field
                 const _FieldLabel(label: 'Subtasks'),
                 const SizedBox(height: 8),
                 Column(
                   children: [
-                    // Subtask list
                     if (_subtasks.isNotEmpty) ...[
                       Container(
                         padding: const EdgeInsets.only(left: 8, right: 8),
@@ -347,7 +337,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 12),
                     ],
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -388,11 +377,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // Date Fields (Start Date and Due Date)
                 Row(
                   children: [
-                    // Start Date Field
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,7 +419,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    // Due Date Field
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -476,8 +461,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-
-                // Labels Field
                 const _FieldLabel(label: 'Labels'),
                 const SizedBox(height: 8),
                 _buildDropdownField(
@@ -489,12 +472,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     });
                   },
                   validator: (value) => null,
-                  // Labels are optional
                   hint: 'Select Label',
                 ),
                 const SizedBox(height: 16),
-
-                // Priority Field
                 const _FieldLabel(label: 'Priority'),
                 const SizedBox(height: 8),
                 _buildDropdownField(
@@ -506,11 +486,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     });
                   },
                   validator: (value) => null,
-                  // Labels are optional
                   hint: 'Select Priority',
                 ),
                 const SizedBox(height: 16),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -545,17 +523,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             padding: const EdgeInsets.only(bottom: 0.0),
                             child: Row(
                               children: [
-                                // InkWell(
-                                //   // onTap: () => _toggleSubtask(i),
-                                //   child: Icon(
-                                //     _subtasks[i].isCompleted
-                                //         ? Icons.check_box
-                                //         : Icons.check_box_outline_blank,
-                                //     color: colorScheme.primary,
-                                //     size: 22,
-                                //   ),
-                                // ),
-                                // const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     _assignedMembers[i].name ?? 'N/A',
@@ -576,16 +543,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   ),
                   const SizedBox(height: 12),
                 ],
-
                 _buildMemberDropdown(),
                 const SizedBox(height: 16),
-
-                // Attachments Field
                 const _FieldLabel(label: 'Attachments'),
                 const SizedBox(height: 8),
                 Column(
                   children: [
-                    // Display selected files
                     if (_attachments.isNotEmpty) ...[
                       Container(
                         padding: const EdgeInsets.all(8),
@@ -628,8 +591,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 12),
                     ],
-
-                    // Add file button
                     InkWell(
                       onTap: _pickFiles,
                       child: Container(
@@ -659,7 +620,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   ],
                 ),
                 const SizedBox(height: 24),
-
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -925,6 +885,3 @@ class _FieldLabel extends StatelessWidget {
     );
   }
 }
-
-// Model class for subtasks
-
