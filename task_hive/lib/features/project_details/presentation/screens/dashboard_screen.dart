@@ -14,8 +14,6 @@ import '../../../home/domain/entity/project_info.dart';
 import '../cubits/fetch_tasks/fetch_tasks_state.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
-  // final Map<String, dynamic> keyData;
-  // const ProjectDetailsScreen({super.key, required this.keyData});
   const ProjectDetailsScreen({super.key});
 
   @override
@@ -27,9 +25,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   late final int projectId;
   final _appData = getIt<AppData>();
   final _fetchTasks = getIt<FetchTasksCubit>();
-  final colors = [Colors.blue, Colors.deepPurple, Colors.deepOrange];
   final icons = [Icons.design_services, Icons.code, Icons.edit_document];
- 
+
   final List<ProjectData> _deliveryTasks = [
     ProjectData(
         title: 'Package #1452',
@@ -57,6 +54,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         priority: 'Medium',
         percentage: 60)
   ];
+
 
   @override
   void initState() {
@@ -97,7 +95,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           onPressed: () {
             context.go(
               "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
-    
             );
           },
           icon: Icon(Icons.add, color: colorScheme.surface),
@@ -323,31 +320,3 @@ String _formatDate(DateTime date) {
 
   return '$weekday, $month ${date.day} ${date.year}';
 }
-
-
-
-/**
- * [
-                      priorityTaskCard(
-                        color: Colors.blue,
-                        icon: Icons.design_services,
-                        title: 'UI Design',
-                        days: 10,
-                        progress: 0.8,
-                      ),
-                      priorityTaskCard(
-                        color: Colors.deepPurple,
-                        icon: Icons.code,
-                        title: 'Laravel Task',
-                        days: 20,
-                        progress: 0.3,
-                      ),
-                      priorityTaskCard(
-                        color: Colors.red,
-                        icon: Icons.image,
-                        title: 'Edit Pictures',
-                        days: 5,
-                        progress: 0.6,
-                      ),
-                    ],
- */
