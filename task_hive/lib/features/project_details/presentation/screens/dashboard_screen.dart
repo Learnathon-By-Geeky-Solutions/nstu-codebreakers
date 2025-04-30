@@ -23,7 +23,6 @@ class ProjectDetailsScreen extends StatefulWidget {
 }
 
 class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
-  // int _selectedIndex = 0;
   late final String userName;
   late final int projectId;
   final _appData = getIt<AppData>();
@@ -119,7 +118,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Date and notification
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -203,14 +201,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
 
               const SizedBox(height: 20),
 
-              // Delivery tasks section
               Text(
                 'My Priority Task',
                 style: textTheme.headlineMedium,
               ),
               const SizedBox(height: 15),
 
-              // Delivery task cards - Scrollable
               BlocBuilder<FetchTasksCubit, FetchTasksState>(
                 bloc: _fetchTasks,
                 builder: (context, state) {
@@ -254,13 +250,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                                 child: UpcomingDeliveryCard(
                                   taskName:
                                       tasks[index].title ?? 'Untitled Task',
-                                  // timeRange: _deliveryTasks[index].date.toString(),
                                   dueDate: _formatDate(
                                       tasks[index].dueDate ?? DateTime.now()),
                                   label: tasks[index].label,
                                   progressPercentage:
                                       _getProgress(tasks[index].subTasks ?? []),
-                                  // assignees: _deliveryTasks[index].assignee,
                                   priority: tasks[index].priority ?? 'N/A',
                                 ),
                               ),
@@ -334,8 +328,8 @@ String _formatDate(DateTime date) {
     'Dec'
   ];
 
-  final weekday = weekdays[date.weekday - 1]; // weekday is 1-7
-  final month = months[date.month - 1]; // month is 1-12
+  final weekday = weekdays[date.weekday - 1];
+  final month = months[date.month - 1];
 
   return '$weekday, $month ${date.day} ${date.year}';
 }
