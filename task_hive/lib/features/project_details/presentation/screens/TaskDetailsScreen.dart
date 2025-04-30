@@ -333,7 +333,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
+                      color: colorScheme.primary.withValues(alpha:0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -438,7 +438,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Widget _buildLabelSection(ColorScheme colorScheme, TextTheme textTheme) {
-    //TODO
+    
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -536,7 +536,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               text: description,
               colorScheme: colorScheme,
               textTheme: textTheme,
-              bgColor: colorScheme.primary.withOpacity(0.1)),
+              bgColor: colorScheme.primary.withValues(alpha:0.1)),
         ],
       ),
     );
