@@ -190,7 +190,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
         right: 16,
         bottom: 36,
       ),
-      // color: Colors.blue,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(40),
@@ -214,7 +213,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   color: colorScheme.primary, size: 16),
             ),
           ),
-          // const SizedBox(width: 16),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -227,7 +225,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               ],
             ),
           ),
-          // const Spacer(),
           GestureDetector(
             onTap: () => _showDeleteTaskDialog(),
             child: BlocBuilder<DeleteTaskCubit, DeleteTaskState>(
