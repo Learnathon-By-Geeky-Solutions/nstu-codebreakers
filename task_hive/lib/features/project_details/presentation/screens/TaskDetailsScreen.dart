@@ -679,11 +679,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             ],
           ),
           const SizedBox(height: 8),
-          // _buildCustomContainer(
-          //     text: assignee,
-          //     colorScheme: colorScheme,
-          //     textTheme: textTheme,
-          //     isBorderEnabled: true),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -692,7 +687,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -810,8 +805,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     return GestureDetector(
       onTap: () {
         onEdit();
-
-        // Edit dates
       },
       child: Icon(Icons.edit, color: colorScheme.primary, size: 20),
     );
@@ -966,7 +959,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   ),
                 )
               : TextField(
-                  //TODO: implement option selection
                   controller: controller,
                   maxLines: multiline ? 5 : 1,
                   decoration: InputDecoration(
