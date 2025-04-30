@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -190,7 +188,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
         right: 16,
         bottom: 36,
       ),
-      // color: Colors.blue,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(40),
@@ -214,7 +211,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   color: colorScheme.primary, size: 16),
             ),
           ),
-          // const SizedBox(width: 16),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -227,7 +223,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               ],
             ),
           ),
-          // const Spacer(),
           GestureDetector(
             onTap: () => _showDeleteTaskDialog(),
             child: BlocBuilder<DeleteTaskCubit, DeleteTaskState>(
@@ -270,7 +265,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
           const SizedBox(height: 8),
           LinearProgressIndicator(
             value: progressValue,
-            backgroundColor: colorScheme.primary.withOpacity(0.3),
+            backgroundColor: colorScheme.primary.withValues(alpha: 0.3),
             valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
             minHeight: 8,
             borderRadius: BorderRadius.circular(4),
@@ -300,7 +295,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -336,7 +331,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -384,19 +379,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             textTheme: textTheme,
             isBorderEnabled: true,
           ),
-          // Container(
-          //   padding: const EdgeInsets.all(12),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: colorScheme.primary),
-          //     borderRadius: BorderRadius.circular(8),
-          //   ),
-          //   child: Row(
-          //     children: [
-          //       Expanded(child: Text(taskTitle,style: const TextStyle(color: Colors.black),),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
@@ -441,7 +423,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Widget _buildLabelSection(ColorScheme colorScheme, TextTheme textTheme) {
-    //TODO
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -539,7 +520,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               text: description,
               colorScheme: colorScheme,
               textTheme: textTheme,
-              bgColor: colorScheme.primary.withOpacity(0.1)),
+              bgColor: colorScheme.primary.withValues(alpha: 0.1)),
         ],
       ),
     );
@@ -569,8 +550,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             ],
           ),
           const SizedBox(height: 8),
-
-          // Subtasks List
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -579,7 +558,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -615,22 +594,22 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             },
           ),
-
           if (_showSubtaskInput) ...[
             TextField(
               controller: newSubtaskController,
               decoration: InputDecoration(
                 hintText: "Enter new subtask",
                 hintStyle: textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSecondaryContainer.withOpacity(0.5),
+                  color:
+                      colorScheme.onSecondaryContainer.withValues(alpha: 0.5),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      BorderSide(color: colorScheme.primary.withOpacity(0.1)),
+                  borderSide: BorderSide(
+                      color: colorScheme.primary.withValues(alpha: 0.1)),
                 ),
                 filled: true,
                 suffixIcon: IconButton(
@@ -650,7 +629,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     }
                   },
                 ),
-                fillColor: colorScheme.primary.withOpacity(0.1),
+                fillColor: colorScheme.primary.withValues(alpha: 0.1),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               ),
@@ -682,11 +661,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             ],
           ),
           const SizedBox(height: 8),
-          // _buildCustomContainer(
-          //     text: assignee,
-          //     colorScheme: colorScheme,
-          //     textTheme: textTheme,
-          //     isBorderEnabled: true),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -695,7 +669,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -813,8 +787,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
     return GestureDetector(
       onTap: () {
         onEdit();
-
-        // Edit dates
       },
       child: Icon(Icons.edit, color: colorScheme.primary, size: 20),
     );
@@ -969,7 +941,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   ),
                 )
               : TextField(
-                  //TODO: implement option selection
                   controller: controller,
                   maxLines: multiline ? 5 : 1,
                   decoration: InputDecoration(

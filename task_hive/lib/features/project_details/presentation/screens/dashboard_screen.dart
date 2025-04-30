@@ -27,6 +27,39 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   final _fetchTasks = getIt<FetchTasksCubit>();
   final icons = [Icons.design_services, Icons.code, Icons.edit_document];
 
+
+
+  final List<ProjectData> _deliveryTasks = [
+    ProjectData(
+        title: 'Package #1452',
+        address: '123 Main Street, Apt 4B',
+        date: DateTime.now().add(const Duration(days: 1)),
+        status: 'In Transit',
+        assignee: ['Tahsin', 'Mamun', 'Rafi'],
+        priority: 'High',
+        percentage: 50),
+    ProjectData(
+      title: 'Package #2378',
+      address: '456 Oak Avenue',
+      date: DateTime.now().add(const Duration(days: 2)),
+      status: 'Processing',
+      assignee: ['Tahsin', 'Mamun', 'Rafi'],
+      priority: 'Low',
+      percentage: 30,
+    ),
+    ProjectData(
+        title: 'Package #3912',
+        address: '789 Pine Road',
+        date: DateTime.now().add(const Duration(days: 3)),
+        status: 'Scheduled',
+        assignee: ['Tahsin', 'Mamun', 'Rafi'],
+        priority: 'Medium',
+        percentage: 60)
+  ];
+
+
+
+
   @override
   void initState() {
     if (_appData.currentProjectId != null) {
@@ -96,7 +129,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Welcome message
+   
               Text(
                 'Have a nice day!',
                 style: textTheme.textxlMedium,
@@ -291,4 +324,3 @@ String _formatDate(DateTime date) {
 
   return '$weekday, $month ${date.day} ${date.year}';
 }
-

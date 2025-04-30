@@ -10,7 +10,7 @@ import 'package:task_hive/features/auth/domain/entity/user_entity.dart';
 import 'package:task_hive/features/profile/presentation/cubits/profile_fetch_cubit.dart';
 
 import '../../../../core/di/di.dart';
-import '../cubits/profile_fetch_state.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   final UserEntity? userData;
@@ -30,7 +30,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _logout() async {
     await getIt<AuthService>().getAuthClient().signOut();
 
-    // Sign out from Google (if user signed in with Google)
     if (await _googleSignIn.isSignedIn()) {
       await _googleSignIn.signOut();
     }

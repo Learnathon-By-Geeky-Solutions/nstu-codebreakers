@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:task_hive/core/extensions/app_extension.dart';
-import 'package:task_hive/features/project_details/presentation/screens/TaskDetailsScreen.dart';
 
 class UpcomingDeliveryCard extends StatelessWidget {
   final String? taskName;
-  // final String timeRange;
+
   final String? dueDate;
   final String? progressPercentage;
   final String? label;
@@ -13,7 +12,6 @@ class UpcomingDeliveryCard extends StatelessWidget {
   const UpcomingDeliveryCard(
       {super.key,
       this.taskName,
-      // this.timeRange = '9:00 AM - 5:00 PM',
       this.dueDate,
       this.progressPercentage,
       this.label,
@@ -41,11 +39,9 @@ class UpcomingDeliveryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Top row with priority tag and completion percentage
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // High priority tag
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -61,8 +57,6 @@ class UpcomingDeliveryCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // Completion percentage
               Text(
                 '$progressPercentage%',
                 style: textTheme.headlineSmall?.copyWith(
@@ -72,36 +66,25 @@ class UpcomingDeliveryCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 12),
-
-          // Task name
           Text(
             taskName ?? 'No Task Name',
             style: textTheme.headlineMedium?.copyWith(
               color: Colors.white,
               fontSize: 18,
-              // fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 12),
-
           Text(
             'Label: ${label ?? 'N/A'}',
             style: textTheme.textSmRegular.copyWith(
               color: Colors.white,
-              // fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 8),
-
-          // Due date and assignees
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Due date
               RichText(
                 text: TextSpan(
                   text: 'Due Date: ',

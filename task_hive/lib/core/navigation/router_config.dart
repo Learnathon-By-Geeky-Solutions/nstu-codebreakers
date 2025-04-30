@@ -157,6 +157,6 @@ class MyRouterObserver extends NavigatorObserver {
   }
 
   Future<void> _updateBackButtonBehavior(Route? route) async {
-    // TODO: Implement platform-specific back-button handling (e.g. call SystemNavigator.pop on root)
+ 
   }
 }
