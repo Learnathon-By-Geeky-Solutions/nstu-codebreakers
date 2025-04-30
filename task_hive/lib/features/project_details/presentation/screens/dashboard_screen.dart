@@ -291,3 +291,4 @@ String _formatDate(DateTime date) {
 
   return '$weekday, $month ${date.day} ${date.year}';
 }
+
