@@ -566,8 +566,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             ],
           ),
           const SizedBox(height: 8),
-
-          // Subtasks List
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -576,7 +574,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -612,22 +610,22 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               );
             },
           ),
-
           if (_showSubtaskInput) ...[
             TextField(
               controller: newSubtaskController,
               decoration: InputDecoration(
                 hintText: "Enter new subtask",
                 hintStyle: textTheme.labelMedium?.copyWith(
-                  color: colorScheme.onSecondaryContainer.withOpacity(0.5),
+                  color:
+                      colorScheme.onSecondaryContainer.withValues(alpha: 0.5),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide:
-                      BorderSide(color: colorScheme.primary.withOpacity(0.1)),
+                  borderSide: BorderSide(
+                      color: colorScheme.primary.withValues(alpha: 0.1)),
                 ),
                 filled: true,
                 suffixIcon: IconButton(
@@ -647,7 +645,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     }
                   },
                 ),
-                fillColor: colorScheme.primary.withOpacity(0.1),
+                fillColor: colorScheme.primary.withValues(alpha: 0.1),
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               ),
