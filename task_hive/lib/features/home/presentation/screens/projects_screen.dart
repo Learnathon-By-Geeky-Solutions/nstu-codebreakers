@@ -53,6 +53,55 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [Color(0xFFe0eafc), Color(0xFFcfdef3)],
+
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: SizedBox(
+          height: 64,
+          width: 64,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF6a11cb), Color(0xFF2575fc)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withOpacity(0.3),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: IconButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => CreateProjectBottomSheet(
+                    createProjectCubit: _createProjectCubit,
+                    userData: userData,
+                    fetchProjectsCubit: _fetchProjectCubit,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add, color: Colors.white, size: 32),
+            ),
+          ),
+        ),
+
         ),
       ),
       child: Scaffold(
@@ -103,6 +152,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
             ),
           ),
         ),
+
         body: SafeArea(
           child: Padding(
             padding:
