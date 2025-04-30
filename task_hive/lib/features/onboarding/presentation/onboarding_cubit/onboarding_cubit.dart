@@ -1,9 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:task_hive/features/onboarding/domain/use_case/onboarding_use_case.dart';
-
-import '../../../../core/di/di.dart';
-
 part 'onboarding_state.dart';
 
 class OnboardingCubit extends Cubit<OnboardingState> {

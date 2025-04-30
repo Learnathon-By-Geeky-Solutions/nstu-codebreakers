@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../core/extensions/app_extension.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/navigation/routes.dart';
