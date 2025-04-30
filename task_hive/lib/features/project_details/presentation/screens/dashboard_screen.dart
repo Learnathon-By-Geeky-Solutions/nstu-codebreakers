@@ -288,8 +288,6 @@ String _formatDate(DateTime date) {
 
   final weekday = weekdays[date.weekday - 1];
   final month = months[date.month - 1];
-  final weekday = weekdays[date.weekday - 1];
-  final month = months[date.month - 1];
 
   return '$weekday, $month ${date.day} ${date.year}';
 }

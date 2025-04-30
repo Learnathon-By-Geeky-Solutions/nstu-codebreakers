@@ -1,8 +1,13 @@
 import 'package:dartz/dartz.dart';
+import 'package:task_hive/core/base/app_data/app_data.dart';
 import 'package:task_hive/core/io/failure.dart';
 import 'package:task_hive/core/io/success.dart';
+import 'package:task_hive/features/project_details/data/data/remote/project_details_remote_imp.dart';
 import 'package:task_hive/features/project_details/domain/entity/task_entity.dart';
 import 'package:task_hive/features/project_details/domain/repository/project_details_repo.dart';
+import 'package:task_hive/features/project_details/presentation/screens/task_create_screen.dart';
+
+import '../../../../core/di/di.dart';
 import '../data/remote/project_details_remote.dart';
 
 class ProjectDetailsRepoImp implements ProjectDetailsRepo {
@@ -35,7 +40,6 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
         }
       }
       if (task.assignees != null && taskId != null) {
-        print('dbg assignee task ${task.assignees?.length}');
         await _projectDetailsRemote.deleteAssignees(taskId);
         for (final assignee in task.assignees!) {
           await _projectDetailsRemote.assignTaskMember({
@@ -80,10 +84,10 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
     try {
       await _projectDetailsRemote.deleteTasks(taskId);
       return Right(Success(
-          'Task deleted successfully')); 
+          'Task deleted successfully')); // Return a placeholder TaskEntity or appropriate value
     } catch (e) {
       return Left(
-          Failure(e.toString())); 
+          Failure(e.toString())); // Return a Failure in case of an error
     }
   }
 }

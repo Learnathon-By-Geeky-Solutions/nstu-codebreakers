@@ -89,7 +89,6 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
                   builder: (context) => CreateProjectBottomSheet(
                     createProjectCubit: _createProjectCubit,
                     userData: userData,

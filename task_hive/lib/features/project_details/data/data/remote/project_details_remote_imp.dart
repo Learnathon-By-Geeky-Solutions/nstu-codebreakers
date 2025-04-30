@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_hive/features/project_details/data/data/remote/project_details_remote.dart';
+
 import '../../../../../core/di/di.dart';
 import '../../../../../core/services/auth_service/auth_service.dart';
 
@@ -14,6 +16,7 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
     if (task.containsKey('id') && task['id'] != null) {
       final taskId = task['id'];
 
+      // Update the task by performing an upsert operation
       final response =
           await supabaseClient.from('tasks').upsert(task).select('id').single();
 
@@ -23,7 +26,6 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
       return taskId;
     }
-    print('dbg create task $task');
     task.remove('id');
     final response =
         await supabaseClient.from('tasks').upsert(task).select('id').single();
@@ -43,23 +45,27 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
       final fileName = file.path.split('/').last;
 
       try {
+        // Check if the file already exists
         final existingFiles = await supabaseClient.storage
-            .from('attachments')
+            .from('attachments') // Replace with your bucket name
             .list(path: '', searchOptions: SearchOptions(search: fileName));
 
         if (existingFiles.isNotEmpty) {
-          final publicUrl =
-              supabaseClient.storage.from('attachments').getPublicUrl(fileName);
+          // File exists, get its public URL
+          final publicUrl = supabaseClient.storage
+              .from('attachments') // Replace with your bucket name
+              .getPublicUrl(fileName);
 
           uploadedFiles.add({'fileName': fileName, 'url': publicUrl});
         } else {
+          // File does not exist, upload it
           final uploadResponse = await supabaseClient.storage
-              .from('attachments')
+              .from('attachments') // Replace with your bucket name
               .upload(fileName, file);
 
           if (uploadResponse.isNotEmpty) {
             final publicUrl = supabaseClient.storage
-                .from('attachments')
+                .from('attachments') // Replace with your bucket name
                 .getPublicUrl(fileName);
 
             uploadedFiles.add({'fileName': fileName, 'url': publicUrl});
@@ -77,6 +83,7 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
   @override
   Future<void> addTaskLabel(Map<String, dynamic> taskLabel) {
+    // TODO: implement addTaskLabel
     throw UnimplementedError();
   }
 
@@ -169,6 +176,7 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
   @override
   Future<void> deleteAttachments(int taskId) {
+    // TODO: implement deleteAttachments
     throw UnimplementedError();
   }
 }
