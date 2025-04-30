@@ -27,6 +27,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   final _fetchUserCubit = getIt.get<FetchUserCubit>();
   final _createProjectCubit = getIt.get<CreateProjectCubit>();
   final _appData = getIt.get<AppData>();
+  HomePageUserEntity? userData;
 
   @override
   void initState() {
@@ -46,127 +47,223 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    HomePageUserEntity? userData;
-    return Scaffold(
-      floatingActionButton: SizedBox(
-        height: 60,
-        width: 60,
-        child: IconButton(
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(colorScheme.primary),
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-            ),
-          ),
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => CreateProjectBottomSheet(
-                createProjectCubit: _createProjectCubit,
-                userData: userData,
-                fetchProjectsCubit: _fetchProjectCubit,
-              ),
-            );
-          },
-          icon: Icon(Icons.add, color: colorScheme.surface),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFe0eafc), Color(0xFFcfdef3)],
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 40.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BlocBuilder<FetchUserCubit, FetchUserState>(
-                bloc: _fetchUserCubit,
-                builder: (context, state) {
-                  if (state is FetchUserLoading) {
-                    return const CircularProgressIndicator(
-                      color: Colors.blue,
-                    );
-                  } else if (state is FetchUserSuccess) {
-                    _fetchProjectCubit
-                        .fetchProjects(state.userData.userId ?? 0);
-                    userData = state.userData;
-                    _appData.userEmail = state.userData.email;
-                    _appData.userName = state.userData.name;
-                    _appData.userId = state.userData.userId;
-                    return const SizedBox.shrink();
-                  } else if (state is FetchUserFailed) {
-                    return Text('Error: ${state.error}');
-                  }
-                  return const SizedBox.shrink();
-                },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        floatingActionButton: SizedBox(
+          height: 64,
+          width: 64,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF6a11cb), Color(0xFF2575fc)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              Text(
-                'Recent Projects',
-                style:
-                    textTheme.textxlMedium.copyWith(color: colorScheme.primary),
-              ),
-              Divider(
-                color: colorScheme.tertiary,
-                height: 1,
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    BlocBuilder<FetchProjectsCubit, FetchProjectsState>(
-                      bloc: _fetchProjectCubit,
-                      builder: (context, state) {
-                        if (state is FetchProjectsLoading) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.blue,
-                            ),
-                          );
-                        } else if (state is FetchProjectsSuccess) {
-                          if (state.projects.isEmpty) {
-                            return const Center(
-                              child: Text('No projects found'),
-                            );
-                          }
-
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: state.projects.length,
-                            itemBuilder: (context, index) {
-                              final project = state.projects[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: GestureDetector(
-                                    onTap: () {
-                                      _appData.currentProjectId =
-                                          project?.id ?? 0;
-                                      context.push(
-                                        '${MyRoutes.home}/${MyRoutes.projectDetails}',
-                                      );
-                                    },
-                                    child:
-                                        RecentProjectsCard(project: project)),
-                              );
-                            },
-                          );
-                        } else if (state is FetchProjectsFailure) {
-                          return Text('Error: ${state.failure}');
-                        }
-                        return const SizedBox.shrink();
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withOpacity(0.3),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: IconButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
                 ),
               ),
-            ],
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => CreateProjectBottomSheet(
+                    createProjectCubit: _createProjectCubit,
+                    userData: userData,
+                    fetchProjectsCubit: _fetchProjectCubit,
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add, color: Colors.white, size: 32),
+            ),
+          ),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BlocBuilder<FetchUserCubit, FetchUserState>(
+                  bloc: _fetchUserCubit,
+                  builder: (context, state) {
+                    if (state is FetchUserLoading) {
+                      return const Center(
+                          child: CircularProgressIndicator(color: Colors.blue));
+                    } else if (state is FetchUserSuccess) {
+                      _fetchProjectCubit
+                          .fetchProjects(state.userData.userId ?? 0);
+                      userData = state.userData;
+                      _appData.userEmail = state.userData.email;
+                      _appData.userName = state.userData.name;
+                      _appData.userId = state.userData.userId;
+                      return _HeaderSection(user: state.userData);
+                    } else if (state is FetchUserFailed) {
+                      return Text('Error: ${state.error}');
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Recent Projects',
+                  style: textTheme.headlineSmall?.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  height: 3,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6a11cb), Color(0xFF2575fc)],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Container(
+                      color: Colors.white.withOpacity(0.7),
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: [
+                          BlocBuilder<FetchProjectsCubit, FetchProjectsState>(
+                            bloc: _fetchProjectCubit,
+                            builder: (context, state) {
+                              if (state is FetchProjectsLoading) {
+                                return const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 40),
+                                    child: CircularProgressIndicator(
+                                        color: Colors.blue),
+                                  ),
+                                );
+                              } else if (state is FetchProjectsSuccess) {
+                                if (state.projects.isEmpty) {
+                                  return const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 40),
+                                      child: Text('No projects found',
+                                          style: TextStyle(fontSize: 18)),
+                                    ),
+                                  );
+                                }
+                                return ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: state.projects.length,
+                                  separatorBuilder: (context, idx) =>
+                                      const SizedBox(height: 12),
+                                  itemBuilder: (context, index) {
+                                    final project = state.projects[index];
+                                    return AnimatedContainer(
+                                      duration:
+                                          const Duration(milliseconds: 400),
+                                      curve: Curves.easeInOut,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _appData.currentProjectId =
+                                              project?.id ?? 0;
+                                          context.push(
+                                            '${MyRoutes.home}/${MyRoutes.projectDetails}',
+                                          );
+                                        },
+                                        child: RecentProjectsCard(
+                                            project: project),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else if (state is FetchProjectsFailure) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 40),
+                                  child: Text('Error: ${state.failure}',
+                                      style:
+                                          const TextStyle(color: Colors.red)),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HeaderSection extends StatelessWidget {
+  final HomePageUserEntity user;
+  const _HeaderSection({required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 28,
+          backgroundColor: const Color(0xFF6a11cb),
+          child: Text(
+            (user.name?.isNotEmpty ?? false)
+                ? user.name![0].toUpperCase()
+                : '?',
+            style: const TextStyle(
+                fontSize: 28, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Hello,',
+                style: textTheme.bodyLarge?.copyWith(color: Colors.black54)),
+            Text(
+              user.name ?? 'Unknown',
+              style: textTheme.titleLarge?.copyWith(
+                color: const Color(0xFF2575fc),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -179,51 +276,69 @@ class RecentProjectsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0F0F0),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: const Icon(
-              Icons.account_balance,
-              size: 18,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  project?.name ?? 'N/A',
-                  style: textTheme.titleMedium?.copyWith(
-                    color: colorScheme.secondary,
-                  ),
+    return Card(
+      elevation: 6,
+      shadowColor: Colors.blue.withOpacity(0.15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 18.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF6a11cb), Color(0xFF2575fc)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  project?.description ?? 'N/A',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(8.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blue.withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
+              child: const Icon(
+                Icons.account_balance,
+                size: 22,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 18),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    project?.name ?? 'N/A',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.secondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    project?.description ?? 'N/A',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurface.withOpacity(0.7),
+                      fontSize: 15,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -35,7 +35,6 @@ class ProjectDetailsRepoImp implements ProjectDetailsRepo {
         }
       }
       if (task.assignees != null && taskId != null) {
-        print('dbg assignee task ${task.assignees?.length}');
         await _projectDetailsRemote.deleteAssignees(taskId);
         for (final assignee in task.assignees!) {
           await _projectDetailsRemote.assignTaskMember({

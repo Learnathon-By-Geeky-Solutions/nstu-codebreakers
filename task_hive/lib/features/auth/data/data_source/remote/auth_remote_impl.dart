@@ -46,20 +46,18 @@ class AuthRemoteImpl implements AuthRemote {
 
   @override
   Future<void> verifyOtp() {
-    // TODO: implement verifyOtp
     throw UnimplementedError();
   }
 
   @override
   Future<void> addUser(UserEntity userInfo) async {
     try {
-      // First check if user exists
       final existingUser = await supabaseClient
           .from('users')
           .select()
           .eq('id', userInfo.id.toString())
           .maybeSingle();
-      // Only insert if user doesn't exist
+
       if (existingUser == null) {
         await supabaseClient.from('users').insert({
           'id': userInfo.id,
@@ -70,11 +68,9 @@ class AuthRemoteImpl implements AuthRemote {
           'updated_at': DateTime.now().toIso8601String(),
         });
       }
-      // Else do nothing (user already exists)
     } catch (e) {
-      // logger.e('Error in addUser: $e');
       throw Exception('Failed to add user: $e');
-    } // Important: Specify the conflict column
+    }
   }
 
   @override
@@ -100,7 +96,7 @@ class AuthRemoteImpl implements AuthRemote {
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email', 'profile'],
         serverClientId:
-            '688864880472-65bh2k76mqijcjl0jh4d9snsgmoakf9a.apps.googleusercontent.com', // Only needed for Android
+            '688864880472-65bh2k76mqijcjl0jh4d9snsgmoakf9a.apps.googleusercontent.com',
       );
 
       final googleUser = await googleSignIn.signIn();

@@ -77,7 +77,7 @@ class AuthReposityImpl implements AuthRepository {
       return Right(Success('User successfully signed in with Google'));
     } catch (e) {
       if (kDebugMode) {
-        print('Error signing in with Google: $e');
+        debugPrint('Error signing in with Google: $e');
       }
       return Left(Failure(e.toString()));
     }
