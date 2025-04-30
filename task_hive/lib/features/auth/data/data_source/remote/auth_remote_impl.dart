@@ -96,7 +96,7 @@ class AuthRemoteImpl implements AuthRemote {
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email', 'profile'],
         serverClientId:
-            '688864880472-65bh2k76mqijcjl0jh4d9snsgmoakf9a.apps.googleusercontent.com', // Only needed for Android
+            '688864880472-65bh2k76mqijcjl0jh4d9snsgmoakf9a.apps.googleusercontent.com',
       );
 
       final googleUser = await googleSignIn.signIn();
