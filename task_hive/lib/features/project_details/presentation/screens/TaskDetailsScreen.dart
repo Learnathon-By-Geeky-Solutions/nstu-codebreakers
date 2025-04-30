@@ -267,7 +267,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
           const SizedBox(height: 8),
           LinearProgressIndicator(
             value: progressValue,
-            backgroundColor: colorScheme.primary.withOpacity(0.3),
+            backgroundColor: colorScheme.primary.withValues(alpha: 0.3),
             valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
             minHeight: 8,
             borderRadius: BorderRadius.circular(4),
@@ -297,7 +297,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.1),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -333,7 +333,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.primary.withValues(alpha:0.1),
+                      color: colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -381,19 +381,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
             textTheme: textTheme,
             isBorderEnabled: true,
           ),
-          // Container(
-          //   padding: const EdgeInsets.all(12),
-          //   decoration: BoxDecoration(
-          //     border: Border.all(color: colorScheme.primary),
-          //     borderRadius: BorderRadius.circular(8),
-          //   ),
-          //   child: Row(
-          //     children: [
-          //       Expanded(child: Text(taskTitle,style: const TextStyle(color: Colors.black),),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );
@@ -438,7 +425,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   }
 
   Widget _buildLabelSection(ColorScheme colorScheme, TextTheme textTheme) {
-    
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -536,7 +522,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               text: description,
               colorScheme: colorScheme,
               textTheme: textTheme,
-              bgColor: colorScheme.primary.withValues(alpha:0.1)),
+              bgColor: colorScheme.primary.withValues(alpha: 0.1)),
         ],
       ),
     );
