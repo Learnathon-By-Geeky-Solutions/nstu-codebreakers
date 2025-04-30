@@ -13,7 +13,7 @@ class AppInputDecorationTheme {
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(15),
       borderSide: BorderSide(
-        color: AppLightColors.brandColor.withOpacity(0.2),
+        color: AppLightColors.brandColor.withValues(alpha: 0.2),
         width: 1,
       ),
     ),
@@ -46,7 +46,7 @@ class AppInputDecorationTheme {
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(15),
       borderSide: BorderSide(
-        color: AppDarkColors.brandColor.withOpacity(0.2),
+        color: AppDarkColors.brandColor.withValues(alpha: 0.2),
         width: 1,
       ),
     ),
