@@ -107,6 +107,7 @@ void setupLocator() {
   getIt.registerLazySingleton<ProfileFetchUseCase>(
       () => ProfileFetchUseCase(getIt.call()));
 
+
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(
       () => OnboardingRepoImp(getIt.call(), getIt.call()));

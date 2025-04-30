@@ -96,16 +96,6 @@ class MyRouterConfig {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: MyRoutes.dummyPage1,
-                builder: (context, state) {
-                  return const DummyPage1();
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
                 path: MyRoutes.profile,
                 builder: (context, state) {
                   return const ProfileScreen();

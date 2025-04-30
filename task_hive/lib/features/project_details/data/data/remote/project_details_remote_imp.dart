@@ -23,7 +23,6 @@ class ProjectDetailsRemoteImp implements ProjectDetailsRemote {
 
       return taskId;
     }
-    print('dbg create task $task');
     task.remove('id');
     final response =
         await supabaseClient.from('tasks').upsert(task).select('id').single();

@@ -27,6 +27,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   final _fetchTasks = getIt<FetchTasksCubit>();
   final icons = [Icons.design_services, Icons.code, Icons.edit_document];
 
+
   final List<ProjectData> _deliveryTasks = [
     ProjectData(
         title: 'Package #1452',
@@ -54,6 +55,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         priority: 'Medium',
         percentage: 60)
   ];
+
 
 
   @override

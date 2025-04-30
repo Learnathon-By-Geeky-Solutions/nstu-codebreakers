@@ -35,14 +35,6 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
           tooltip: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_outlined),
-          label: 'Add',
-          activeIcon: Icon(
-            Icons.add_circle,
-          ),
-          tooltip: 'Add',
-        ),
-        BottomNavigationBarItem(
           icon: Icon(
             Icons.person_outlined,
           ),

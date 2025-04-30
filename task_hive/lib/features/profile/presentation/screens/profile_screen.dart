@@ -7,7 +7,9 @@ import 'package:task_hive/core/base/app_data/app_data.dart';
 import 'package:task_hive/core/navigation/routes.dart';
 import 'package:task_hive/core/services/auth_service/auth_service.dart';
 import 'package:task_hive/features/auth/domain/entity/user_entity.dart';
+
 import '../../../../core/di/di.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   final UserEntity? userData;
