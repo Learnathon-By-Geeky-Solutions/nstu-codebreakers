@@ -14,8 +14,6 @@ import '../../../home/domain/entity/project_info.dart';
 import '../cubits/fetch_tasks/fetch_tasks_state.dart';
 
 class ProjectDetailsScreen extends StatefulWidget {
-  // final Map<String, dynamic> keyData;
-  // const ProjectDetailsScreen({super.key, required this.keyData});
   const ProjectDetailsScreen({super.key});
 
   @override
@@ -27,36 +25,7 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   late final int projectId;
   final _appData = getIt<AppData>();
   final _fetchTasks = getIt<FetchTasksCubit>();
-  final colors = [Colors.blue, Colors.deepPurple, Colors.deepOrange];
   final icons = [Icons.design_services, Icons.code, Icons.edit_document];
-  // Sample delivery task data
-  final List<ProjectData> _deliveryTasks = [
-    ProjectData(
-        title: 'Package #1452',
-        address: '123 Main Street, Apt 4B',
-        date: DateTime.now().add(const Duration(days: 1)),
-        status: 'In Transit',
-        assignee: ['Tahsin', 'Mamun', 'Rafi'],
-        priority: 'High',
-        percentage: 50),
-    ProjectData(
-      title: 'Package #2378',
-      address: '456 Oak Avenue',
-      date: DateTime.now().add(const Duration(days: 2)),
-      status: 'Processing',
-      assignee: ['Tahsin', 'Mamun', 'Rafi'],
-      priority: 'Low',
-      percentage: 30,
-    ),
-    ProjectData(
-        title: 'Package #3912',
-        address: '789 Pine Road',
-        date: DateTime.now().add(const Duration(days: 3)),
-        status: 'Scheduled',
-        assignee: ['Tahsin', 'Mamun', 'Rafi'],
-        priority: 'Medium',
-        percentage: 60)
-  ];
 
   @override
   void initState() {
@@ -73,12 +42,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
     _fetchTasks.close();
     super.dispose();
   }
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -103,10 +66,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           onPressed: () {
             context.go(
               "${MyRoutes.home}/${MyRoutes.projectDetails}/${MyRoutes.createTask}",
-              // extra: {
-              //   'project_id': _appData.currentProjectId,
-              //   'user_id': _appData.userId,
-              // },
             );
           },
           icon: Icon(Icons.add, color: colorScheme.surface),
@@ -261,7 +220,6 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                               const SizedBox(height: 12),
                             ],
                           );
-                          // return _buildDeliveryTaskCard(_deliveryTasks[index]);
                         },
                       ),
                     );
@@ -330,34 +288,8 @@ String _formatDate(DateTime date) {
 
   final weekday = weekdays[date.weekday - 1];
   final month = months[date.month - 1];
+  final weekday = weekdays[date.weekday - 1];
+  final month = months[date.month - 1];
 
   return '$weekday, $month ${date.day} ${date.year}';
 }
-
-// Model class for Delivery Tasks
-
-/**
- * [
-                      priorityTaskCard(
-                        color: Colors.blue,
-                        icon: Icons.design_services,
-                        title: 'UI Design',
-                        days: 10,
-                        progress: 0.8,
-                      ),
-                      priorityTaskCard(
-                        color: Colors.deepPurple,
-                        icon: Icons.code,
-                        title: 'Laravel Task',
-                        days: 20,
-                        progress: 0.3,
-                      ),
-                      priorityTaskCard(
-                        color: Colors.red,
-                        icon: Icons.image,
-                        title: 'Edit Pictures',
-                        days: 5,
-                        progress: 0.6,
-                      ),
-                    ],
- */

@@ -1,28 +1,27 @@
 import 'package:get_it/get_it.dart';
-import 'package:task_hive/core/base/app_data/app_data.dart';
-import 'package:task_hive/features/auth/data/data_source/local/auth_local.dart';
-import 'package:task_hive/features/auth/data/data_source/remote/auth_remote.dart';
-import 'package:task_hive/features/auth/data/data_source/remote/auth_remote_impl.dart';
 
-import 'package:task_hive/features/auth/domain/repository/auth_repository.dart';
-import 'package:task_hive/features/auth/domain/use_case/auth_use_case.dart';
-import '''
-package:task_hive/features/auth/presentation/cubits/auth/forget_password/forget_pass_cubit.dart''';
-import '''
-package:task_hive/features/auth/presentation/cubits/auth/sign_up/sign_up_cubit.dart''';
-import '''
-package:task_hive/features/home/data/data_source/local/home_local.dart''';
-import '''
-package:task_hive/features/home/data/data_source/remote/home_remote.dart''';
-import '''
-package:task_hive/features/home/data/data_source/remote/home_remote_imp.dart''';
-import 'package:task_hive/features/home/presentation/cubits/create_project/create_project_cubit.dart';
-import 'package:task_hive/features/project_details/data/data/remote/project_details_remote_imp.dart';
-import 'package:task_hive/features/project_details/data/repository_imp/project_details_repo_imp.dart';
-import 'package:task_hive/features/project_details/domain/repository/project_details_repo.dart';
-import 'package:task_hive/features/project_details/domain/use_case/project_details_use_case.dart';
-import 'package:task_hive/features/project_details/presentation/cubits/create_task/create_task_cubit.dart';
-
+import '../base/app_data/app_data.dart';
+import '../../features/auth/data/data_source/local/auth_local.dart';
+import '../../features/auth/data/data_source/remote/auth_remote.dart';
+import '../../features/auth/data/data_source/remote/auth_remote_impl.dart';
+import '../../features/auth/domain/repository/auth_repository.dart';
+import '../../features/auth/domain/use_case/auth_use_case.dart';
+import '../../features/auth/presentation/cubits/auth/forget_password/forget_pass_cubit.dart';
+import '../../features/auth/presentation/cubits/auth/sign_up/sign_up_cubit.dart';
+import '../../features/home/data/data_source/local/home_local.dart';
+import '../../features/home/data/data_source/remote/home_remote.dart';
+import '../../features/home/data/data_source/remote/home_remote_imp.dart';
+import '../../features/home/presentation/cubits/create_project/create_project_cubit.dart';
+import '../../features/profile/data/data_source/profile_data_source.dart';
+import '../../features/profile/data/data_source/profile_data_source_impl.dart';
+import '../../features/profile/data/repo_impl/profile_repo_imp.dart';
+import '../../features/profile/domain/use_case/profile_fetch_use_case.dart';
+import '../../features/profile/presentation/cubits/profile_fetch_cubit.dart';
+import '../../features/project_details/data/data/remote/project_details_remote_imp.dart';
+import '../../features/project_details/data/repository_imp/project_details_repo_imp.dart';
+import '../../features/project_details/domain/repository/project_details_repo.dart';
+import '../../features/project_details/domain/use_case/project_details_use_case.dart';
+import '../../features/project_details/presentation/cubits/create_task/create_task_cubit.dart';
 import '../../features/auth/data/data_source/local/auth_local_imp.dart';
 import '../../features/auth/data/repository_impl/auth_reposity_impl.dart';
 import '../../features/auth/presentation/cubits/auth/sign_in/google_sign_in_cubit.dart';
@@ -33,6 +32,7 @@ import '../../features/home/domain/repository/home_repository.dart';
 import '../../features/home/domain/use_cases/home_use_cases.dart';
 import '../../features/home/presentation/cubits/fetch_projects/fetch_projects_cubit.dart';
 import '../../features/home/presentation/cubits/fetch_user/fetch_user_cubit.dart';
+import '../../features/profile/domain/repository/profile_repo.dart';
 import '../../features/project_details/data/data/remote/project_details_remote.dart';
 import '../../features/project_details/presentation/cubits/delete_task/detele_task_cubit.dart';
 import '../../features/project_details/presentation/cubits/fetch_task/fetch_task_cubit.dart';
@@ -78,6 +78,8 @@ void setupLocator() {
   getIt.registerFactory<FetchTaskCubit>(() => FetchTaskCubit(getIt.call()));
   getIt.registerFactory<FetchTasksCubit>(() => FetchTasksCubit(getIt.call()));
   getIt.registerFactory<DeleteTaskCubit>(() => DeleteTaskCubit(getIt.call()));
+  getIt.registerFactory<ProfileFetchCubit>(
+      () => ProfileFetchCubit(getIt.call(), getIt.call()));
 
   ///Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(
@@ -102,6 +104,8 @@ void setupLocator() {
       () => FetchTasksUseCase(getIt.call()));
   getIt.registerLazySingleton<DeleteTasksUseCase>(
       () => DeleteTasksUseCase(getIt.call()));
+  getIt.registerLazySingleton<ProfileFetchUseCase>(
+      () => ProfileFetchUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(
@@ -112,6 +116,7 @@ void setupLocator() {
       () => HomeRepositoryImpl(getIt.call(), getIt.call()));
   getIt.registerLazySingleton<ProjectDetailsRepo>(
       () => ProjectDetailsRepoImp(getIt.call()));
+  getIt.registerLazySingleton<ProfileRepo>(() => ProfileRepoImp(getIt.call()));
 
   /// Register DataSources
   getIt.registerLazySingleton<OnboardingLocalDataSource>(
@@ -124,4 +129,5 @@ void setupLocator() {
   getIt.registerLazySingleton<HomeLocal>(() => HomeLocalImpl());
   getIt.registerLazySingleton<ProjectDetailsRemote>(
       () => ProjectDetailsRemoteImp());
+  getIt.registerLazySingleton<ProfileDataSource>(() => ProfileDataSourceImpl());
 }
