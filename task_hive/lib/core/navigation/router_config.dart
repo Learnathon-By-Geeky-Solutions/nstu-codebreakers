@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:task_hive/core/navigation/dummy_pages/dummy_page_1.dart';
+
+import 'package:task_hive/core/services/local/shared_preference_services.dart';
 
 import '../../features/auth/presentation/screens/forget_pass_screen.dart';
 import '../../features/auth/presentation/screens/sign_up_screen.dart';
@@ -14,6 +15,7 @@ import '../../features/project_details/presentation/screens/task_create_screen.d
 import '../../features/project_details/presentation/screens/TaskDetailsScreen.dart';
 import '../../features/project_details/presentation/screens/dashboard_screen.dart';
 import '../../features/onboarding/presentation/screens/onboard_screen_3.dart';
+import '../di/di.dart';
 import 'error_page.dart';
 import 'nav_bar.dart';
 import 'routes.dart';
@@ -21,6 +23,7 @@ import 'routes.dart';
 class MyRouterConfig {
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
+  static final prefs = getIt<SharedPreferenceService>();
 
   static void refresh() {
     router.go(MyRoutes.profile);
@@ -32,20 +35,32 @@ class MyRouterConfig {
     errorBuilder: (context, state) {
       return const ErrorPage();
     },
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final isLoggedIn = Supabase.instance.client.auth.currentSession != null;
-      final isOnboarding = state.uri.toString().contains(MyRoutes.onboard1) ||
-          state.uri.toString().contains(MyRoutes.onboard2) ||
-          state.uri.toString().contains(MyRoutes.onboard3);
-      if (isLoggedIn && isOnboarding) {
+      final isOnboarding =
+          await MyRouterConfig.prefs.getBool('onboardingCompleted') ?? false;
+
+      final onboardingPaths = [
+        "/${MyRoutes.onboard1}",
+        "/${MyRoutes.onboard2}",
+        "/${MyRoutes.onboard3}",
+      ];
+      print("in routing: ${state.fullPath}");
+      print("in routing: ${isOnboarding}");
+      print('-> ${!isOnboarding && !onboardingPaths.contains(state.fullPath)}');
+
+      if (!isOnboarding && !onboardingPaths.contains(state.fullPath)) {
+        print('comming');
+        if (state.fullPath?.isEmpty == true) return onboardingPaths[0];
+        return state.fullPath;
+      }
+
+      if (isLoggedIn) {
         return MyRoutes.home;
       }
-      if (isLoggedIn && !isOnboarding) {
-        return (state.fullPath == null || state.fullPath!.isEmpty)
-            ? MyRoutes.home
-            : state.fullPath!;
-      }
-      if (!isLoggedIn && !isOnboarding) {
+
+      // If user has completed onboarding but not logged in
+      if (!isLoggedIn && isOnboarding) {
         return MyRoutes.signInRoute;
       }
 
@@ -126,7 +141,7 @@ class MyRouterConfig {
         builder: (context, state) => const SignInScreen(),
       ),
       GoRoute(
-        path: "/${MyRoutes.signUpRoute}",
+        path: MyRoutes.signUpRoute,
         builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(
@@ -156,7 +171,5 @@ class MyRouterObserver extends NavigatorObserver {
     _updateBackButtonBehavior(newRoute);
   }
 
-  Future<void> _updateBackButtonBehavior(Route? route) async {
- 
-  }
+  Future<void> _updateBackButtonBehavior(Route? route) async {}
 }
