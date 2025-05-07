@@ -21,7 +21,8 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends State<SignInScreen>
+    with AutomaticKeepAliveClientMixin {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
 
@@ -34,8 +35,6 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     Future(() async {
       final prefs = getIt<SharedPreferenceService>();
-      final isOnboarding = await prefs.getBool('onboardingCompleted') ?? false;
-      print(isOnboarding);
       await prefs.setBool('onboardingCompleted', false);
     });
     super.initState();
@@ -55,6 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -234,4 +234,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ));
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

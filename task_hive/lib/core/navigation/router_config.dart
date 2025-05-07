@@ -45,12 +45,7 @@ class MyRouterConfig {
         "/${MyRoutes.onboard2}",
         "/${MyRoutes.onboard3}",
       ];
-      print("in routing: ${state.fullPath}");
-      print("in routing: ${isOnboarding}");
-      print('-> ${!isOnboarding && !onboardingPaths.contains(state.fullPath)}');
-
       if (!isOnboarding && !onboardingPaths.contains(state.fullPath)) {
-        print('comming');
         if (state.fullPath?.isEmpty == true) return onboardingPaths[0];
         return state.fullPath;
       }
@@ -58,8 +53,6 @@ class MyRouterConfig {
       if (isLoggedIn) {
         return MyRoutes.home;
       }
-
-      // If user has completed onboarding but not logged in
       if (!isLoggedIn && isOnboarding) {
         return MyRoutes.signInRoute;
       }
