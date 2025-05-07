@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/features/auth/presentation/widgets/google_sign_in.dart';
+import '../../../../core/services/local/shared_preference_services.dart';
 import '../cubits/auth/sign_in/sign_in_cubit.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/app_extension.dart';
@@ -31,6 +32,12 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
+    Future(() async {
+      final prefs = getIt<SharedPreferenceService>();
+      final isOnboarding = await prefs.getBool('onboardingCompleted') ?? false;
+      print(isOnboarding);
+      await prefs.setBool('onboardingCompleted', false);
+    });
     super.initState();
   }
 
@@ -156,7 +163,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
       onTap: () {
-        context.go("/${MyRoutes.signUpRoute}");
+        context.go(MyRoutes.signUpRoute);
       },
     );
   }

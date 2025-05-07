@@ -106,7 +106,8 @@ void setupLocator() {
       () => DeleteTasksUseCase(getIt.call()));
   getIt.registerLazySingleton<ProfileFetchUseCase>(
       () => ProfileFetchUseCase(getIt.call()));
-
+  getIt.registerLazySingleton<UpdateProfileUseCase>(
+      () => UpdateProfileUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(
