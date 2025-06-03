@@ -17,4 +17,9 @@ class InputFieldValidation {
     if (text == null || text.isEmpty) return 'Name field can\'t be empty';
     return null;
   }
+
+  String? otpValidation(String otp) {
+    if (otp.contains(' ', 0)) return 'OTP text can\'t contain space';
+    return null;
+  }
 }

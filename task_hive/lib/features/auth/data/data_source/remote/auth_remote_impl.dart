@@ -45,11 +45,6 @@ class AuthRemoteImpl implements AuthRemote {
   }
 
   @override
-  Future<void> verifyOtp() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<void> addUser(UserEntity userInfo) async {
     try {
       final existingUser = await supabaseClient
@@ -120,6 +115,24 @@ class AuthRemoteImpl implements AuthRemote {
       return response;
     } catch (e) {
       throw AuthException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> resetPass(Map<String, dynamic> payload) async {
+    try {
+      final res = await authClient.verifyOTP(
+        type: OtpType.email,
+        email: payload['email'],
+        token: payload['otp'],
+      );
+      if (res.user != null) {
+        await authClient.updateUser(
+          UserAttributes(password: payload['password']),
+        );
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

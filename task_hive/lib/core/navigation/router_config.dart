@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_hive/core/services/local/shared_preference_services.dart';
 
 import '../../features/auth/presentation/screens/forget_pass_screen.dart';
+import '../../features/auth/presentation/screens/reset_pass_screen.dart';
 import '../../features/auth/presentation/screens/sign_up_screen.dart';
 import '../../features/auth/presentation/screens/signin_screen.dart';
 import '../../features/home/presentation/screens/projects_screen.dart';
@@ -140,6 +141,15 @@ class MyRouterConfig {
       GoRoute(
         path: MyRoutes.forgotPassword,
         builder: (context, state) => const ForgetPasswordScreen(),
+        routes: [
+          GoRoute(
+            path: MyRoutes.otpRoute,
+            builder: (context, state) {
+              final email = state.extra as String?;
+              return ResetPassScreen(email: email ?? 'No email provided');
+            },
+          ),
+        ],
       ),
     ],
   );
