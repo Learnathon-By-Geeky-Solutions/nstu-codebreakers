@@ -77,9 +77,9 @@ class OnboardScreen3 extends StatelessWidget {
             children: [
               _dot(false, colorTheme.primary),
               const SizedBox(width: 10),
-              _dot(true, colorTheme.primary),
-              const SizedBox(width: 10),
               _dot(false, colorTheme.primary),
+              const SizedBox(width: 10),
+              _dot(true, colorTheme.primary),
             ],
           ),
         ),
@@ -115,7 +115,7 @@ class OnboardScreen3 extends StatelessWidget {
       width: 10,
       height: 10,
       decoration: BoxDecoration(
-        color: (isActive) ? primaryColor : primaryColor,
+        color: (isActive) ? primaryColor : primaryColor.withValues(alpha: 0.4),
         shape: BoxShape.circle,
       ),
     );

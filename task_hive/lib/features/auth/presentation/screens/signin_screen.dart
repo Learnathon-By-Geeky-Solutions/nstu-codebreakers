@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_hive/features/auth/presentation/widgets/google_sign_in.dart';
+import '../../../../core/services/local/shared_preference_services.dart';
 import '../cubits/auth/sign_in/sign_in_cubit.dart';
 import '../../../../core/di/di.dart';
 import '../../../../core/extensions/app_extension.dart';
@@ -20,7 +21,8 @@ class SignInScreen extends StatefulWidget {
   State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends State<SignInScreen>
+    with AutomaticKeepAliveClientMixin {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
 
@@ -31,6 +33,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
+    Future(() async {
+      final prefs = getIt<SharedPreferenceService>();
+      await prefs.setBool('onboardingCompleted', false);
+    });
     super.initState();
   }
 
@@ -48,6 +54,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
@@ -156,7 +163,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       ),
       onTap: () {
-        context.go("/${MyRoutes.signUpRoute}");
+        context.go(MyRoutes.signUpRoute);
       },
     );
   }
@@ -227,4 +234,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ));
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

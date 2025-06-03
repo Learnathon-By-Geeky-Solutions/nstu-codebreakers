@@ -23,12 +23,24 @@ class ProfileRepoImp extends ProfileRepo {
   Future<Either<String, ProfileInfo>> updateProfileInfo(
       ProfileInfo profileInfo) async {
     try {
-      final res =
-          await _profileDataSource.updateProfileInfo(profileInfo.toJson());
+      // Only upload image if a new image is provided
+      if (profileInfo.url != null && profileInfo.url!.isNotEmpty) {
+        profileInfo.url =
+            await _profileDataSource.uploadProfileImage(profileInfo.url!);
+      }
+
+      // Prepare update data
+      final updateData = profileInfo.toJson();
+      if (updateData.isEmpty) {
+        return const Left('No data to update');
+      }
+
+      // Update profile and get the result
+      final res = await _profileDataSource.updateProfileInfo(updateData);
       final updatedProfileInfo = ProfileModel.fromJson(res).toEntity();
       return Right(updatedProfileInfo);
     } catch (e) {
-      throw Exception('Error updating profile info: $e');
+      return Left(e.toString());
     }
   }
 }
