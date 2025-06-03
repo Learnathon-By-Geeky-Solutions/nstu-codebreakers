@@ -1,3 +1,5 @@
+import 'dart:io' show File;
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_hive/features/profile/data/data_source/profile_data_source.dart';
 
@@ -27,13 +29,53 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   Future<Map<String, dynamic>> updateProfileInfo(
       Map<String, dynamic> profileInfo) async {
     try {
-      final response = await supabaseClient
+      print('dbg profile info: $profileInfo');
+      // First update the user data
+      await supabaseClient
           .from('users')
           .update(profileInfo)
           .eq('id', profileInfo['id']);
+
+      // Then fetch the updated user data
+      final response = await supabaseClient
+          .from('users')
+          .select()
+          .eq('id', profileInfo['id'])
+          .maybeSingle();
+
+      if (response == null) {
+        throw Exception('Failed to fetch updated user data');
+      }
+
       return response;
     } catch (e) {
       throw Exception('Error updating profile info: $e');
+    }
+  }
+
+  @override
+  Future<String> uploadProfileImage(String filePath) async {
+    final storage = supabaseClient.storage.from('attachments');
+    final fileName = filePath.split('/').last;
+    print('dbg called $fileName');
+    try {
+      final files = await storage.list(path: '');
+      final exists = files.any((file) => file.name == fileName);
+      print('dbg exist $exists');
+
+      if (exists) {
+        return storage.getPublicUrl(fileName);
+      }
+
+      final file = File(filePath);
+      print('dbg before up ');
+
+      await storage.upload(fileName, file);
+      print('dbg after up ');
+
+      return storage.getPublicUrl(fileName);
+    } catch (error) {
+      throw Exception('Failed to upload profile image: $error');
     }
   }
 }

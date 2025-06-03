@@ -6,7 +6,7 @@ abstract class AuthRemote {
   Future<AuthResponse> signIn(UserEntity userInfo);
   Future<AuthResponse> signInWithGoogle();
   Future<void> forgetPassword(String email);
-  Future<void> verifyOtp();
+  Future<void> resetPass(Map<String, dynamic> payload);
   Future<void> addUser(UserEntity userInfo);
   Future<Map<String, dynamic>> getUser(String? email);
 }

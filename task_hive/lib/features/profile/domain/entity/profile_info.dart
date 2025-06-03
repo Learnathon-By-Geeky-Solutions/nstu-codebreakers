@@ -16,6 +16,7 @@ class ProfileInfo {
     if (name != null) map['full_name'] = name;
     if (email != null) map['email'] = email;
     if (url != null) map['profile_picture'] = url;
+    if (id != null) map['id'] = id;
     return map;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import '../../features/auth/presentation/cubits/auth/reset_password/reset_pass_cubit.dart';
 import '../base/app_data/app_data.dart';
 import '../../features/auth/data/data_source/local/auth_local.dart';
 import '../../features/auth/data/data_source/remote/auth_remote.dart';
@@ -80,6 +81,8 @@ void setupLocator() {
   getIt.registerFactory<DeleteTaskCubit>(() => DeleteTaskCubit(getIt.call()));
   getIt.registerFactory<ProfileFetchCubit>(
       () => ProfileFetchCubit(getIt.call(), getIt.call()));
+  getIt.registerFactory<ResetPasswordCubit>(
+      () => ResetPasswordCubit(getIt.call()));
 
   ///Register UseCases
   getIt.registerLazySingleton<OnboardingUseCase>(
@@ -108,6 +111,8 @@ void setupLocator() {
       () => ProfileFetchUseCase(getIt.call()));
   getIt.registerLazySingleton<UpdateProfileUseCase>(
       () => UpdateProfileUseCase(getIt.call()));
+  getIt.registerLazySingleton<ResetPasswordUseCase>(
+      () => ResetPasswordUseCase(getIt.call()));
 
   /// Register Repositories
   getIt.registerLazySingleton<OnboardingRepository>(

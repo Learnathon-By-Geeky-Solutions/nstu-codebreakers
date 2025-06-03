@@ -35,6 +35,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
+      appBar: AppBar(),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -70,7 +71,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       state.success.message,
                       Colors.green,
                     );
-                    context.go(MyRoutes.signInRoute);
+                    context.go(
+                      "${MyRoutes.forgotPassword}/${MyRoutes.otpRoute}",
+                      extra: _emailCtrl.text.trim(),
+                    );
                   }
                 },
                 builder: (context, state) {

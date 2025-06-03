@@ -50,11 +50,6 @@ class AuthReposityImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> verifyOtp() async {
-    return Left(Failure('verifyOtp() not yet implemented'));
-  }
-
-  @override
   Future<Either<Failure, Success>> signInWithGoogle() async {
     try {
       final response = await _authRemoteDataSource.signInWithGoogle();
@@ -79,6 +74,17 @@ class AuthReposityImpl implements AuthRepository {
       if (kDebugMode) {
         debugPrint('Error signing in with Google: $e');
       }
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Success>> resetPass(
+      Map<String, dynamic> payload) async {
+    try {
+      await _authRemoteDataSource.resetPass(payload);
+      return Right(Success('Reset password successful.'));
+    } catch (e) {
       return Left(Failure(e.toString()));
     }
   }

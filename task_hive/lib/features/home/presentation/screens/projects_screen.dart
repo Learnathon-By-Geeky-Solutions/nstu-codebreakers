@@ -56,7 +56,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         floatingActionButton: SizedBox(
           height: 64,
           width: 64,
@@ -141,8 +141,11 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                   width: 60,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF6a11cb), Color(0xFF2575fc)],
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.surface,
+                        Color(0xFF2575fc)
+                      ],
                     ),
                   ),
                 ),
@@ -151,7 +154,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
                     child: Container(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Theme.of(context).colorScheme.surface,
                       child: ListView(
                         padding: EdgeInsets.zero,
                         children: [

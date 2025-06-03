@@ -51,7 +51,7 @@ dependencies:
   intl: ^0.18.0
   mocktail: ^1.0.4
   google_sign_in: ^6.2.2
-  image_picker: ^1.0.7
+  image_picker: ^1.1.2
   
 
 dev_dependencies:
