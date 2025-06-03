@@ -47,18 +47,21 @@ class AuthRemoteImpl implements AuthRemote {
   @override
   Future<void> addUser(UserEntity userInfo) async {
     try {
-      final existingUser = await supabaseClient
-          .from('users')
-          .select()
-          .eq('id', userInfo.id.toString())
-          .maybeSingle();
+      final existingUser = (userInfo.id != null)
+          ? await supabaseClient
+              .from('users')
+              .select()
+              .eq('id', userInfo.id.toString())
+              .maybeSingle()
+          : null;
 
       if (existingUser == null) {
         await supabaseClient.from('users').insert({
-          'id': userInfo.id,
-          'email': userInfo.email,
-          'full_name': userInfo.name,
-          'profile_picture': userInfo.profilePictureUrl,
+          if (userInfo.id != null) 'id': userInfo.id,
+          if (userInfo.email != null) 'email': userInfo.email,
+          if (userInfo.name != null) 'full_name': userInfo.name,
+          if (userInfo.profilePictureUrl != null)
+            'profile_picture': userInfo.profilePictureUrl,
           'created_at': DateTime.now().toIso8601String(),
           'updated_at': DateTime.now().toIso8601String(),
         });

@@ -32,13 +32,12 @@ class ProfileRepoImp extends ProfileRepo {
       // Prepare update data
       final updateData = profileInfo.toJson();
       if (updateData.isEmpty) {
-        return Left('No data to update');
+        return const Left('No data to update');
       }
 
       // Update profile and get the result
       final res = await _profileDataSource.updateProfileInfo(updateData);
       final updatedProfileInfo = ProfileModel.fromJson(res).toEntity();
-      print('dbg updated profile info: ${updatedProfileInfo.toJson()}');
       return Right(updatedProfileInfo);
     } catch (e) {
       return Left(e.toString());
