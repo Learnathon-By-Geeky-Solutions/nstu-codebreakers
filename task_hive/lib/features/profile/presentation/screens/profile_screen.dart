@@ -64,6 +64,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _submitChanges() {
+    if (_appData.userId == null) {
+      return; // Don't proceed if there's no user ID
+    }
+
     final profile = ProfileInfo(
       id: _appData.userId,
       name: _nameController.text.trim(),

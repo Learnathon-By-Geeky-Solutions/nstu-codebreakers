@@ -29,7 +29,6 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   Future<Map<String, dynamic>> updateProfileInfo(
       Map<String, dynamic> profileInfo) async {
     try {
-      print('dbg profile info: $profileInfo');
       // First update the user data
       await supabaseClient
           .from('users')
@@ -57,21 +56,17 @@ class ProfileDataSourceImpl implements ProfileDataSource {
   Future<String> uploadProfileImage(String filePath) async {
     final storage = supabaseClient.storage.from('attachments');
     final fileName = filePath.split('/').last;
-    print('dbg called $fileName');
     try {
       final files = await storage.list(path: '');
       final exists = files.any((file) => file.name == fileName);
-      print('dbg exist $exists');
 
       if (exists) {
         return storage.getPublicUrl(fileName);
       }
 
       final file = File(filePath);
-      print('dbg before up ');
 
       await storage.upload(fileName, file);
-      print('dbg after up ');
 
       return storage.getPublicUrl(fileName);
     } catch (error) {
