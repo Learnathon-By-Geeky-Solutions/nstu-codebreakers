@@ -18,7 +18,7 @@ A robust task management and project collaboration Flutter application with Supa
 https://drive.google.com/drive/folders/1zzEos7D048KUAY6uXgjOg2ztLIBnkE-0
 ## Overview
 
-TASK-HIVE is a comprehensive project and task management solution that enables teams to efficiently collaborate on projects, track progress, and manage workloads. Built with Flutter and backed by Supabase, it offers a seamless experience across multiple platforms.
+TASK-HIVE is a comprehensive project and task management solution that enables users to efficiently work on projects, track progress, and manage workloads. Built with Flutter and backed by Supabase, it offers a seamless experience across multiple platforms.
 
 ## Features
 
@@ -27,7 +27,6 @@ TASK-HIVE is a comprehensive project and task management solution that enables t
 - **Secure Login System**:
   - Email/password authentication
   - Form validation with real-time feedback
-  - Secure password storage with encryption
 
 - **Signup Process**:
   - Email verification
@@ -37,7 +36,6 @@ TASK-HIVE is a comprehensive project and task management solution that enables t
 - **Password Recovery**:
   - Email-based recovery workflow
   - Secure token-based reset mechanism
-  - Expiring reset links for security
 
 ### Project Dashboard
 
@@ -45,55 +43,37 @@ TASK-HIVE is a comprehensive project and task management solution that enables t
   - Grid and list view options for projects
   - Project cards with progress indicators
   - Color-coded project categorization
-  - Search and filter functionality
-  - Project creation with custom templates
 
 - **Quick Actions**:
   - Create new project
-  - Pin important projects
-  - Archive completed projects
   - Project analytics summary
 
 ### Task Management System
 
-- **Kanban Board**:
+- **Task Board**:
   - Column-based task organization:
     - To-Do
     - In Progress
     - Done
     - Blocked
-  - Drag-and-drop functionality
-  - Collapsible columns
-  - Task count indicators
 
 - **Task Details**:
   - Title and subtitle fields
-  - Rich text description
   - Due date with reminder options
-  - Priority levels (Low, Medium, High, Urgent)
+  - Priority levels (Low, Medium, High)
   - Custom labels and tags
   - Checklists for subtasks
-
-- **Task Assignment**:
-  - User assignment with avatars
-  - Multiple assignees support
-  - Notification system for assignments
-  - Workload visibility
 
 - **Attachments**:
   - Multiple file uploads
   - Image previews
   - Storage quotas
-  - File versioning
 
 ### User Profile Management
 
 - **Profile Features**:
   - Personal information management
   - Profile picture upload
-  - Role-based permissions
-  - Activity history and statistics
-  - Notification preferences
   - Theme settings
 
 ## Technical Implementation
@@ -102,8 +82,7 @@ TASK-HIVE is a comprehensive project and task management solution that enables t
 
 TASK-HIVE implements a clean architecture pattern with:
 
-- **Presentation Layer**: Flutter UI components with Material Design 3
-- **Business Logic Layer**: BLoC pattern for state management
+- **Presentation Layer**: Flutter UI components with Material Design 3 and with BLoC pattern for state management
 - **Domain Layer**: Core business logic and models
 - **Data Layer**: Repository pattern for data access
 
@@ -112,7 +91,6 @@ TASK-HIVE implements a clean architecture pattern with:
 - **Supabase Integration**:
   - Real-time data synchronization
   - PostgreSQL database
-  - Row-level security (RLS) policies
   - Supabase Auth for authentication
   - Supabase Storage for file management
 
@@ -124,7 +102,7 @@ TASK-HIVE uses the following Supabase tables:
 - **Users**: Stores user profiles and authentication data
 - **Projects**: Contains project metadata and ownership information
 - **Tasks**: Manages task details including status, priority, and due dates
-- **Task Assignees**: Tracks assignment of tasks to team members
+- **Task Assignees**: Tracks the assignment of tasks to team members
 - **Attachments**: Stores file metadata for task attachments
 
 ## Project Structure
@@ -147,31 +125,7 @@ Key Flutter packages used:
 
 - **State Management**: flutter_bloc, equatable
 - **Supabase**: supabase_flutter
-- **UI Components**: flutter_svg, cached_network_image, shimmer
 - **Forms**: form_field_validator
 - **Utilities**: intl, flutter_dotenv, logger
 - **File Handling**: path_provider, file_picker
 
-
-## Performance Features
-
-- Lazy loading for efficient data fetching
-- Local caching for offline access
-- Background synchronization
-- Optimized image loading
-- Efficient state management
-
-## Security
-
-- JWT-based authentication
-- Secure data storage
-- Input validation and sanitization
-- Supabase Row Level Security policies
-- Encrypted data transmission
-
-## Future Enhancements
-
-- Team collaboration features
-- Advanced reporting and analytics
-- Calendar integration
-- Time tracking
